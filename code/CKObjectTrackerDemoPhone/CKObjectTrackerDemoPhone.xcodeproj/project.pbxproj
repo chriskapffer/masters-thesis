@@ -1,0 +1,495 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4C4E0D1315DE33C0002BE9A4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0CF015DE3378002BE9A4 /* UIKit.framework */; };
+		4C4E0D1415DE33C0002BE9A4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0CF215DE3378002BE9A4 /* Foundation.framework */; };
+		4C4E0D1515DE33C0002BE9A4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0CF415DE3378002BE9A4 /* CoreGraphics.framework */; };
+		4C4E0D1B15DE33C0002BE9A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E0D1915DE33C0002BE9A4 /* InfoPlist.strings */; };
+		4C4E0D1D15DE33C0002BE9A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4E0D1C15DE33C0002BE9A4 /* main.m */; };
+		4C4E0D2115DE33C0002BE9A4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4E0D2015DE33C0002BE9A4 /* AppDelegate.m */; };
+		4C4E0D2415DE33C0002BE9A4 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4E0D2315DE33C0002BE9A4 /* MainViewController.m */; };
+		4C4E0D2715DE33C0002BE9A4 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E0D2515DE33C0002BE9A4 /* MainViewController.xib */; };
+		4C4E0D3115DE344C002BE9A4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0CF015DE3378002BE9A4 /* UIKit.framework */; };
+		4C4E0D3215DE344C002BE9A4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0CF215DE3378002BE9A4 /* Foundation.framework */; };
+		4C4E0D3315DE344C002BE9A4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0CF415DE3378002BE9A4 /* CoreGraphics.framework */; };
+		4C4E0D3915DE344C002BE9A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E0D3715DE344C002BE9A4 /* InfoPlist.strings */; };
+		4C4E0D3B15DE344C002BE9A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4E0D3A15DE344C002BE9A4 /* main.m */; };
+		4C4E0D3F15DE344C002BE9A4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4E0D3E15DE344C002BE9A4 /* AppDelegate.m */; };
+		4C4E0D4215DE344C002BE9A4 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4E0D4115DE344C002BE9A4 /* MainViewController.m */; };
+		4C4E0D4515DE344C002BE9A4 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E0D4315DE344C002BE9A4 /* MainViewController.xib */; };
+		4C4E0DE615DE4076002BE9A4 /* libCKObjectTrackerPhone.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0DE415DE4034002BE9A4 /* libCKObjectTrackerPhone.a */; };
+		4C4E0DE715DE4077002BE9A4 /* libCKObjectTrackerPhone.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0DE415DE4034002BE9A4 /* libCKObjectTrackerPhone.a */; };
+		4C4E0DE915DE4221002BE9A4 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0DE815DE4221002BE9A4 /* opencv2.framework */; };
+		4C4E0DEA15DE423B002BE9A4 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0DE815DE4221002BE9A4 /* opencv2.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		4C4E0CF015DE3378002BE9A4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		4C4E0CF215DE3378002BE9A4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		4C4E0CF415DE3378002BE9A4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		4C4E0D1115DE33C0002BE9A4 /* CKObjectTrackerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CKObjectTrackerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C4E0D1815DE33C0002BE9A4 /* CKObjectTrackerDemo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CKObjectTrackerDemo-Info.plist"; sourceTree = "<group>"; };
+		4C4E0D1A15DE33C0002BE9A4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		4C4E0D1C15DE33C0002BE9A4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		4C4E0D1E15DE33C0002BE9A4 /* CKObjectTrackerDemo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CKObjectTrackerDemo-Prefix.pch"; sourceTree = "<group>"; };
+		4C4E0D1F15DE33C0002BE9A4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		4C4E0D2015DE33C0002BE9A4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		4C4E0D2215DE33C0002BE9A4 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		4C4E0D2315DE33C0002BE9A4 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		4C4E0D2615DE33C0002BE9A4 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainViewController.xib; sourceTree = "<group>"; };
+		4C4E0D2F15DE344C002BE9A4 /* CKObjectTrackerTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CKObjectTrackerTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C4E0D3615DE344C002BE9A4 /* CKObjectTrackerTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CKObjectTrackerTest-Info.plist"; sourceTree = "<group>"; };
+		4C4E0D3815DE344C002BE9A4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		4C4E0D3A15DE344C002BE9A4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		4C4E0D3C15DE344C002BE9A4 /* CKObjectTrackerTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CKObjectTrackerTest-Prefix.pch"; sourceTree = "<group>"; };
+		4C4E0D3D15DE344C002BE9A4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		4C4E0D3E15DE344C002BE9A4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		4C4E0D4015DE344C002BE9A4 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		4C4E0D4115DE344C002BE9A4 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		4C4E0D4415DE344C002BE9A4 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainViewController.xib; sourceTree = "<group>"; };
+		4C4E0DE415DE4034002BE9A4 /* libCKObjectTrackerPhone.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCKObjectTrackerPhone.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C4E0DE815DE4221002BE9A4 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = ../opencv2.framework; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4C4E0D0E15DE33C0002BE9A4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C4E0D1315DE33C0002BE9A4 /* UIKit.framework in Frameworks */,
+				4C4E0D1415DE33C0002BE9A4 /* Foundation.framework in Frameworks */,
+				4C4E0D1515DE33C0002BE9A4 /* CoreGraphics.framework in Frameworks */,
+				4C4E0DEA15DE423B002BE9A4 /* opencv2.framework in Frameworks */,
+				4C4E0DE715DE4077002BE9A4 /* libCKObjectTrackerPhone.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C4E0D2C15DE344C002BE9A4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C4E0D3115DE344C002BE9A4 /* UIKit.framework in Frameworks */,
+				4C4E0D3215DE344C002BE9A4 /* Foundation.framework in Frameworks */,
+				4C4E0D3315DE344C002BE9A4 /* CoreGraphics.framework in Frameworks */,
+				4C4E0DE915DE4221002BE9A4 /* opencv2.framework in Frameworks */,
+				4C4E0DE615DE4076002BE9A4 /* libCKObjectTrackerPhone.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4C4E0CE115DE3378002BE9A4 = {
+			isa = PBXGroup;
+			children = (
+				4C4E0D3415DE344C002BE9A4 /* CKObjectTrackerTest */,
+				4C4E0D1615DE33C0002BE9A4 /* CKObjectTrackerDemo */,
+				4C4E0DBA15DE3ABE002BE9A4 /* CKObjectTrackerShared */,
+				4C4E0CEF15DE3378002BE9A4 /* Frameworks */,
+				4C4E0CED15DE3378002BE9A4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4C4E0CED15DE3378002BE9A4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4C4E0D1115DE33C0002BE9A4 /* CKObjectTrackerDemo.app */,
+				4C4E0D2F15DE344C002BE9A4 /* CKObjectTrackerTest.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4C4E0CEF15DE3378002BE9A4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4C4E0CF015DE3378002BE9A4 /* UIKit.framework */,
+				4C4E0CF215DE3378002BE9A4 /* Foundation.framework */,
+				4C4E0CF415DE3378002BE9A4 /* CoreGraphics.framework */,
+				4C4E0DE815DE4221002BE9A4 /* opencv2.framework */,
+				4C4E0DE415DE4034002BE9A4 /* libCKObjectTrackerPhone.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4C4E0D1615DE33C0002BE9A4 /* CKObjectTrackerDemo */ = {
+			isa = PBXGroup;
+			children = (
+				4C4E0D1F15DE33C0002BE9A4 /* AppDelegate.h */,
+				4C4E0D2015DE33C0002BE9A4 /* AppDelegate.m */,
+				4C4E0D2215DE33C0002BE9A4 /* MainViewController.h */,
+				4C4E0D2315DE33C0002BE9A4 /* MainViewController.m */,
+				4C4E0D2515DE33C0002BE9A4 /* MainViewController.xib */,
+				4C4E0D1715DE33C0002BE9A4 /* Supporting Files */,
+			);
+			path = CKObjectTrackerDemo;
+			sourceTree = "<group>";
+		};
+		4C4E0D1715DE33C0002BE9A4 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4C4E0D1815DE33C0002BE9A4 /* CKObjectTrackerDemo-Info.plist */,
+				4C4E0D1915DE33C0002BE9A4 /* InfoPlist.strings */,
+				4C4E0D1C15DE33C0002BE9A4 /* main.m */,
+				4C4E0D1E15DE33C0002BE9A4 /* CKObjectTrackerDemo-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4C4E0D3415DE344C002BE9A4 /* CKObjectTrackerTest */ = {
+			isa = PBXGroup;
+			children = (
+				4C4E0D3D15DE344C002BE9A4 /* AppDelegate.h */,
+				4C4E0D3E15DE344C002BE9A4 /* AppDelegate.m */,
+				4C4E0D4015DE344C002BE9A4 /* MainViewController.h */,
+				4C4E0D4115DE344C002BE9A4 /* MainViewController.m */,
+				4C4E0D4315DE344C002BE9A4 /* MainViewController.xib */,
+				4C4E0D3515DE344C002BE9A4 /* Supporting Files */,
+			);
+			path = CKObjectTrackerTest;
+			sourceTree = "<group>";
+		};
+		4C4E0D3515DE344C002BE9A4 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4C4E0D3615DE344C002BE9A4 /* CKObjectTrackerTest-Info.plist */,
+				4C4E0D3715DE344C002BE9A4 /* InfoPlist.strings */,
+				4C4E0D3A15DE344C002BE9A4 /* main.m */,
+				4C4E0D3C15DE344C002BE9A4 /* CKObjectTrackerTest-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4C4E0DBA15DE3ABE002BE9A4 /* CKObjectTrackerShared */ = {
+			isa = PBXGroup;
+			children = (
+				4C4E0DBB15DE3ABE002BE9A4 /* Categories */,
+				4C4E0DBC15DE3ABE002BE9A4 /* Controllers */,
+				4C4E0DBD15DE3ABE002BE9A4 /* Models */,
+				4C4E0DBE15DE3ABE002BE9A4 /* Views */,
+			);
+			path = CKObjectTrackerShared;
+			sourceTree = "<group>";
+		};
+		4C4E0DBB15DE3ABE002BE9A4 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		4C4E0DBC15DE3ABE002BE9A4 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		4C4E0DBD15DE3ABE002BE9A4 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		4C4E0DBE15DE3ABE002BE9A4 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4C4E0D1015DE33C0002BE9A4 /* CKObjectTrackerDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4C4E0D2815DE33C0002BE9A4 /* Build configuration list for PBXNativeTarget "CKObjectTrackerDemo" */;
+			buildPhases = (
+				4C4E0D0D15DE33C0002BE9A4 /* Sources */,
+				4C4E0D0E15DE33C0002BE9A4 /* Frameworks */,
+				4C4E0D0F15DE33C0002BE9A4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CKObjectTrackerDemo;
+			productName = CKObjectTrackerDemo;
+			productReference = 4C4E0D1115DE33C0002BE9A4 /* CKObjectTrackerDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		4C4E0D2E15DE344C002BE9A4 /* CKObjectTrackerTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4C4E0D4615DE344C002BE9A4 /* Build configuration list for PBXNativeTarget "CKObjectTrackerTest" */;
+			buildPhases = (
+				4C4E0D2B15DE344C002BE9A4 /* Sources */,
+				4C4E0D2C15DE344C002BE9A4 /* Frameworks */,
+				4C4E0D2D15DE344C002BE9A4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CKObjectTrackerTest;
+			productName = CKObjectTrackerTest;
+			productReference = 4C4E0D2F15DE344C002BE9A4 /* CKObjectTrackerTest.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4C4E0CE315DE3378002BE9A4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+				ORGANIZATIONNAME = "HTW Berlin";
+			};
+			buildConfigurationList = 4C4E0CE615DE3378002BE9A4 /* Build configuration list for PBXProject "CKObjectTrackerDemoPhone" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 4C4E0CE115DE3378002BE9A4;
+			productRefGroup = 4C4E0CED15DE3378002BE9A4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4C4E0D2E15DE344C002BE9A4 /* CKObjectTrackerTest */,
+				4C4E0D1015DE33C0002BE9A4 /* CKObjectTrackerDemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4C4E0D0F15DE33C0002BE9A4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C4E0D1B15DE33C0002BE9A4 /* InfoPlist.strings in Resources */,
+				4C4E0D2715DE33C0002BE9A4 /* MainViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C4E0D2D15DE344C002BE9A4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C4E0D3915DE344C002BE9A4 /* InfoPlist.strings in Resources */,
+				4C4E0D4515DE344C002BE9A4 /* MainViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4C4E0D0D15DE33C0002BE9A4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C4E0D1D15DE33C0002BE9A4 /* main.m in Sources */,
+				4C4E0D2115DE33C0002BE9A4 /* AppDelegate.m in Sources */,
+				4C4E0D2415DE33C0002BE9A4 /* MainViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4C4E0D2B15DE344C002BE9A4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C4E0D3B15DE344C002BE9A4 /* main.m in Sources */,
+				4C4E0D3F15DE344C002BE9A4 /* AppDelegate.m in Sources */,
+				4C4E0D4215DE344C002BE9A4 /* MainViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		4C4E0D1915DE33C0002BE9A4 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4C4E0D1A15DE33C0002BE9A4 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		4C4E0D2515DE33C0002BE9A4 /* MainViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4C4E0D2615DE33C0002BE9A4 /* en */,
+			);
+			name = MainViewController.xib;
+			sourceTree = "<group>";
+		};
+		4C4E0D3715DE344C002BE9A4 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4C4E0D3815DE344C002BE9A4 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		4C4E0D4315DE344C002BE9A4 /* MainViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4C4E0D4415DE344C002BE9A4 /* en */,
+			);
+			name = MainViewController.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		4C4E0D0815DE3378002BE9A4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/..\"";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				LIBRARY_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				SDKROOT = iphoneos;
+				USER_HEADER_SEARCH_PATHS = "\"$(BUILT_PRODUCTS_DIR)\"/** \"$(BUILD_ROOT)/../IntermediateBuildFilesPath/UninstalledProducts\"/**";
+			};
+			name = Debug;
+		};
+		4C4E0D0915DE3378002BE9A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/..\"";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				LIBRARY_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				USER_HEADER_SEARCH_PATHS = "\"$(BUILT_PRODUCTS_DIR)\"/** \"$(BUILD_ROOT)/../IntermediateBuildFilesPath/UninstalledProducts\"/**";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4C4E0D2915DE33C0002BE9A4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CKObjectTrackerDemo/CKObjectTrackerDemo-Prefix.pch";
+				INFOPLIST_FILE = "CKObjectTrackerDemo/CKObjectTrackerDemo-Info.plist";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(inherited)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		4C4E0D2A15DE33C0002BE9A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CKObjectTrackerDemo/CKObjectTrackerDemo-Prefix.pch";
+				INFOPLIST_FILE = "CKObjectTrackerDemo/CKObjectTrackerDemo-Info.plist";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(inherited)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		4C4E0D4715DE344C002BE9A4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CKObjectTrackerTest/CKObjectTrackerTest-Prefix.pch";
+				INFOPLIST_FILE = "CKObjectTrackerTest/CKObjectTrackerTest-Info.plist";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(inherited)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		4C4E0D4815DE344C002BE9A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CKObjectTrackerTest/CKObjectTrackerTest-Prefix.pch";
+				INFOPLIST_FILE = "CKObjectTrackerTest/CKObjectTrackerTest-Info.plist";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(inherited)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4C4E0CE615DE3378002BE9A4 /* Build configuration list for PBXProject "CKObjectTrackerDemoPhone" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C4E0D0815DE3378002BE9A4 /* Debug */,
+				4C4E0D0915DE3378002BE9A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4C4E0D2815DE33C0002BE9A4 /* Build configuration list for PBXNativeTarget "CKObjectTrackerDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C4E0D2915DE33C0002BE9A4 /* Debug */,
+				4C4E0D2A15DE33C0002BE9A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4C4E0D4615DE344C002BE9A4 /* Build configuration list for PBXNativeTarget "CKObjectTrackerTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C4E0D4715DE344C002BE9A4 /* Debug */,
+				4C4E0D4815DE344C002BE9A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4C4E0CE315DE3378002BE9A4 /* Project object */;
+}

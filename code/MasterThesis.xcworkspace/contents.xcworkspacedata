@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:CKObjectTrackerLib/CKObjectTrackerLib.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:CKObjectTrackerDemoMac/CKObjectTrackerDemoMac.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:CKObjectTrackerDemoPhone/CKObjectTrackerDemoPhone.xcodeproj">
+   </FileRef>
+</Workspace>
