@@ -39,7 +39,7 @@ string getFullpath(string file)
     }
     string pathString = string(path);
     pathString.erase(pathString.find_last_of('/') + 1);
-    return pathString;
+    return pathString + file;
 }
 
 void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
@@ -47,8 +47,11 @@ void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
     CKObjectTracker tracker = CKObjectTracker();
     tracker.setObject(objectImage);
     
-    CKTrackingInfo info;
-    CKTrackingResult result;
+    //namedWindow("objHist");
+    //imshow("objHist", tracker.getObjectHistogramAsImage());
+    
+    TrackerOutput output;
+    TrackerDebugInfo debugInfo;
     
     Mat frame;
     namedWindow("video");
@@ -59,7 +62,21 @@ void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
             endCapture = true;
         }
 
-        tracker.track(frame, result, info);
+        tracker.trackObjectInVideo(frame, output, debugInfo);
+//        for (int i = 0; i < output.points.size(); i++) {
+//            circle(frame, result.points[i], 2, Scalar(255, 0, 0), 2);
+//        }
+//        
+//        if (info.corners.size() > 0) {
+//            Scalar color = result.valid ? Scalar(0, 255, 0) : Scalar(0, 0, 255);
+//            line(frame, info.corners[0], info.corners[1], color, 2);
+//            line(frame, info.corners[1], info.corners[2], color, 2);
+//            line(frame, info.corners[2], info.corners[3], color, 2);
+//            line(frame, info.corners[3], info.corners[0], color, 2);
+//        }
+        cout << "This took " <<  debugInfo.moduleInfo.totalProcessingTime << "ms and results in " << 1000 / debugInfo.moduleInfo.totalProcessingTime << " FPS." << endl;
+        
+        
         
         imshow("video", frame);
         if (waitKey(1000 / sceneVideo.get(CV_CAP_PROP_FPS)) >= 0) {
@@ -77,19 +94,14 @@ void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
 
 void trackObjectInStillImage(const Mat& objectImage, const Mat& sceneImage)
 {
-    CKObjectTracker tracker = CKObjectTracker(true);
+    vector<TrackerOutput> output;
+    vector<TrackerDebugInfo> debugInfo;
+    
+    CKObjectTracker tracker = CKObjectTracker();
     tracker.setObject(objectImage);
-
-    CKTrackingInfo info;
-    CKTrackingResult result;
-    while (info.trackingState != CK_TRACKING_STATE_TRACK) {
-        
-        tracker.track(sceneImage, result, info);
-        
-        if (info.trackingState == CK_TRACKING_STATE_FAIL) {
-            cout << "Could not find object." << endl;
-            break;
-        }
+    tracker.trackObjectInStillImage(objectImage, output, debugInfo);
+    if (!output.at(output.size() - 1).isObjectPresent) {
+        cout << "Object not found" << endl;
     }
 }
 
@@ -98,7 +110,7 @@ int main(int argc, const char * argv[])
     if(argc != 3) {
         cout << "This program is used for quality and performance testing of the CKObjectTracker library.\n"
              << "Usage: " << argv[0] << " -help | <object> <scene>\n"
-             << "-help prints this message\n."
+             << "-help prints this message\n"
              << "<object> is a realtive path to an image containing the object to be tracked.\n"
              << "         Valid image formats are: .bmp, .dib, .jpeg, .jpg, .jpe, .jp2,\n"
              << "         .png, .pbm, .pgm, .ppm, .sr, .ras, .tiff and .tif\n"

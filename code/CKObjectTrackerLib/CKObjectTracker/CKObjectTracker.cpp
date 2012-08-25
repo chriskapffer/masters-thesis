@@ -1,27 +1,32 @@
 //
 //  CKObjectTracker.cpp
-//  CKObjectTracker
+//  CKObjectTrackerLib
 //
 //  Created by Christoph Kapffer on 17.08.12.
 //  Copyright (c) 2012 HTW Berlin. All rights reserved.
 //
 
+#include "CKObjectTrackerImpl.h"
 #include "CKObjectTracker.h"
 
-using namespace std;
-using namespace cv;
-
-CKObjectTracker::CKObjectTracker(bool inputIsStillImage)
+CKObjectTracker::CKObjectTracker()
 {
-    _inputIsStillImage = inputIsStillImage;
+    mImpl = new Impl();
 }
 
-void CKObjectTracker::setObject(const cv::Mat& objectImage)
+CKObjectTracker::~CKObjectTracker()
 {
-
+    delete mImpl;
 }
 
-bool CKObjectTracker::track(const cv::Mat& frame, CKTrackingResult& result, CKTrackingInfo& info)
-{
-    return false;
+void CKObjectTracker::setObject(const cv::Mat& objectImage) {
+    mImpl->setObject(objectImage);
+}
+
+void CKObjectTracker::trackObjectInVideo(const cv::Mat& frame, TrackerOutput& output, TrackerDebugInfo& debugInfo) {
+    mImpl->trackObjectInVideo(frame, output, debugInfo);
+}
+
+void CKObjectTracker::trackObjectInStillImage(const cv::Mat& image, std::vector<TrackerOutput>& output, std::vector<TrackerDebugInfo>& debugInfo) {
+    mImpl->trackObjectInStillImage(image, output, debugInfo);
 }

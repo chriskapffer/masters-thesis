@@ -35,8 +35,8 @@ int main(int argc, const char * argv[])
     
     CKObjectTracker tracker = CKObjectTracker();
 
-    CKTrackingInfo info;
-    CKTrackingResult result;
+    TrackerOutput output;
+    TrackerDebugInfo info;
     
     Mat frame;
     namedWindow("video");
@@ -47,7 +47,7 @@ int main(int argc, const char * argv[])
             endCapture = true;
         }
         
-        tracker.track(frame, result, info);
+        tracker.trackObjectInVideo(frame, output, info);
         
         imshow("video", frame);
         char key = (char)waitKey(30);
