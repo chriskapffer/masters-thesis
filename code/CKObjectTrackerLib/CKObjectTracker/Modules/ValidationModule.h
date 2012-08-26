@@ -20,6 +20,10 @@ private:
     cv::Ptr<cv::DescriptorExtractor> _extractor;
     cv::Ptr<cv::DescriptorMatcher> _matcher;
     
+    std::vector<cv::KeyPoint> _objectKeypoints;
+    cv::Mat _objectDescriptors;
+    cv::Mat _objectImage;
+    
 public:
     ValidationModule();
     ~ValidationModule();

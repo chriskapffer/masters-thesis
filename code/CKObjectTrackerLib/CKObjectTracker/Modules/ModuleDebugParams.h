@@ -9,14 +9,12 @@
 #ifndef CKObjectTrackerLib_ModuleDebugParams_h
 #define CKObjectTrackerLib_ModuleDebugParams_h
 
-#include "ModuleTypes.h"
-
 namespace ck {
 
     struct ModuleDebugParams {
         double totalProcessingTime;
-        std::vector<double> individualProcessingTimes;
-        ModuleType currentModuleType;
+        std::vector<double> subTaskProcessingTimes;
+        std::string currentModuleType;
     };
     
 } // end of namespace

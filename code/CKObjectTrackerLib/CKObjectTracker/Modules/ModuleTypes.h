@@ -9,6 +9,8 @@
 #ifndef CKObjectTrackerLib_ModuleTypes_h
 #define CKObjectTrackerLib_ModuleTypes_h
 
+#include "MapCreator.h"
+
 namespace ck {
     
     enum ModuleType {
@@ -17,6 +19,13 @@ namespace ck {
         MODULE_TYPE_TRACKING,
         MODULE_TYPE_EMPTY,
     };
+    
+    static const std::map<ModuleType, const char*> moduleTypeString = createMap<ModuleType, const char*>
+        (MODULE_TYPE_DETECTION, "DetectionModule")
+        (MODULE_TYPE_VALIDATION, "ValidationModule")
+        (MODULE_TYPE_TRACKING, "TrackingModule")
+        (MODULE_TYPE_EMPTY, "EmptyModule")
+    ;
     
 } // end of namespace
 

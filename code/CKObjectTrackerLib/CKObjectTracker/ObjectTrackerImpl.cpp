@@ -9,7 +9,7 @@
 #include "ObjectTrackerImpl.h"
 
 #if defined(__has_include) && __has_include(<future>) && __has_feature(cxx_lambdas)
-#define __NECESSARY_CPP11_FEATURES_PRESENT__
+#define __NECESSARY_CPP11_FEATURES_AVAILABLE__
 #include <future>
 #endif
 
@@ -27,6 +27,7 @@ namespace ck {
 ObjectTracker::Impl::Impl()
 {
     _allModules = ModuleCollection::create();
+    _moduleParams.successor = MODULE_TYPE_EMPTY;
     _currentModule = _allModules[MODULE_TYPE_EMPTY];
 }
 
@@ -41,18 +42,23 @@ ObjectTracker::Impl::~Impl()
 
 void ObjectTracker::Impl::initModules(const cv::Mat& objectImage)
 {
+    double startTime = (double)cv::getTickCount();
     std::map<ModuleType, AbstractModule*>::iterator it;
     for (it = _allModules.begin(); it != _allModules.end(); it++) {
         (*it).second->initWithObjectImage(objectImage);
     }
+    double elapsedTime = ((double)cv::getTickCount() - startTime) / cv::getTickFrequency() * 1000;
+    cout << "Initialization took " << elapsedTime << " ms." << endl;
+    _moduleParams.successor = MODULE_TYPE_DETECTION;
     _currentModule = _allModules[MODULE_TYPE_DETECTION];
 }
 
 void ObjectTracker::Impl::setObject(const Mat& objectImage)
 {
+    _moduleParams.successor = MODULE_TYPE_EMPTY;
     _currentModule = _allModules[MODULE_TYPE_EMPTY];
 
-#ifdef __NECESSARY_CPP11_FEATURES_PRESENT__
+#ifdef __NECESSARY_CPP11_FEATURES_AVAILABLE__
     // use C++11 features for concurrency
     auto function = [] (CKObjectTracker::Impl& tracker, const cv::Mat &objectImage) {
         tracker.initModules(objectImage);

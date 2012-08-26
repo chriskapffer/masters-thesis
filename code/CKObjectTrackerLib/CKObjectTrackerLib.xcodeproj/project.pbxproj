@@ -53,14 +53,16 @@
 		4CC655C415E9331D0035C072 /* ModuleManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655C215E9331D0035C072 /* ModuleManagement.h */; };
 		4CC655C915E93C9A0035C072 /* ModuleTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655C815E93C9A0035C072 /* ModuleTypes.h */; };
 		4CC655CA15E93C9A0035C072 /* ModuleTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655C815E93C9A0035C072 /* ModuleTypes.h */; };
-		4CC655CC15E93CAD0035C072 /* ModuleDebugParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655CB15E93CAD0035C072 /* ModuleDebugParams.h */; };
-		4CC655CD15E93CAD0035C072 /* ModuleDebugParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655CB15E93CAD0035C072 /* ModuleDebugParams.h */; };
+		4CC655CC15E93CAD0035C072 /* ModuleDebugParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655CB15E93CAD0035C072 /* ModuleDebugParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4CC655CD15E93CAD0035C072 /* ModuleDebugParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655CB15E93CAD0035C072 /* ModuleDebugParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4CC655CF15E93CCF0035C072 /* ModuleInOutParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655CE15E93CCF0035C072 /* ModuleInOutParams.h */; };
 		4CC655D015E93CCF0035C072 /* ModuleInOutParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655CE15E93CCF0035C072 /* ModuleInOutParams.h */; };
 		4CC655D215E9418E0035C072 /* EmptyModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655D115E9418E0035C072 /* EmptyModule.h */; };
 		4CC655D315E9418E0035C072 /* EmptyModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655D115E9418E0035C072 /* EmptyModule.h */; };
 		4CC655D515E9419E0035C072 /* EmptyModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CC655D415E9419D0035C072 /* EmptyModule.cpp */; };
 		4CC655D615E9419E0035C072 /* EmptyModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CC655D415E9419D0035C072 /* EmptyModule.cpp */; };
+		4CC8701015EA4DE900AD47BD /* MapCreator.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC8700F15EA4DE900AD47BD /* MapCreator.h */; };
+		4CC8701115EA4DE900AD47BD /* MapCreator.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC8700F15EA4DE900AD47BD /* MapCreator.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -95,6 +97,7 @@
 		4CC655CE15E93CCF0035C072 /* ModuleInOutParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModuleInOutParams.h; sourceTree = "<group>"; };
 		4CC655D115E9418E0035C072 /* EmptyModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmptyModule.h; sourceTree = "<group>"; };
 		4CC655D415E9419D0035C072 /* EmptyModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EmptyModule.cpp; sourceTree = "<group>"; };
+		4CC8700F15EA4DE900AD47BD /* MapCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapCreator.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -205,6 +208,7 @@
 				4C506C8815E51E2C0087865E /* Utils.cpp */,
 				4C506C8215E51E010087865E /* Profiler.h */,
 				4C506C8515E51E120087865E /* Profiler.cpp */,
+				4CC8700F15EA4DE900AD47BD /* MapCreator.h */,
 				4C506C7F15E51DF00087865E /* Singleton.h */,
 			);
 			path = Utils;
@@ -233,6 +237,7 @@
 				4CC655CC15E93CAD0035C072 /* ModuleDebugParams.h in Headers */,
 				4CC655CF15E93CCF0035C072 /* ModuleInOutParams.h in Headers */,
 				4CC655D215E9418E0035C072 /* EmptyModule.h in Headers */,
+				4CC8701015EA4DE900AD47BD /* MapCreator.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +261,7 @@
 				4CC655CD15E93CAD0035C072 /* ModuleDebugParams.h in Headers */,
 				4CC655D015E93CCF0035C072 /* ModuleInOutParams.h in Headers */,
 				4CC655D315E9418E0035C072 /* EmptyModule.h in Headers */,
+				4CC8701115EA4DE900AD47BD /* MapCreator.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

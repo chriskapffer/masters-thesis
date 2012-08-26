@@ -13,11 +13,12 @@ namespace ck {
 
 void AbstractModule::process(ModuleInOutParams& params, ModuleDebugParams& debugInfo)
 {
+    assert(params.successor == _moduleType);
     double startTime = (double)cv::getTickCount();
     params.isObjectPresent = false;
     params.successor = ModuleTransition::getSuccessor(_moduleType, internalProcess(params, debugInfo));
     debugInfo.totalProcessingTime = ((double)cv::getTickCount() - startTime) / cv::getTickFrequency() * 1000;
-    debugInfo.currentModuleType = _moduleType;
+    debugInfo.currentModuleType = (*moduleTypeString.find(_moduleType)).second;
 }
 
 } // end of namespace

@@ -48,9 +48,6 @@ void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
     ObjectTracker tracker = ObjectTracker();
     tracker.setObject(objectImage);
     
-    //namedWindow("objHist");
-    //imshow("objHist", tracker.getObjectHistogramAsImage());
-    
     TrackerOutput output;
     TrackerDebugInfo debugInfo;
     
@@ -64,21 +61,10 @@ void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
         }
 
         tracker.trackObjectInVideo(frame, output, debugInfo);
-//        for (int i = 0; i < output.points.size(); i++) {
-//            circle(frame, result.points[i], 2, Scalar(255, 0, 0), 2);
-//        }
-//        
-//        if (info.corners.size() > 0) {
-//            Scalar color = result.valid ? Scalar(0, 255, 0) : Scalar(0, 0, 255);
-//            line(frame, info.corners[0], info.corners[1], color, 2);
-//            line(frame, info.corners[1], info.corners[2], color, 2);
-//            line(frame, info.corners[2], info.corners[3], color, 2);
-//            line(frame, info.corners[3], info.corners[0], color, 2);
-//        }
-        cout << "This took " <<  debugInfo.moduleInfo.totalProcessingTime << "ms and results in " << 1000 / debugInfo.moduleInfo.totalProcessingTime << " FPS." << endl;
-        
-        
-        
+        cout << debugInfo.moduleInfo.currentModuleType << " ";
+        cout << "took " <<  debugInfo.moduleInfo.totalProcessingTime << " ms";
+        cout << " which results in " << 1000 / debugInfo.moduleInfo.totalProcessingTime << " FPS." << endl;
+    
         imshow("video", frame);
         if (waitKey(1000 / sceneVideo.get(CV_CAP_PROP_FPS)) >= 0) {
             cout << "User stopped playback." << endl;
