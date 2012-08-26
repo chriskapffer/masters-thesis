@@ -10,10 +10,11 @@
 #include <iostream>
 #include <mach-o/dyld.h>
 #include <opencv2/opencv.hpp>
-#include "CKObjectTracker.h"
+#include "ObjectTracker.h"
 
 using namespace std;
 using namespace cv;
+using namespace ck;
 
 bool isVideoFile(const string& file)
 {
@@ -44,7 +45,7 @@ string getFullpath(string file)
 
 void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
 {
-    CKObjectTracker tracker = CKObjectTracker();
+    ObjectTracker tracker = ObjectTracker();
     tracker.setObject(objectImage);
     
     //namedWindow("objHist");
@@ -97,7 +98,7 @@ void trackObjectInStillImage(const Mat& objectImage, const Mat& sceneImage)
     vector<TrackerOutput> output;
     vector<TrackerDebugInfo> debugInfo;
     
-    CKObjectTracker tracker = CKObjectTracker();
+    ObjectTracker tracker = ObjectTracker();
     tracker.setObject(objectImage);
     tracker.trackObjectInStillImage(objectImage, output, debugInfo);
     if (!output.at(output.size() - 1).isObjectPresent) {

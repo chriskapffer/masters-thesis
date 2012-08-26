@@ -9,11 +9,15 @@
 #ifndef CKObjectTrackerLib_ModuleTypes_h
 #define CKObjectTrackerLib_ModuleTypes_h
 
-enum ModuleType {
-    MODULE_TYPE_DETECTION,
-    MODULE_TYPE_VALIDATION,
-    MODULE_TYPE_TRACKING,
-    MODULE_TYPE_EMPTY,
-};
+namespace ck {
+    
+    enum ModuleType {
+        MODULE_TYPE_DETECTION,
+        MODULE_TYPE_VALIDATION,
+        MODULE_TYPE_TRACKING,
+        MODULE_TYPE_EMPTY,
+    };
+    
+} // end of namespace
 
 #endif

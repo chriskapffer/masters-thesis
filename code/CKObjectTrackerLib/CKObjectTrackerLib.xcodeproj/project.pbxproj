@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4C4E0D8C15DE368E002BE9A4 /* CKObjectTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C4E0D8A15DE368E002BE9A4 /* CKObjectTracker.cpp */; };
-		4C4E0D8D15DE368E002BE9A4 /* CKObjectTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C4E0D8A15DE368E002BE9A4 /* CKObjectTracker.cpp */; };
-		4C4E0D8E15DE368E002BE9A4 /* CKObjectTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C4E0D8B15DE368E002BE9A4 /* CKObjectTracker.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4C4E0D8F15DE368E002BE9A4 /* CKObjectTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C4E0D8B15DE368E002BE9A4 /* CKObjectTracker.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C4E0D8C15DE368E002BE9A4 /* ObjectTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C4E0D8A15DE368E002BE9A4 /* ObjectTracker.cpp */; };
+		4C4E0D8D15DE368E002BE9A4 /* ObjectTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C4E0D8A15DE368E002BE9A4 /* ObjectTracker.cpp */; };
+		4C4E0D8E15DE368E002BE9A4 /* ObjectTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C4E0D8B15DE368E002BE9A4 /* ObjectTracker.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C4E0D8F15DE368E002BE9A4 /* ObjectTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C4E0D8B15DE368E002BE9A4 /* ObjectTracker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C4E0DDE15DE3E94002BE9A4 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0DDD15DE3E94002BE9A4 /* opencv2.framework */; };
 		4C4E0DE015DE3EC5002BE9A4 /* libdispatch.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0DDF15DE3EC5002BE9A4 /* libdispatch.dylib */; };
 		4C506C3615E4FB8C0087865E /* DetectionModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C506C3415E4FB8C0087865E /* DetectionModule.h */; };
@@ -35,20 +35,20 @@
 		4C506C8715E51E120087865E /* Profiler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C506C8515E51E120087865E /* Profiler.cpp */; };
 		4C506C8915E51E2C0087865E /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C506C8815E51E2C0087865E /* Utils.cpp */; };
 		4C506C8A15E51E2C0087865E /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C506C8815E51E2C0087865E /* Utils.cpp */; };
-		4CBB24A715E7D074005867C4 /* CKObjectTrackerDebugger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CBB24A615E7D074005867C4 /* CKObjectTrackerDebugger.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4CBB24A815E7D074005867C4 /* CKObjectTrackerDebugger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CBB24A615E7D074005867C4 /* CKObjectTrackerDebugger.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4CBB24AA15E7D092005867C4 /* CKObjectTrackerDebugger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CBB24A915E7D092005867C4 /* CKObjectTrackerDebugger.cpp */; };
-		4CBB24AB15E7D092005867C4 /* CKObjectTrackerDebugger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CBB24A915E7D092005867C4 /* CKObjectTrackerDebugger.cpp */; };
+		4CBB24A715E7D074005867C4 /* ObjectTrackerDebugger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CBB24A615E7D074005867C4 /* ObjectTrackerDebugger.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4CBB24A815E7D074005867C4 /* ObjectTrackerDebugger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CBB24A615E7D074005867C4 /* ObjectTrackerDebugger.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4CBB24AA15E7D092005867C4 /* ObjectTrackerDebugger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CBB24A915E7D092005867C4 /* ObjectTrackerDebugger.cpp */; };
+		4CBB24AB15E7D092005867C4 /* ObjectTrackerDebugger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CBB24A915E7D092005867C4 /* ObjectTrackerDebugger.cpp */; };
 		4CBB24B015E80914005867C4 /* AbstractModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CBB24AF15E80914005867C4 /* AbstractModule.h */; };
 		4CBB24B115E80914005867C4 /* AbstractModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CBB24AF15E80914005867C4 /* AbstractModule.h */; };
 		4CBB24B615E811E1005867C4 /* AbstractModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CBB24B515E811E1005867C4 /* AbstractModule.cpp */; };
 		4CBB24B715E811E1005867C4 /* AbstractModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CBB24B515E811E1005867C4 /* AbstractModule.cpp */; };
-		4CC655B615E8C3010035C072 /* CKObjectTrackerImpl.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655B515E8C3010035C072 /* CKObjectTrackerImpl.h */; };
-		4CC655B715E8C3010035C072 /* CKObjectTrackerImpl.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655B515E8C3010035C072 /* CKObjectTrackerImpl.h */; };
-		4CC655BA15E8C3DD0035C072 /* CKObjectTrackerImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CC655B915E8C3DD0035C072 /* CKObjectTrackerImpl.cpp */; };
-		4CC655BB15E8C3DD0035C072 /* CKObjectTrackerImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CC655B915E8C3DD0035C072 /* CKObjectTrackerImpl.cpp */; };
-		4CC655BD15E8D2C20035C072 /* CKObjectTrackerTypeDefinitions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655BC15E8D2C20035C072 /* CKObjectTrackerTypeDefinitions.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4CC655BE15E8D2C20035C072 /* CKObjectTrackerTypeDefinitions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655BC15E8D2C20035C072 /* CKObjectTrackerTypeDefinitions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4CC655B615E8C3010035C072 /* ObjectTrackerImpl.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655B515E8C3010035C072 /* ObjectTrackerImpl.h */; };
+		4CC655B715E8C3010035C072 /* ObjectTrackerImpl.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655B515E8C3010035C072 /* ObjectTrackerImpl.h */; };
+		4CC655BA15E8C3DD0035C072 /* ObjectTrackerImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CC655B915E8C3DD0035C072 /* ObjectTrackerImpl.cpp */; };
+		4CC655BB15E8C3DD0035C072 /* ObjectTrackerImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CC655B915E8C3DD0035C072 /* ObjectTrackerImpl.cpp */; };
+		4CC655BD15E8D2C20035C072 /* ObjectTrackerTypeDefinitions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655BC15E8D2C20035C072 /* ObjectTrackerTypeDefinitions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4CC655BE15E8D2C20035C072 /* ObjectTrackerTypeDefinitions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655BC15E8D2C20035C072 /* ObjectTrackerTypeDefinitions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4CC655C315E9331D0035C072 /* ModuleManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655C215E9331D0035C072 /* ModuleManagement.h */; };
 		4CC655C415E9331D0035C072 /* ModuleManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655C215E9331D0035C072 /* ModuleManagement.h */; };
 		4CC655C915E93C9A0035C072 /* ModuleTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655C815E93C9A0035C072 /* ModuleTypes.h */; };
@@ -67,8 +67,8 @@
 		4C4E0D7715DE352D002BE9A4 /* libCKObjectTrackerMac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCKObjectTrackerMac.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C4E0D7F15DE35E1002BE9A4 /* libCKObjectTrackerPhone.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCKObjectTrackerPhone.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C4E0D8315DE35E1002BE9A4 /* CKObjectTracker-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CKObjectTracker-Prefix.pch"; sourceTree = "<group>"; };
-		4C4E0D8A15DE368E002BE9A4 /* CKObjectTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CKObjectTracker.cpp; sourceTree = "<group>"; };
-		4C4E0D8B15DE368E002BE9A4 /* CKObjectTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKObjectTracker.h; sourceTree = "<group>"; };
+		4C4E0D8A15DE368E002BE9A4 /* ObjectTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ObjectTracker.cpp; sourceTree = "<group>"; };
+		4C4E0D8B15DE368E002BE9A4 /* ObjectTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectTracker.h; sourceTree = "<group>"; };
 		4C4E0DDD15DE3E94002BE9A4 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = ../opencv2.framework; sourceTree = "<group>"; };
 		4C4E0DDF15DE3EC5002BE9A4 /* libdispatch.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libdispatch.dylib; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/usr/lib/system/libdispatch.dylib; sourceTree = DEVELOPER_DIR; };
 		4C506C3415E4FB8C0087865E /* DetectionModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetectionModule.h; sourceTree = "<group>"; };
@@ -82,13 +82,13 @@
 		4C506C8215E51E010087865E /* Profiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Profiler.h; sourceTree = "<group>"; };
 		4C506C8515E51E120087865E /* Profiler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Profiler.cpp; sourceTree = "<group>"; };
 		4C506C8815E51E2C0087865E /* Utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Utils.cpp; sourceTree = "<group>"; };
-		4CBB24A615E7D074005867C4 /* CKObjectTrackerDebugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKObjectTrackerDebugger.h; sourceTree = "<group>"; };
-		4CBB24A915E7D092005867C4 /* CKObjectTrackerDebugger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CKObjectTrackerDebugger.cpp; sourceTree = "<group>"; };
+		4CBB24A615E7D074005867C4 /* ObjectTrackerDebugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectTrackerDebugger.h; sourceTree = "<group>"; };
+		4CBB24A915E7D092005867C4 /* ObjectTrackerDebugger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ObjectTrackerDebugger.cpp; sourceTree = "<group>"; };
 		4CBB24AF15E80914005867C4 /* AbstractModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbstractModule.h; sourceTree = "<group>"; };
 		4CBB24B515E811E1005867C4 /* AbstractModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AbstractModule.cpp; sourceTree = "<group>"; };
-		4CC655B515E8C3010035C072 /* CKObjectTrackerImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKObjectTrackerImpl.h; sourceTree = "<group>"; };
-		4CC655B915E8C3DD0035C072 /* CKObjectTrackerImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CKObjectTrackerImpl.cpp; sourceTree = "<group>"; };
-		4CC655BC15E8D2C20035C072 /* CKObjectTrackerTypeDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKObjectTrackerTypeDefinitions.h; sourceTree = "<group>"; };
+		4CC655B515E8C3010035C072 /* ObjectTrackerImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectTrackerImpl.h; sourceTree = "<group>"; };
+		4CC655B915E8C3DD0035C072 /* ObjectTrackerImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ObjectTrackerImpl.cpp; sourceTree = "<group>"; };
+		4CC655BC15E8D2C20035C072 /* ObjectTrackerTypeDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectTrackerTypeDefinitions.h; sourceTree = "<group>"; };
 		4CC655C215E9331D0035C072 /* ModuleManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModuleManagement.h; sourceTree = "<group>"; };
 		4CC655C815E93C9A0035C072 /* ModuleTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModuleTypes.h; sourceTree = "<group>"; };
 		4CC655CB15E93CAD0035C072 /* ModuleDebugParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModuleDebugParams.h; sourceTree = "<group>"; };
@@ -147,13 +147,13 @@
 		4C4E0D8115DE35E1002BE9A4 /* CKObjectTracker */ = {
 			isa = PBXGroup;
 			children = (
-				4C4E0D8B15DE368E002BE9A4 /* CKObjectTracker.h */,
-				4C4E0D8A15DE368E002BE9A4 /* CKObjectTracker.cpp */,
-				4CC655B515E8C3010035C072 /* CKObjectTrackerImpl.h */,
-				4CC655B915E8C3DD0035C072 /* CKObjectTrackerImpl.cpp */,
-				4CBB24A615E7D074005867C4 /* CKObjectTrackerDebugger.h */,
-				4CBB24A915E7D092005867C4 /* CKObjectTrackerDebugger.cpp */,
-				4CC655BC15E8D2C20035C072 /* CKObjectTrackerTypeDefinitions.h */,
+				4C4E0D8B15DE368E002BE9A4 /* ObjectTracker.h */,
+				4C4E0D8A15DE368E002BE9A4 /* ObjectTracker.cpp */,
+				4CC655B515E8C3010035C072 /* ObjectTrackerImpl.h */,
+				4CC655B915E8C3DD0035C072 /* ObjectTrackerImpl.cpp */,
+				4CBB24A615E7D074005867C4 /* ObjectTrackerDebugger.h */,
+				4CBB24A915E7D092005867C4 /* ObjectTrackerDebugger.cpp */,
+				4CC655BC15E8D2C20035C072 /* ObjectTrackerTypeDefinitions.h */,
 				4C506C3315E4FB8C0087865E /* Modules */,
 				4C506C3215E4FB8C0087865E /* Algorithms */,
 				4C506C7B15E51BE20087865E /* Utils */,
@@ -217,17 +217,17 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C4E0D8E15DE368E002BE9A4 /* CKObjectTracker.h in Headers */,
+				4C4E0D8E15DE368E002BE9A4 /* ObjectTracker.h in Headers */,
 				4C506C3615E4FB8C0087865E /* DetectionModule.h in Headers */,
 				4C506C3815E4FB8C0087865E /* ValidationModule.h in Headers */,
 				4C506C3B15E4FBBB0087865E /* TrackingModule.h in Headers */,
 				4C506C7D15E51DD80087865E /* Utils.h in Headers */,
 				4C506C8015E51DF00087865E /* Singleton.h in Headers */,
 				4C506C8315E51E010087865E /* Profiler.h in Headers */,
-				4CBB24A715E7D074005867C4 /* CKObjectTrackerDebugger.h in Headers */,
+				4CBB24A715E7D074005867C4 /* ObjectTrackerDebugger.h in Headers */,
 				4CBB24B015E80914005867C4 /* AbstractModule.h in Headers */,
-				4CC655B615E8C3010035C072 /* CKObjectTrackerImpl.h in Headers */,
-				4CC655BD15E8D2C20035C072 /* CKObjectTrackerTypeDefinitions.h in Headers */,
+				4CC655B615E8C3010035C072 /* ObjectTrackerImpl.h in Headers */,
+				4CC655BD15E8D2C20035C072 /* ObjectTrackerTypeDefinitions.h in Headers */,
 				4CC655C315E9331D0035C072 /* ModuleManagement.h in Headers */,
 				4CC655C915E93C9A0035C072 /* ModuleTypes.h in Headers */,
 				4CC655CC15E93CAD0035C072 /* ModuleDebugParams.h in Headers */,
@@ -240,17 +240,17 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C4E0D8F15DE368E002BE9A4 /* CKObjectTracker.h in Headers */,
+				4C4E0D8F15DE368E002BE9A4 /* ObjectTracker.h in Headers */,
 				4C506C3715E4FB8C0087865E /* DetectionModule.h in Headers */,
 				4C506C3915E4FB8C0087865E /* ValidationModule.h in Headers */,
 				4C506C3C15E4FBBB0087865E /* TrackingModule.h in Headers */,
 				4C506C7E15E51DD80087865E /* Utils.h in Headers */,
 				4C506C8115E51DF00087865E /* Singleton.h in Headers */,
 				4C506C8415E51E010087865E /* Profiler.h in Headers */,
-				4CBB24A815E7D074005867C4 /* CKObjectTrackerDebugger.h in Headers */,
+				4CBB24A815E7D074005867C4 /* ObjectTrackerDebugger.h in Headers */,
 				4CBB24B115E80914005867C4 /* AbstractModule.h in Headers */,
-				4CC655B715E8C3010035C072 /* CKObjectTrackerImpl.h in Headers */,
-				4CC655BE15E8D2C20035C072 /* CKObjectTrackerTypeDefinitions.h in Headers */,
+				4CC655B715E8C3010035C072 /* ObjectTrackerImpl.h in Headers */,
+				4CC655BE15E8D2C20035C072 /* ObjectTrackerTypeDefinitions.h in Headers */,
 				4CC655C415E9331D0035C072 /* ModuleManagement.h in Headers */,
 				4CC655CA15E93C9A0035C072 /* ModuleTypes.h in Headers */,
 				4CC655CD15E93CAD0035C072 /* ModuleDebugParams.h in Headers */,
@@ -328,15 +328,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C4E0D8C15DE368E002BE9A4 /* CKObjectTracker.cpp in Sources */,
+				4C4E0D8C15DE368E002BE9A4 /* ObjectTracker.cpp in Sources */,
 				4C506C3E15E4FC430087865E /* DetectionModule.cpp in Sources */,
 				4C506C4115E4FC5D0087865E /* TrackingModule.cpp in Sources */,
 				4C506C4415E4FC6D0087865E /* ValidationModule.cpp in Sources */,
 				4C506C8615E51E120087865E /* Profiler.cpp in Sources */,
 				4C506C8915E51E2C0087865E /* Utils.cpp in Sources */,
-				4CBB24AA15E7D092005867C4 /* CKObjectTrackerDebugger.cpp in Sources */,
+				4CBB24AA15E7D092005867C4 /* ObjectTrackerDebugger.cpp in Sources */,
 				4CBB24B615E811E1005867C4 /* AbstractModule.cpp in Sources */,
-				4CC655BA15E8C3DD0035C072 /* CKObjectTrackerImpl.cpp in Sources */,
+				4CC655BA15E8C3DD0035C072 /* ObjectTrackerImpl.cpp in Sources */,
 				4CC655D515E9419E0035C072 /* EmptyModule.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -345,15 +345,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C4E0D8D15DE368E002BE9A4 /* CKObjectTracker.cpp in Sources */,
+				4C4E0D8D15DE368E002BE9A4 /* ObjectTracker.cpp in Sources */,
 				4C506C3F15E4FC430087865E /* DetectionModule.cpp in Sources */,
 				4C506C4215E4FC5D0087865E /* TrackingModule.cpp in Sources */,
 				4C506C4515E4FC6D0087865E /* ValidationModule.cpp in Sources */,
 				4C506C8715E51E120087865E /* Profiler.cpp in Sources */,
 				4C506C8A15E51E2C0087865E /* Utils.cpp in Sources */,
-				4CBB24AB15E7D092005867C4 /* CKObjectTrackerDebugger.cpp in Sources */,
+				4CBB24AB15E7D092005867C4 /* ObjectTrackerDebugger.cpp in Sources */,
 				4CBB24B715E811E1005867C4 /* AbstractModule.cpp in Sources */,
-				4CC655BB15E8C3DD0035C072 /* CKObjectTrackerImpl.cpp in Sources */,
+				4CC655BB15E8C3DD0035C072 /* ObjectTrackerImpl.cpp in Sources */,
 				4CC655D615E9419E0035C072 /* EmptyModule.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

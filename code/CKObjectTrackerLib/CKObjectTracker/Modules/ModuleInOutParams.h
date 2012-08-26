@@ -11,6 +11,8 @@
 
 #include "ModuleTypes.h"
 
+namespace ck {
+
 struct ModuleInOutParams {
     ModuleType successor;
     cv::Mat sceneImage;
@@ -19,5 +21,7 @@ struct ModuleInOutParams {
     
     ModuleInOutParams() : successor(MODULE_TYPE_EMPTY), homography(cv::Mat()) {};
 };
+    
+} // end of namespace
 
 #endif

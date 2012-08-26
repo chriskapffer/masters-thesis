@@ -1,12 +1,12 @@
 //
-//  CKObjectTrackerImpl.cpp
+//  ObjectTrackerImpl.cpp
 //  CKObjectTrackerLib
 //
 //  Created by Christoph Kapffer on 25.08.12.
 //  Copyright (c) 2012 HTW Berlin. All rights reserved.
 //
 
-#include "CKObjectTrackerImpl.h"
+#include "ObjectTrackerImpl.h"
 
 #if defined(__has_include) && __has_include(<future>) && __has_feature(cxx_lambdas)
 #define __NECESSARY_CPP11_FEATURES_PRESENT__
@@ -22,13 +22,15 @@
 using namespace std;
 using namespace cv;
 
-CKObjectTracker::Impl::Impl()
+namespace ck {
+
+ObjectTracker::Impl::Impl()
 {
     _allModules = ModuleCollection::create();
     _currentModule = _allModules[MODULE_TYPE_EMPTY];
 }
 
-CKObjectTracker::Impl::~Impl()
+ObjectTracker::Impl::~Impl()
 {
     std::map<ModuleType, AbstractModule*>::iterator it;
     for (it = _allModules.begin(); it != _allModules.end(); it++) {
@@ -37,7 +39,7 @@ CKObjectTracker::Impl::~Impl()
     _allModules.clear();
 }
 
-void CKObjectTracker::Impl::initModules(const cv::Mat& objectImage)
+void ObjectTracker::Impl::initModules(const cv::Mat& objectImage)
 {
     std::map<ModuleType, AbstractModule*>::iterator it;
     for (it = _allModules.begin(); it != _allModules.end(); it++) {
@@ -46,7 +48,7 @@ void CKObjectTracker::Impl::initModules(const cv::Mat& objectImage)
     _currentModule = _allModules[MODULE_TYPE_DETECTION];
 }
 
-void CKObjectTracker::Impl::setObject(const Mat& objectImage)
+void ObjectTracker::Impl::setObject(const Mat& objectImage)
 {
     _currentModule = _allModules[MODULE_TYPE_EMPTY];
 
@@ -77,7 +79,7 @@ void CKObjectTracker::Impl::setObject(const Mat& objectImage)
 #endif
 }
 
-void CKObjectTracker::Impl::trackObjectInStillImage(const Mat& image, vector<TrackerOutput>& output, vector<TrackerDebugInfo>& debugInfo)
+void ObjectTracker::Impl::trackObjectInStillImage(const Mat& image, vector<TrackerOutput>& output, vector<TrackerDebugInfo>& debugInfo)
 {
     TrackerOutput outputItem;
     TrackerDebugInfo debugInfoItem;
@@ -88,12 +90,12 @@ void CKObjectTracker::Impl::trackObjectInStillImage(const Mat& image, vector<Tra
     }
 }
 
-void CKObjectTracker::Impl::trackObjectInVideo(const Mat& frame, TrackerOutput& output, TrackerDebugInfo& debugInfo)
+void ObjectTracker::Impl::trackObjectInVideo(const Mat& frame, TrackerOutput& output, TrackerDebugInfo& debugInfo)
 {
     track(frame, output, debugInfo, true);
 }
 
-void CKObjectTracker::Impl::track(const Mat& frame, TrackerOutput& output, TrackerDebugInfo& debugInfo, bool trackInSequence)
+void ObjectTracker::Impl::track(const Mat& frame, TrackerOutput& output, TrackerDebugInfo& debugInfo, bool trackInSequence)
 {
     debugInfo.sceneImage = frame;
     _moduleParams.sceneImage = frame;
@@ -105,3 +107,5 @@ void CKObjectTracker::Impl::track(const Mat& frame, TrackerOutput& output, Track
     output.isObjectPresent = _moduleParams.isObjectPresent;
     output.failed = _currentModule->getType() == MODULE_TYPE_EMPTY;
 }
+
+} // end of namespace

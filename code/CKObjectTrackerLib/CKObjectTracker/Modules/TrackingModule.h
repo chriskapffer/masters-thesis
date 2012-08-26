@@ -11,6 +11,8 @@
 
 #include "AbstractModule.h"
 
+namespace ck {
+
 class TrackingModule : public AbstractModule {
 
 private:
@@ -23,4 +25,6 @@ public:
     
 };
 
+} // end of namespace
+    
 #endif

@@ -13,6 +13,8 @@
 #include "ModuleInOutParams.h"
 #include "ModuleDebugParams.h"
 
+namespace ck {
+    
 class AbstractModule {
     
 public:
@@ -29,4 +31,6 @@ private:
     ModuleType _moduleType;
 };
 
+} // end of namespace
+    
 #endif

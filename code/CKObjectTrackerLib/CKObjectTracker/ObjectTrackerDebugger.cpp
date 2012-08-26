@@ -1,22 +1,26 @@
 //
-//  CKObjectTrackerDebugger.cpp
+//  ObjectTrackerDebugger.cpp
 //  CKObjectTrackerLib
 //
 //  Created by Christoph Kapffer on 24.08.12.
 //  Copyright (c) 2012 HTW Berlin. All rights reserved.
 //
 
-#include "CKObjectTrackerDebugger.h"
+#include "ObjectTrackerDebugger.h"
 
 using namespace std;
 using namespace cv;
 
-std::string CKObjectTrackerDebugger::debugString(TrackerDebugInfo info)
+namespace ck {
+
+string ObjectTrackerDebugger::debugString(TrackerDebugInfo info)
 {
     return string();
 }
 
-std::vector<cv::Mat> CKObjectTrackerDebugger::debugImages(TrackerDebugInfo info)
+vector<Mat> ObjectTrackerDebugger::debugImages(TrackerDebugInfo info)
 {
     return vector<Mat>();
 }
+
+} // end of namespace

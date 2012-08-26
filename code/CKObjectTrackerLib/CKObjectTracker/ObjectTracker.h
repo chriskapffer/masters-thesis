@@ -1,24 +1,26 @@
 //
-//  CKObjectTracker.h
+//  ObjectTracker.h
 //  CKObjectTrackerLib
 //
 //  Created by Christoph Kapffer on 17.08.12.
 //  Copyright (c) 2012 HTW Berlin. All rights reserved.
 //
 
-#ifndef CKObjectTracker_CKObjectTracker_h
-#define CKObjectTracker_CKObjectTracker_h
+#ifndef CKObjectTracker_ObjectTracker_h
+#define CKObjectTracker_ObjectTracker_h
 
 // http://opencv-users.1802565.n2.nabble.com/BRISK-td7452653.html <-- TODO read
 // TODO create a namespace
 
-#include "CKObjectTrackerTypeDefinitions.h"
+#include "ObjectTrackerTypeDefinitions.h"
 
-class CKObjectTracker {
+namespace ck {
+
+class ObjectTracker {
 
 public:
-    CKObjectTracker();
-    ~CKObjectTracker();
+    ObjectTracker();
+    ~ObjectTracker();
     
     void setObject(const cv::Mat& objectImage);
     void trackObjectInVideo(const cv::Mat& frame, TrackerOutput& output, TrackerDebugInfo& debugInfo);
@@ -28,5 +30,7 @@ private:
     class Impl;
     Impl* mImpl;
 };
+
+} // end of namespace
 
 #endif

@@ -11,6 +11,8 @@
 
 #include "AbstractModule.h"
 
+namespace ck {
+
 class ValidationModule : public AbstractModule {
 
 private:
@@ -25,5 +27,7 @@ public:
     bool internalProcess(ModuleInOutParams& params, ModuleDebugParams& debugInfo);
 
 };
+    
+} // end of namespace
 
 #endif

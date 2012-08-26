@@ -13,6 +13,8 @@
 #define BGRA2GRAY_NEON     1
 #define BGRA2GRAY_NEON_ASM 2
 
+namespace ck {
+
 class Utils
 {
     
@@ -77,4 +79,6 @@ public:
     static static cv::Mat bgra2Gray(cv::Mat imgIn, int method);
 };
 
+} // end of namespace
+    
 #endif

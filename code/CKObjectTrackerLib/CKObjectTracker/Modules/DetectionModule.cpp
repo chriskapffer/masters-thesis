@@ -11,6 +11,8 @@
 using namespace std;
 using namespace cv;
 
+namespace ck {
+
 DetectionModule::DetectionModule() : AbstractModule(MODULE_TYPE_DETECTION)
 {
 
@@ -31,6 +33,8 @@ bool DetectionModule::internalProcess(ModuleInOutParams& params, ModuleDebugPara
     return true;
 }
 
+} // end of namespaces
+    
 // preprocess, erode, delate, blur, reduce colors
 
 // moments, histogram comparison, backprojection, mser, blob, chamfer

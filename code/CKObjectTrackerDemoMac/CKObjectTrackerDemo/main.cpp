@@ -8,10 +8,11 @@
 
 #include <iostream>
 #include <opencv2/opencv.hpp>
-#include "CKObjectTracker.h"
+#include "ObjectTracker.h"
 
 using namespace std;
 using namespace cv;
+using namespace ck;
 
 int main(int argc, const char * argv[])
 {
@@ -33,7 +34,7 @@ int main(int argc, const char * argv[])
         return -1;
     }
     
-    CKObjectTracker tracker = CKObjectTracker();
+    ObjectTracker tracker = ObjectTracker();
 
     TrackerOutput output;
     TrackerDebugInfo info;

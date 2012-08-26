@@ -8,9 +8,10 @@
 
 #include "Utils.h"
 
-
 using namespace cv;
 using namespace std;
+
+namespace ck {
 
 vector<MatND> Utils::calcHistograms(const Mat& image, int numOfBins)
 {
@@ -350,3 +351,5 @@ static void neon_asm_convert(uint8_t * __restrict dest, uint8_t * __restrict src
 }
 
 #endif
+
+} // end of namespace

@@ -11,10 +11,14 @@
 
 #include "ModuleTypes.h"
 
-struct ModuleDebugParams {
-    double totalProcessingTime;
-    std::vector<double> individualProcessingTimes;
-    ModuleType currentModuleType;
-};
+namespace ck {
+
+    struct ModuleDebugParams {
+        double totalProcessingTime;
+        std::vector<double> individualProcessingTimes;
+        ModuleType currentModuleType;
+    };
+    
+} // end of namespace
 
 #endif

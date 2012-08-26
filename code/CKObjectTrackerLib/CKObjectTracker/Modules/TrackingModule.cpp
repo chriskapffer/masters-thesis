@@ -13,6 +13,8 @@
 using namespace std;
 using namespace cv;
 
+namespace ck {
+
 TrackingModule::TrackingModule() : AbstractModule(MODULE_TYPE_TRACKING)
 {
     
@@ -33,6 +35,8 @@ bool TrackingModule::internalProcess(ModuleInOutParams& params, ModuleDebugParam
     return true;
 }
 
+} // end of namespace
+    
 //bool TrackingModule::track(const Mat& frame, const CKObjectData& objData, CKTrackingResult& previous, CKTrackingResult& current, CKTrackingInfo& info)
 //{
 //    vector<float> error;

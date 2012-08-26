@@ -10,6 +10,8 @@
 
 using namespace std;
 
+namespace ck {
+
 DEFINE_SINGLETON(Profiler)
 
 Profiler::Profiler()
@@ -108,3 +110,5 @@ double Profiler::Timer::elapsedTotal() const
     }
     return result;
 }
+    
+} // end of namespace

@@ -1,13 +1,13 @@
 //
-//  ModuleTransitionTable.h
+//  ModuleManagement.h
 //  CKObjectTrackerLib
 //
 //  Created by Christoph Kapffer on 25.08.12.
 //  Copyright (c) 2012 HTW Berlin. All rights reserved.
 //
 
-#ifndef CKObjectTrackerLib_ModuleTransitionTable_h
-#define CKObjectTrackerLib_ModuleTransitionTable_h
+#ifndef CKObjectTrackerLib_ModuleManagement_h
+#define CKObjectTrackerLib_ModuleManagement_h
 
 #include "ModuleTypes.h"
 #include "AbstractModule.h"
@@ -15,6 +15,8 @@
 #include "validationModule.h"
 #include "TrackingModule.h"
 #include "EmptyModule.h"
+
+namespace ck {
 
 struct ModuleCollection {
     inline static std::map<ModuleType, AbstractModule*> create() {
@@ -47,6 +49,8 @@ public:
         return didSucceed ? transitionTable[moduleType].first : transitionTable[moduleType].second;
     }
 };
+    
+} // end of namespace
 
 #endif
 

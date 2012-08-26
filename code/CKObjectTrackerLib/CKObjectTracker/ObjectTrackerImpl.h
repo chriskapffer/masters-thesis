@@ -1,19 +1,20 @@
 //
-//  CKObjectTrackerImpl.h
+//  ObjectTrackerImpl.h
 //  CKObjectTrackerLib
 //
 //  Created by Christoph Kapffer on 25.08.12.
 //  Copyright (c) 2012 HTW Berlin. All rights reserved.
 //
 
-#ifndef CKObjectTrackerLib_CKObjectTrackerImpl_h
-#define CKObjectTrackerLib_CKObjectTrackerImpl_h
+#ifndef CKObjectTrackerLib_ObjectTrackerImpl_h
+#define CKObjectTrackerLib_ObjectTrackerImpl_h
 
-#include "CKObjectTracker.h"
-
+#include "ObjectTracker.h"
 #include "AbstractModule.h"
 
-class CKObjectTracker::Impl {
+namespace ck {
+    
+class ObjectTracker::Impl {
 
 private:
     ModuleInOutParams _moduleParams;
@@ -33,4 +34,6 @@ public:
     void trackObjectInStillImage(const cv::Mat& image, std::vector<TrackerOutput>& output, std::vector<TrackerDebugInfo>& debugInfo);
 };
 
+} // end of namespace
+    
 #endif

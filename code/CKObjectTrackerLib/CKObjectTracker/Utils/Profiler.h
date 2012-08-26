@@ -11,6 +11,8 @@
 
 #include "Singleton.h"
 
+namespace ck {
+
 class Profiler {
 
 DECLARE_SINGLETON(Profiler)
@@ -45,4 +47,6 @@ private:
     bool _enabled;
 };
 
+} // end of namespace
+    
 #endif

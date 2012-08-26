@@ -11,6 +11,8 @@
 
 #include "AbstractModule.h"
 
+namespace ck {
+
 class DetectionModule : public AbstractModule {
     
 private:
@@ -24,4 +26,6 @@ public:
     
 };
 
+} // end of namespace
+    
 #endif

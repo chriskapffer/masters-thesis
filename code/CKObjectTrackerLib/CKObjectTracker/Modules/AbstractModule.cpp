@@ -9,6 +9,8 @@
 #include "AbstractModule.h"
 #include "ModuleManagement.h"
 
+namespace ck {
+
 void AbstractModule::process(ModuleInOutParams& params, ModuleDebugParams& debugInfo)
 {
     double startTime = (double)cv::getTickCount();
@@ -17,3 +19,5 @@ void AbstractModule::process(ModuleInOutParams& params, ModuleDebugParams& debug
     debugInfo.totalProcessingTime = ((double)cv::getTickCount() - startTime) / cv::getTickFrequency() * 1000;
     debugInfo.currentModuleType = _moduleType;
 }
+
+} // end of namespace

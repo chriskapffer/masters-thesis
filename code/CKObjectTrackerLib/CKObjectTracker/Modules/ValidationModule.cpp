@@ -13,6 +13,8 @@
 using namespace std;
 using namespace cv;
 
+namespace ck {
+
 ValidationModule::ValidationModule() : AbstractModule(MODULE_TYPE_VALIDATION)
 {
     Ptr<Feature2D> orb = new ORB();
@@ -36,6 +38,8 @@ bool ValidationModule::internalProcess(ModuleInOutParams& params, ModuleDebugPar
     return true;
 }
 
+} // end of namespace
+    
 //bool ValidationModule::validate(const Mat& frame, const CKObjectData& objData, CKTrackingResult& previous, CKTrackingResult& current, CKTrackingInfo& info)
 //{
 //    Profiler* profiler = Profiler::Instance();

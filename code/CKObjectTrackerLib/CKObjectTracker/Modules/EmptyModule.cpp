@@ -8,6 +8,8 @@
 
 #include "EmptyModule.h"
 
+namespace ck {
+
 EmptyModule::EmptyModule() : AbstractModule(MODULE_TYPE_EMPTY)
 {
     
@@ -27,3 +29,5 @@ bool EmptyModule::internalProcess(ModuleInOutParams& params, ModuleDebugParams& 
 {
     return false;
 }
+
+} // end of namespace
