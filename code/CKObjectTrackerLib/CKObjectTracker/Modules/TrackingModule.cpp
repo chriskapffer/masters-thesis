@@ -30,7 +30,7 @@ void TrackingModule::initWithObjectImage(const cv::Mat &objectImage)
     
 }
 
-bool TrackingModule::internalProcess(ModuleInOutParams& params, ModuleDebugParams& debugInfo)
+bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& debugInfo)
 {
     return true;
 }

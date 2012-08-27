@@ -61,9 +61,9 @@ void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
         }
 
         tracker.trackObjectInVideo(frame, output, debugInfo);
-        cout << debugInfo.moduleInfo.currentModuleType << " ";
-        cout << "took " <<  debugInfo.moduleInfo.totalProcessingTime << " ms";
-        cout << " which results in " << 1000 / debugInfo.moduleInfo.totalProcessingTime << " FPS." << endl;
+        cout << debugInfo.currentModuleType << " ";
+        cout << "took " <<  debugInfo.totalProcessingTime << " ms";
+        cout << " which results in " << 1000 / debugInfo.totalProcessingTime << " FPS." << endl;
     
         imshow("video", frame);
         if (waitKey(1000 / sceneVideo.get(CV_CAP_PROP_FPS)) >= 0) {

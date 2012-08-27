@@ -10,8 +10,8 @@
 #define CKObjectTrackerLib_AbstractModule_h
 
 #include "ModuleTypes.h"
-#include "ModuleInOutParams.h"
-#include "ModuleDebugParams.h"
+#include "ModuleParams.h"
+#include "ObjectTrackerTypeDefinitions.h"
 
 namespace ck {
     
@@ -20,12 +20,12 @@ class AbstractModule {
 public:
     virtual ~AbstractModule() { };
     virtual void initWithObjectImage(const cv::Mat& objectImage) = 0;
-    void process(ModuleInOutParams& params, ModuleDebugParams& debugInfo);
+    void process(ModuleParams& params, TrackerDebugInfo& debugInfo);
     inline ModuleType getType() const { return _moduleType; }
     
 protected:
     AbstractModule(ModuleType moduleType) : _moduleType(moduleType) { };
-    virtual bool internalProcess(ModuleInOutParams& params, ModuleDebugParams& debugInfo) = 0;
+    virtual bool internalProcess(ModuleParams& params, TrackerDebugInfo& debugInfo) = 0;
     
 private:
     ModuleType _moduleType;

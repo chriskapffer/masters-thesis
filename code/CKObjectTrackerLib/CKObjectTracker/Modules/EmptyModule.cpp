@@ -25,7 +25,7 @@ void EmptyModule::initWithObjectImage(const cv::Mat &objectImage)
     
 }
 
-bool EmptyModule::internalProcess(ModuleInOutParams& params, ModuleDebugParams& debugInfo)
+bool EmptyModule::internalProcess(ModuleParams& params, TrackerDebugInfo& debugInfo)
 {
     return false;
 }

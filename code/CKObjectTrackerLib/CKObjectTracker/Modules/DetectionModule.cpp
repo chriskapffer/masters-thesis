@@ -28,7 +28,7 @@ void DetectionModule::initWithObjectImage(const cv::Mat &objectImage)
 
 }
 
-bool DetectionModule::internalProcess(ModuleInOutParams& params, ModuleDebugParams& debugInfo)
+bool DetectionModule::internalProcess(ModuleParams& params, TrackerDebugInfo& debugInfo)
 {
     return true;
 }

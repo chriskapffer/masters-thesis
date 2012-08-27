@@ -9,74 +9,34 @@
 #ifndef CKObjectTrackerLib_Utils_h
 #define CKObjectTrackerLib_Utils_h
 
-#define BGRA2GRAY_CV       0
-#define BGRA2GRAY_NEON     1
-#define BGRA2GRAY_NEON_ASM 2
-
 namespace ck {
 
-class Utils
+template <typename T>
+inline static bool contains(const std::vector<T>& vec, T elem) {
+    return find(vec.begin(), vec.end(), elem) != vec.end();
+}
+    
+inline static bool compareKnnMatch (std::vector<cv::DMatch> i, std::vector<cv::DMatch> j)
 {
+    // DMatch has '<' operator defined
+    return (i[0] < j[0]);
+}
     
-public:
+struct utils {
     
-    static std::vector<cv::MatND> calcHistograms(const cv::Mat& image, int numOfBins);
-    static cv::Mat imageFromHistograms(const std::vector<cv::MatND>& histgrams, int width, int height, int bins);
+    static void ratioTest(const std::vector<std::vector<cv::DMatch> >& matches, std::vector<cv::DMatch>& result, float ratio);
     
-    static void matchSimple(const cv::Ptr<cv::DescriptorMatcher>& matcher,
-                            const cv::Mat& descriptors1,
-                            const cv::Mat& descriptors2,
-                            std::vector<cv::DMatch>& matches,
-                            bool crossCheck = false);
+    static void ratioTest(const std::vector<std::vector<cv::DMatch> >& matches, std::vector<std::vector<cv::DMatch> >& result, float ratio);
     
-    static void matchAdvanced(const cv::Ptr<cv::DescriptorMatcher>& matcher,
-                              const cv::Mat& descriptors1,
-                              const cv::Mat& descriptors2,
-                              std::vector<cv::DMatch>& matches,
-                              int knn = 2);
+    static void symmetryTest(const std::vector<cv::DMatch>& matches12, const std::vector<cv::DMatch>& matches21, std::vector<cv::DMatch>& result);
     
-    static void get2DCoordinatesOfMatches(const std::vector<cv::DMatch>& matches,
-                                          const std::vector<cv::KeyPoint>& keypoints1,
-                                          const std::vector<cv::KeyPoint>& keypoints2,
-                                          std::vector<cv::Point2f>& coordinates1,
-                                          std::vector<cv::Point2f>& coordinates2);
+    static void symmetryTest(const std::vector<std::vector<cv::DMatch> >& matches12, const std::vector<std::vector<cv::DMatch> >& matches21, std::vector<std::vector<cv::DMatch> >& result);
     
-    static void calcHomography(const std::vector<cv::KeyPoint>& keypoints1,
-                               const std::vector<cv::KeyPoint>& keypoints2,
-                               const std::vector<cv::DMatch>& matches,
-                               cv::Mat& H, int method, double ransacThreshold);
+    static void nBestMatches(const std::vector<cv::DMatch>& matches, std::vector<cv::DMatch>& result, int n, bool sorted);
     
-    static void calcHomography(const std::vector<cv::Point2f>& coordinates1,
-                               const std::vector<cv::Point2f>& coordinates2,
-                               cv::Mat& H, int method, double ransacThreshold);
+    static void nBestMatches(const std::vector<std::vector<cv::DMatch> >& matches, std::vector<std::vector<cv::DMatch> >& result, int n, bool sorted);
     
-    static std::vector<char> createMaskWithOriginalPointSet(const std::vector<cv::Point2f>& coordinates1,
-                                                            const std::vector<cv::Point2f>& coordinates2,
-                                                            const cv::Mat& H, double ransacThreshold);
-    
-    static std::vector<char> createMaskWithTransformedPointSet(const std::vector<cv::Point2f>& coordinates1,
-                                                               const std::vector<cv::Point2f>& coordinates2,
-                                                               double ransacThreshold);
-    
-    static std::vector<char> invertedMask(const std::vector<char>& original);
-    
-    static std::vector<cv::DMatch> filteredMatchesWithMask(const std::vector<cv::DMatch>& matches,
-                                                           const std::vector<char>& mask);
-    
-    static std::vector<cv::DMatch> nBestMatches(const std::vector<cv::DMatch>& matches,
-                                                int numberOfMatchesToKeep);
-    
-    static int positiveMatches(const std::vector<char>& mask);
-    
-    static void maxMinDistance(const std::vector<cv::DMatch>& matches, float& maxDistance, float& minDistance);
-    
-    static double distanceBetween(const cv::Point2f& v1,
-                                  const cv::Point2f& v2);
-    
-    static double cumulatedDistance(const std::vector<cv::Point2f>& c1,
-                                    const std::vector<cv::Point2f>& c2);
-    
-    static static cv::Mat bgra2Gray(cv::Mat imgIn, int method);
+    static void stripNeighbors(const std::vector<std::vector<cv::DMatch> >& matches, std::vector<cv::DMatch>& result);
 };
 
 } // end of namespace

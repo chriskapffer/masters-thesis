@@ -21,7 +21,7 @@ public:
     TrackingModule();
     ~TrackingModule();
     void initWithObjectImage(const cv::Mat& objectImage);
-    bool internalProcess(ModuleInOutParams& params, ModuleDebugParams& debugInfo);
+    bool internalProcess(ModuleParams& params, TrackerDebugInfo& debugInfo);
     
 };
 

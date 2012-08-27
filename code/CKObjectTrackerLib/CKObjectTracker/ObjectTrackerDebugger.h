@@ -16,7 +16,7 @@ namespace ck {
 class ObjectTrackerDebugger {
     
 public:
-    static std::string debugString(TrackerDebugInfo info);
+    static std::string debugString(TrackerDebugInfoStripped info);
     static std::vector<cv::Mat> debugImages(TrackerDebugInfo info);
 };
 

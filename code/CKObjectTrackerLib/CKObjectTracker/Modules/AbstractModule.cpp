@@ -11,7 +11,7 @@
 
 namespace ck {
 
-void AbstractModule::process(ModuleInOutParams& params, ModuleDebugParams& debugInfo)
+void AbstractModule::process(ModuleParams& params, TrackerDebugInfo& debugInfo)
 {
     assert(params.successor == _moduleType);
     double startTime = (double)cv::getTickCount();

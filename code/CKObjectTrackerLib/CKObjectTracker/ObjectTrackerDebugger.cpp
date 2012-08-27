@@ -13,7 +13,7 @@ using namespace cv;
 
 namespace ck {
 
-string ObjectTrackerDebugger::debugString(TrackerDebugInfo info)
+string ObjectTrackerDebugger::debugString(TrackerDebugInfoStripped info)
 {
     return string();
 }

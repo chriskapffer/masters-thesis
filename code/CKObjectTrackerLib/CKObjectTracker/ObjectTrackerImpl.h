@@ -17,7 +17,7 @@ namespace ck {
 class ObjectTracker::Impl {
 
 private:
-    ModuleInOutParams _moduleParams;
+    ModuleParams _moduleParams;
     AbstractModule* _currentModule;
 
     std::map<ModuleType, AbstractModule*> _allModules;
