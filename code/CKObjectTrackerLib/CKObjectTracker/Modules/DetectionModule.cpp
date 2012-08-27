@@ -30,6 +30,8 @@ void DetectionModule::initWithObjectImage(const cv::Mat &objectImage)
 
 bool DetectionModule::internalProcess(ModuleParams& params, TrackerDebugInfo& debugInfo)
 {
+    // search in whole image
+    params.searchRect = Rect(0, 0, params.sceneImage.cols, params.sceneImage.rows);
     return true;
 }
 

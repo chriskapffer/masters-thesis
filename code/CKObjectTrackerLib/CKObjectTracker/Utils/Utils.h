@@ -24,6 +24,8 @@ inline static bool compareKnnMatch (std::vector<cv::DMatch> i, std::vector<cv::D
     
 struct utils {
     
+    static void get2DCoordinatesOfMatches(const std::vector<cv::DMatch>& matches, const std::vector<cv::KeyPoint>& keypoints1, const std::vector<cv::KeyPoint>& keypoints2, std::vector<cv::Point2f>& coordinates1, std::vector<cv::Point2f>& coordinates2);
+    
     static void ratioTest(const std::vector<std::vector<cv::DMatch> >& matches, std::vector<cv::DMatch>& result, float ratio);
     
     static void ratioTest(const std::vector<std::vector<cv::DMatch> >& matches, std::vector<std::vector<cv::DMatch> >& result, float ratio);
@@ -36,7 +38,7 @@ struct utils {
     
     static void nBestMatches(const std::vector<std::vector<cv::DMatch> >& matches, std::vector<std::vector<cv::DMatch> >& result, int n, bool sorted);
     
-    static void stripNeighbors(const std::vector<std::vector<cv::DMatch> >& matches, std::vector<cv::DMatch>& result);
+    static std::vector<cv::DMatch> stripNeighbors(const std::vector<std::vector<cv::DMatch> >& matches);
 };
 
 } // end of namespace

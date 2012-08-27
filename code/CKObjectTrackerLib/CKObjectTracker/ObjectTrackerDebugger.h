@@ -17,7 +17,7 @@ class ObjectTrackerDebugger {
     
 public:
     static std::string debugString(TrackerDebugInfoStripped info);
-    static std::vector<cv::Mat> debugImages(TrackerDebugInfo info);
+    static std::vector<std::pair<std::string, cv::Mat> > debugImages(TrackerDebugInfo info, bool drawTransformedRect = true, bool drawFilteredMatches = true, bool drawAllMatchess = false);
 };
 
 } // end of namespace

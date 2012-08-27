@@ -8,17 +8,20 @@
 
 #include "AbstractModule.h"
 #include "ModuleManagement.h"
+#include "Profiler.h"
 
 namespace ck {
 
 void AbstractModule::process(ModuleParams& params, TrackerDebugInfo& debugInfo)
 {
-    assert(params.successor == _moduleType);
     double startTime = (double)cv::getTickCount();
+    assert(params.successor == _moduleType);
+    debugInfo.subTaskProcessingTimes.clear();
     params.isObjectPresent = false;
     params.successor = ModuleTransition::getSuccessor(_moduleType, internalProcess(params, debugInfo));
     debugInfo.totalProcessingTime = ((double)cv::getTickCount() - startTime) / cv::getTickFrequency() * 1000;
     debugInfo.currentModuleType = (*moduleTypeString.find(_moduleType)).second;
+    Profiler::Instance()->clearAll();
 }
 
 } // end of namespace

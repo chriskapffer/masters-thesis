@@ -10,7 +10,6 @@
 #define CKObjectTracker_ObjectTracker_h
 
 // http://opencv-users.1802565.n2.nabble.com/BRISK-td7452653.html <-- TODO read
-// TODO create a namespace
 
 #include "ObjectTrackerTypeDefinitions.h"
 

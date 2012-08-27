@@ -36,7 +36,8 @@ private:
         inline static std::map<ModuleType, std::pair<ModuleType, ModuleType> > table() {
             std::map<ModuleType, std::pair<ModuleType, ModuleType> > t;
             t[MODULE_TYPE_DETECTION] = std::make_pair(MODULE_TYPE_VALIDATION, MODULE_TYPE_DETECTION);
-            t[MODULE_TYPE_VALIDATION] = std::make_pair(MODULE_TYPE_TRACKING, MODULE_TYPE_DETECTION);
+            //t[MODULE_TYPE_VALIDATION] = std::make_pair(MODULE_TYPE_TRACKING, MODULE_TYPE_DETECTION);
+            t[MODULE_TYPE_VALIDATION] = std::make_pair(MODULE_TYPE_VALIDATION, MODULE_TYPE_DETECTION);
             t[MODULE_TYPE_TRACKING] = std::make_pair(MODULE_TYPE_TRACKING, MODULE_TYPE_VALIDATION);
             t[MODULE_TYPE_EMPTY] = std::make_pair(MODULE_TYPE_EMPTY, MODULE_TYPE_EMPTY);
             return t;

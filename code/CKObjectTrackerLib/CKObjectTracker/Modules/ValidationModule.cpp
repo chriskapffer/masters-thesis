@@ -7,8 +7,14 @@
 //
 
 #include "ValidationModule.h"
+#include "SanityCheck.h"
 #include "Profiler.h"
 #include "Utils.h"
+
+#define TIMER_DETECT "detection"
+#define TIMER_EXTRACT "extraction"
+#define TIMER_ESTIMATE "estimation"
+#define TIMER_VALIDATE "validation"
 
 using namespace std;
 using namespace cv;
@@ -18,9 +24,21 @@ namespace ck {
 ValidationModule::ValidationModule() : AbstractModule(MODULE_TYPE_VALIDATION)
 {
     Ptr<Feature2D> orb = new ORB();
-    _detector = FeatureDetector::create("GFTT");
-    _extractor = DescriptorExtractor::create("BRIEF");
+    _detector = orb;
+    _extractor = orb;
     _matcher = new BFMatcher(NORM_HAMMING);
+    
+    _filterFlags = vector<FilterFlag>();
+    _filterFlags.push_back(FILTER_FLAG_RATIO);
+    //_filterFlags.push_back(FILTER_FLAG_SYMMETRY);
+    _filterFlags.push_back(FILTER_FLAG_CROP);
+    _sortMatches = true;
+    _nBestMatches = 32;
+    _ratio = 0.65f;
+    
+    _estimationMethod = CV_RANSAC;
+    _ransacThreshold = 3;
+    _refineHomography = true;
 }
 
 ValidationModule::~ValidationModule()
@@ -28,296 +46,107 @@ ValidationModule::~ValidationModule()
 
 }
 
-void ValidationModule::initWithObjectImage(const cv::Mat &objectImage)
+void ValidationModule::initWithObjectImage(const cv::Mat &objectImage) // TODO debug info
 {
-    //timer
-    _detector->detect(objectImage, _objectKeypoints);
-    //timer
-    _extractor->compute(objectImage, _objectKeypoints, _objectDescriptors);
-}  
-   
-
+    Profiler* profiler = Profiler::Instance();
+    _objectImage = objectImage;
     
-    void getFilteredMatches(const DescriptorMatcher& matcher, const Mat& descriptors1, const Mat& descriptors2, vector<DMatch>& result, const vector<FilterFlag>& flags, bool sortMatches, float ratio, int nBestMatches) {
-
-        if(contains(flags, RATIO_FILTER)) {
-            if (contains(flags, SYMMETRY_FILTER)) {
-                // both, ratio- and symmetry test are set
-                vector<vector<DMatch> > matches12;
-                vector<vector<DMatch> > matches21;
-                matcher.knnMatch(descriptors1, descriptors2, matches12, 2);
-                matcher.knnMatch(descriptors2, descriptors1, matches21, 2);
-                if (sortMatches) {
-                    sort(matches12.begin(), matches12.end(), compareKnnMatch);
-                    sort(matches21.begin(), matches21.end(), compareKnnMatch);
-                }
-                vector<vector<DMatch> > tmp;
-                bool didSymmetryMatch = false;
-                for (int i = 0; i < flags.size(); i++) {
-                    switch (flags[i]) {
-                        case CROP_FILTER:
-                            utils::nBestMatches(matches12, tmp, nBestMatches, sortMatches);
-                            matches12 = tmp;
-                            if (!didSymmetryMatch) {
-                                utils::nBestMatches(matches21, tmp, nBestMatches, sortMatches);
-                                matches21 = tmp;
-                            }
-                            break;
-                        case RATIO_FILTER:
-                            utils::ratioTest(matches12, tmp, ratio);
-                            matches12 = tmp;
-                            if (!didSymmetryMatch) {
-                                utils::ratioTest(matches21, tmp, ratio);
-                                matches21 = tmp;
-                            }
-                            break;
-                        case SYMMETRY_FILTER:
-                            utils::symmetryTest(matches12, matches21, tmp);
-                            matches12 = tmp;
-                            didSymmetryMatch = true;
-                            break;
-                    }
-                }
-                utils::stripNeighbors(matches12, result);
-            } else {
-                vector<vector<DMatch> > matches;
-                matcher.knnMatch(descriptors1, descriptors2, matches, 2);
-                if (sortMatches) { sort(matches.begin(), matches.end(), compareKnnMatch); }
-                vector<vector<DMatch> > tmp;
-                for (int i = 0; i < flags.size(); i++) {
-                    switch (flags[i]) {
-                        case CROP_FILTER:
-                            utils::nBestMatches(matches, tmp, nBestMatches, sortMatches);
-                            matches = tmp;
-                            break;
-                        case RATIO_FILTER:
-                            utils::ratioTest(matches, tmp, ratio);
-                            matches = tmp;
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                utils::stripNeighbors(matches, result);
-            }
-        } else {
-            if (contains(flags, SYMMETRY_FILTER)) {
-                vector<DMatch> matches12;
-                vector<DMatch> matches21;
-                matcher.match(descriptors1, descriptors2, matches12);
-                matcher.match(descriptors2, descriptors1, matches21);
-                if (sortMatches) {
-                    sort(matches12.begin(), matches12.end());
-                    sort(matches21.begin(), matches21.end());
-                }
-                vector<DMatch> tmp;
-                bool didSymmetryMatch = false;
-                for (int i = 0; i < flags.size(); i++) {
-                    switch (flags[i]) {
-                        case CROP_FILTER:
-                            utils::nBestMatches(matches12, tmp, nBestMatches, sortMatches);
-                            matches12 = tmp;
-                            if (!didSymmetryMatch) {
-                                utils::nBestMatches(matches21, tmp, nBestMatches, sortMatches);
-                                matches21 = tmp;
-                            }
-                            break;
-                        case SYMMETRY_FILTER:
-                            utils::symmetryTest(matches12, matches21, tmp);
-                            matches12 = tmp;
-                            didSymmetryMatch = true;
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                result = matches12;
-            } else {
-                vector<DMatch> matches;
-                matcher.match(descriptors1, descriptors2, matches);
-                if (sortMatches) { sort(matches.begin(), matches.end()); }
-                
-                vector<DMatch> tmp;
-                if (!flags.empty()) { // can not be anything else than crop
-                    utils::nBestMatches(matches, tmp, nBestMatches, sortMatches);
-                    matches = tmp;
-                }
-                
-                result = matches;
-            }
-        }
-    }
+    profiler->startTimer(TIMER_DETECT);
+    _detector->detect(_objectImage, _objectKeyPoints);
+    profiler->stopTimer(TIMER_DETECT);
+    profiler->startTimer(TIMER_EXTRACT);
+    _extractor->compute(_objectImage, _objectKeyPoints, _objectDescriptors);
+    profiler->stopTimer(TIMER_EXTRACT);
+    
+    _objectCorners = vector<Point2f>(4); // clock wise
+    _objectCorners[0] = cvPoint(                0,                 0); // top left
+    _objectCorners[1] = cvPoint(_objectImage.cols,                 0); // top right
+    _objectCorners[2] = cvPoint(_objectImage.cols, _objectImage.rows); // bottom right
+    _objectCorners[3] = cvPoint(                0, _objectImage.rows); // bottom left
+}
 
 bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& debugInfo)
 {
-    float ratio = 0.65f;
-    
+    Mat sceneImage;
     Mat sceneDescriptors;
     vector<KeyPoint> sceneKeyPoints;
+    vector<Point2f> sceneCoordinates;
+    vector<Point2f> objectCoordinates;
+    vector<unsigned char> mask;
+    vector<DMatch> matches;
+    Mat homography;
     
-    //timer
+    // get region of interest
+    sceneImage = params.sceneImage(params.searchRect);
+    
+    // detect keypoints and extract features
+    Profiler* profiler = Profiler::Instance();
+    profiler->startTimer(TIMER_DETECT);
     _detector->detect(params.sceneImage, sceneKeyPoints);
-    //timer
+    profiler->stopTimer(TIMER_DETECT);
+    profiler->startTimer(TIMER_EXTRACT);
     _extractor->compute(params.sceneImage, sceneKeyPoints, sceneDescriptors);
+    profiler->stopTimer(TIMER_EXTRACT);
+
+    // set first bit of debug info values
+    debugInfo.objectKeyPoints = _objectKeyPoints;
+    debugInfo.objectImage = _objectImage;
+    debugInfo.sceneKeyPoints = sceneKeyPoints;
+    debugInfo.sceneImage = sceneImage;
     
-    int nBest = 20;
-    
-    // crop, ratio, sym
-    {
-        vector<vector<DMatch> > matches12;
-        vector<vector<DMatch> > matches21;
-        _matcher->knnMatch(_objectDescriptors, sceneDescriptors, matches12, 2);
-        _matcher->knnMatch(sceneDescriptors, _objectDescriptors, matches21, 2);
-        
-        vector<vector<DMatch> > nBestMatches12;
-        vector<vector<DMatch> > nBestMatches21;
-        utils::nBestMatches(matches12, nBestMatches12, nBest, false);
-        utils::nBestMatches(matches21, nBestMatches21, nBest, false);
-        
-        vector<DMatch> afterRatioTest12;
-        vector<DMatch> afterRatioTest21;
-        utils::ratioTest(nBestMatches12, afterRatioTest12, ratio);
-        utils::ratioTest(nBestMatches21, afterRatioTest21, ratio);
-        
-        vector<DMatch> afterSymTest;
-        utils::symmetryTest(afterRatioTest12, afterRatioTest21, afterSymTest);
+    // match and filter descriptors
+    MatcherFilter::getFilteredMatches(*_matcher, _objectDescriptors, sceneDescriptors, matches, _filterFlags, _sortMatches, _ratio, _nBestMatches, debugInfo.namedMatches);
+    if (matches.size() < MIN_MATCHES) {
+        cout << "Not enough matches!" << endl;
+        // set rest of debug info values in case of failure
+        debugInfo.subTaskProcessingTimes.push_back(make_pair(TIMER_DETECT, profiler->elapsedTime(TIMER_DETECT)));
+        debugInfo.subTaskProcessingTimes.push_back(make_pair(TIMER_EXTRACT, profiler->elapsedTime(TIMER_EXTRACT)));
+        debugInfo.subTaskProcessingTimes.push_back(make_pair(TIMER_MATCH, profiler->elapsedTime(TIMER_MATCH)));
+        debugInfo.subTaskProcessingTimes.push_back(make_pair(TIMER_FILTER, profiler->elapsedTime(TIMER_FILTER)));
+        debugInfo.transformedObjectCorners.clear();
+        debugInfo.badHomography = false;
+        return false;
+    }
+
+    // compute homography from matches
+    profiler->startTimer(TIMER_ESTIMATE);
+    utils::get2DCoordinatesOfMatches(matches, _objectKeyPoints, sceneKeyPoints, objectCoordinates, sceneCoordinates);
+    homography = findHomography(objectCoordinates, sceneCoordinates, _estimationMethod, _ransacThreshold, mask);
+    profiler->stopTimer(TIMER_ESTIMATE);
+    if (_refineHomography) {
+        vector<DMatch> noOutliers;
+        // filter matches with mask and compute homography again
+        MatcherFilter::filterMatchesWithMask(matches, mask, noOutliers, debugInfo.namedMatches);
+        profiler->startTimer(TIMER_ESTIMATE);
+        utils::get2DCoordinatesOfMatches(noOutliers, _objectKeyPoints, sceneKeyPoints, objectCoordinates, sceneCoordinates);
+        homography = findHomography(objectCoordinates, sceneCoordinates, 0); // default method, because there are no outliers
+        profiler->stopTimer(TIMER_ESTIMATE);
     }
     
+    // validate homography matrix
+    profiler->startTimer(TIMER_VALIDATE);
+    vector<Point2f> objectCornersTransformed;
+    perspectiveTransform(_objectCorners, objectCornersTransformed, homography);
+    bool validHomography = SanityCheck::checkRectangle(objectCornersTransformed);
+    profiler->stopTimer(TIMER_VALIDATE);
+
+    // set out params
+    params.points = sceneCoordinates;
+    params.isObjectPresent = validHomography;
+    params.homography = homography;
     
-    if (true) { // ratio present;
-        vector<vector<DMatch> > matches;
-        vector<vector<DMatch> > filtered;
-        _matcher->knnMatch(_objectDescriptors, sceneDescriptors, matches, 2);
-        utils::ratioTest(matches, filtered, ratio);
-    }
-    
-    
-    
-    
-    if (true) { // ratio test
-        vector<vector<DMatch> > matches;
-        vector<DMatch> filtered;
-        _matcher->knnMatch(_objectDescriptors, sceneDescriptors, matches, 2);
-        utils::ratioTest(matches, filtered, ratio);
-    }
-    
-    if (true) { // cross check
-        vector<DMatch> matchesObj2Scn;
-        vector<DMatch> matchesScn2Obj;
-        vector<DMatch> filtered;
-        _matcher->match(_objectDescriptors, sceneDescriptors, matchesObj2Scn);
-        _matcher->match(sceneDescriptors, _objectDescriptors, matchesScn2Obj);
-        utils::symmetryTest(matchesObj2Scn, matchesScn2Obj, filtered);
-    }
-    
-    
-    
-//    if ((_filterStrategies & FILTER_RATIOTEST) == FILTER_RATIOTEST) {
-//        _matcher->match(_objectDescriptors, sceneDescriptors, <#vector<cv::DMatch> &matches#>)
-//    }
-//    
-//    if ((_filterStrategies & FILTER_RATIOTEST) == FILTER_RATIOTEST
-//        || (_filterStrategies & FILTER_CROSSCHECK) == FILTER_CROSSCHECK)){
-//    
-//    } else {
-//    
-//    }
-    
-    
-    return true;
+    // set rest of debug info value
+    debugInfo.subTaskProcessingTimes.push_back(make_pair(TIMER_DETECT, profiler->elapsedTime(TIMER_DETECT)));
+    debugInfo.subTaskProcessingTimes.push_back(make_pair(TIMER_EXTRACT, profiler->elapsedTime(TIMER_EXTRACT)));
+    debugInfo.subTaskProcessingTimes.push_back(make_pair(TIMER_MATCH, profiler->elapsedTime(TIMER_MATCH)));
+    debugInfo.subTaskProcessingTimes.push_back(make_pair(TIMER_FILTER, profiler->elapsedTime(TIMER_FILTER)));
+    debugInfo.subTaskProcessingTimes.push_back(make_pair(TIMER_ESTIMATE, profiler->elapsedTime(TIMER_ESTIMATE)));
+    debugInfo.subTaskProcessingTimes.push_back(make_pair(TIMER_VALIDATE, profiler->elapsedTime(TIMER_VALIDATE)));
+    debugInfo.transformedObjectCorners = objectCornersTransformed;
+    debugInfo.badHomography = !validHomography;
+    debugInfo.homography = homography;
+
+    return validHomography;
 }
 
 } // end of namespace
-    
-//bool ValidationModule::validate(const Mat& frame, const CKObjectData& objData, CKTrackingResult& previous, CKTrackingResult& current, CKTrackingInfo& info)
-//{
-//    Profiler* profiler = Profiler::Instance();
-//    vector<Point2f> objectCoordinates;
-//    vector<Point2f> sceneCoordinates;
-//    vector<KeyPoint> sceneKeypoints;
-//    vector<DMatch> filteredMatches;
-//    vector<DMatch> allMatches;
-//    Mat sceneDescriptors;
-//    Mat homography;
-//    
-//    Mat regionOfInterest = frame(previous.candidates[0]);
-//    // detect and extract
-//    detectAndExtract(regionOfInterest, sceneKeypoints, sceneDescriptors);
-//    if (sceneKeypoints.size() < _minKeyPoints) {
-//        cout << "Not enough keypoints. " << endl;
-//        return false;
-//    }
-//    
-//    // find matches
-//    profiler->startTimer(MATCHING_TIMER_NAME);
-//    Utils::matchSimple(_matcher, objData.descriptors, sceneDescriptors, allMatches, true);
-//    if (allMatches.size() < _minMatches) {
-//        profiler->stopTimer(MATCHING_TIMER_NAME);
-//        cout << "Not enough matches. " << endl;
-//        return false;
-//    }
-//    
-//    // filter matches
-//    //filteredMatches = Utils::nBestMatches(allMatches, 64);
-//    filteredMatches = allMatches;
-//    
-//    profiler->stopTimer(MATCHING_TIMER_NAME);
-//        
-//    // get coordinates of matches in object and scene image to calculate homographic transformation
-//    Utils::get2DCoordinatesOfMatches(filteredMatches, objData.keyPoints, sceneKeypoints,
-//                                       objectCoordinates, sceneCoordinates);
-//
-//    int method = CV_RANSAC;
-//    profiler->startTimer(HOMOGRAPHY_TIMER_NAME);
-//    Utils::calcHomography(objectCoordinates, sceneCoordinates, homography, method, _ransacThreshold);
-//    profiler->stopTimer(HOMOGRAPHY_TIMER_NAME);
-//
-//    // TODO validate mit umlauf, determinate, singularität
-//    int width = objData.image.cols;
-//    int height = objData.image.rows;
-//    vector<Point2f> objectCorners(4);
-//    vector<Point2f> objectCornersTransformed;
-//    
-//    objectCorners[0] = cvPoint(    0,      0);
-//    objectCorners[1] = cvPoint(width,      0);
-//    objectCorners[2] = cvPoint(width, height);
-//    objectCorners[3] = cvPoint(    0, height);
-//    perspectiveTransform(objectCorners, objectCornersTransformed, homography);
-//    
-//    current.valid = true;
-//    
-//    // output
-//    current.searchRect = previous.candidates[0];
-//    current.points = sceneCoordinates;
-//    current.homography = homography;
-//    
-//    vector<char> mask = Utils::createMaskWithOriginalPointSet(objectCoordinates, sceneCoordinates, homography, _ransacThreshold);
-//    info.outliers = Utils::filteredMatchesWithMask(allMatches, Utils::invertedMask(mask));
-//    info.inliers = Utils::filteredMatchesWithMask(allMatches, mask);
-//    info.corners = objectCornersTransformed;
-//    info.keyPoints = sceneKeypoints;
-//    
-//    return true;
-//}
-//
-//void ValidationModule::detectAndExtract(const Mat& image, vector<KeyPoint>& keypoints, Mat& descriptors)
-//{
-//    detectAndExtract(image, _detector, _extractor, keypoints, descriptors);
-//}
-//
-//void ValidationModule::detectAndExtract(const Mat& image, const Ptr<FeatureDetector>& detector, const Ptr<DescriptorExtractor>& extractor, vector<KeyPoint>& keypoints, Mat& descriptors)
-//{
-//    Profiler* profiler = Profiler::Instance();
-//    
-//    // detect key points
-//    profiler->startTimer(DETECTION_TIMER_NAME);
-//    detector->detect(image, keypoints);
-//    profiler->stopTimer(DETECTION_TIMER_NAME);
-//    
-//    // extract descriptors
-//    profiler->startTimer(EXTRACTION_TIMER_NAME);
-//    extractor->compute(image, keypoints, descriptors);
-//    profiler->stopTimer(EXTRACTION_TIMER_NAME);
-//}
-
-// detector, descriptor, matcher

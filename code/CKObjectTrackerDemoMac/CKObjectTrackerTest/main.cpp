@@ -10,7 +10,9 @@
 #include <iostream>
 #include <mach-o/dyld.h>
 #include <opencv2/opencv.hpp>
+
 #include "ObjectTracker.h"
+#include "ObjectTrackerDebugger.h"
 
 using namespace std;
 using namespace cv;
@@ -52,8 +54,8 @@ void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
     TrackerDebugInfo debugInfo;
     
     Mat frame;
-    namedWindow("video");
-    bool endCapture = false;    
+    bool firstRun = true;
+    bool endCapture = false;
     while (!endCapture) {
         if (!sceneVideo.read(frame)) {
             cout << "Capture error." << endl;
@@ -61,11 +63,18 @@ void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
         }
 
         tracker.trackObjectInVideo(frame, output, debugInfo);
+        vector<pair<string, Mat> > debugImages = ObjectTrackerDebugger::debugImages(debugInfo);
+        for (int i = 0; i < debugImages.size(); i++) {
+            pair<string, Mat> item = debugImages[i];
+            if (firstRun) { namedWindow(item.first); }
+            imshow(item.first, item.second);
+        }
+        firstRun = false;
+        
         cout << debugInfo.currentModuleType << " ";
         cout << "took " <<  debugInfo.totalProcessingTime << " ms";
         cout << " which results in " << 1000 / debugInfo.totalProcessingTime << " FPS." << endl;
     
-        imshow("video", frame);
         if (waitKey(1000 / sceneVideo.get(CV_CAP_PROP_FPS)) >= 0) {
             cout << "User stopped playback." << endl;
             endCapture = true;

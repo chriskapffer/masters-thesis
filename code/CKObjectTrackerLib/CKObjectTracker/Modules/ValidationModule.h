@@ -10,19 +10,17 @@
 #define CKObjectTrackerLib_ValidationModule_h
 
 #include "AbstractModule.h"
+#include "MatchAndFilterDescriptors.h"
+
+#define MIN_MATCHES 8
 
 namespace ck {
 
-enum FilterFlag {
-    CROP_FILTER,
-    RATIO_FILTER,
-    SYMMETRY_FILTER,
-};
-    
 class ValidationModule : public AbstractModule {
 
 private:
-    std::vector<cv::KeyPoint> _objectKeypoints;
+    std::vector<cv::Point2f> _objectCorners;
+    std::vector<cv::KeyPoint> _objectKeyPoints;
     cv::Mat _objectDescriptors;
     cv::Mat _objectImage;
     
@@ -31,11 +29,12 @@ private:
     cv::Ptr<cv::DescriptorMatcher> _matcher;
     
     std::vector<FilterFlag> _filterFlags;
+    int _ransacThreshold;
+    int _nBestMatches;
     bool _sortMatches;
+    float _ratio;
     
     int _estimationMethod;
-    int _validationMethod;
-    
     bool _refineHomography;
     
 public:

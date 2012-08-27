@@ -61,6 +61,14 @@
 		4CC8701115EA4DE900AD47BD /* MapCreator.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC8700F15EA4DE900AD47BD /* MapCreator.h */; };
 		4CCBADC415EBA344005C579F /* ModuleParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCBADC315EBA343005C579F /* ModuleParams.h */; };
 		4CCBADC515EBA344005C579F /* ModuleParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCBADC315EBA343005C579F /* ModuleParams.h */; };
+		4CCBADC715EBA6FE005C579F /* MatchAndFilterDescriptors.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCBADC615EBA6FE005C579F /* MatchAndFilterDescriptors.h */; };
+		4CCBADC815EBA6FE005C579F /* MatchAndFilterDescriptors.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCBADC615EBA6FE005C579F /* MatchAndFilterDescriptors.h */; };
+		4CCBADCA15EBA719005C579F /* MatchAndFilterDescriptors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CCBADC915EBA719005C579F /* MatchAndFilterDescriptors.cpp */; };
+		4CCBADCB15EBA719005C579F /* MatchAndFilterDescriptors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CCBADC915EBA719005C579F /* MatchAndFilterDescriptors.cpp */; };
+		4CCBADCD15EBD4D4005C579F /* SanityCheck.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCBADCC15EBD4D4005C579F /* SanityCheck.h */; };
+		4CCBADCE15EBD4D4005C579F /* SanityCheck.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCBADCC15EBD4D4005C579F /* SanityCheck.h */; };
+		4CCBADD015EBD4F0005C579F /* SanityCheck.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CCBADCF15EBD4F0005C579F /* SanityCheck.cpp */; };
+		4CCBADD115EBD4F0005C579F /* SanityCheck.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CCBADCF15EBD4F0005C579F /* SanityCheck.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -95,6 +103,10 @@
 		4CC655D415E9419D0035C072 /* EmptyModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EmptyModule.cpp; sourceTree = "<group>"; };
 		4CC8700F15EA4DE900AD47BD /* MapCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapCreator.h; sourceTree = "<group>"; };
 		4CCBADC315EBA343005C579F /* ModuleParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModuleParams.h; sourceTree = "<group>"; };
+		4CCBADC615EBA6FE005C579F /* MatchAndFilterDescriptors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MatchAndFilterDescriptors.h; sourceTree = "<group>"; };
+		4CCBADC915EBA719005C579F /* MatchAndFilterDescriptors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MatchAndFilterDescriptors.cpp; sourceTree = "<group>"; };
+		4CCBADCC15EBD4D4005C579F /* SanityCheck.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SanityCheck.h; sourceTree = "<group>"; };
+		4CCBADCF15EBD4F0005C579F /* SanityCheck.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SanityCheck.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,6 +185,10 @@
 		4C506C3215E4FB8C0087865E /* Algorithms */ = {
 			isa = PBXGroup;
 			children = (
+				4CCBADCC15EBD4D4005C579F /* SanityCheck.h */,
+				4CCBADCF15EBD4F0005C579F /* SanityCheck.cpp */,
+				4CCBADC615EBA6FE005C579F /* MatchAndFilterDescriptors.h */,
+				4CCBADC915EBA719005C579F /* MatchAndFilterDescriptors.cpp */,
 			);
 			path = Algorithms;
 			sourceTree = "<group>";
@@ -233,6 +249,8 @@
 				4CC655D215E9418E0035C072 /* EmptyModule.h in Headers */,
 				4CC8701015EA4DE900AD47BD /* MapCreator.h in Headers */,
 				4CCBADC415EBA344005C579F /* ModuleParams.h in Headers */,
+				4CCBADC715EBA6FE005C579F /* MatchAndFilterDescriptors.h in Headers */,
+				4CCBADCD15EBD4D4005C579F /* SanityCheck.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +274,8 @@
 				4CC655D315E9418E0035C072 /* EmptyModule.h in Headers */,
 				4CC8701115EA4DE900AD47BD /* MapCreator.h in Headers */,
 				4CCBADC515EBA344005C579F /* ModuleParams.h in Headers */,
+				4CCBADC815EBA6FE005C579F /* MatchAndFilterDescriptors.h in Headers */,
+				4CCBADCE15EBD4D4005C579F /* SanityCheck.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,6 +358,8 @@
 				4CBB24B615E811E1005867C4 /* AbstractModule.cpp in Sources */,
 				4CC655BA15E8C3DD0035C072 /* ObjectTrackerImpl.cpp in Sources */,
 				4CC655D515E9419E0035C072 /* EmptyModule.cpp in Sources */,
+				4CCBADCA15EBA719005C579F /* MatchAndFilterDescriptors.cpp in Sources */,
+				4CCBADD015EBD4F0005C579F /* SanityCheck.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -355,6 +377,8 @@
 				4CBB24B715E811E1005867C4 /* AbstractModule.cpp in Sources */,
 				4CC655BB15E8C3DD0035C072 /* ObjectTrackerImpl.cpp in Sources */,
 				4CC655D615E9419E0035C072 /* EmptyModule.cpp in Sources */,
+				4CCBADCB15EBA719005C579F /* MatchAndFilterDescriptors.cpp in Sources */,
+				4CCBADD115EBD4F0005C579F /* SanityCheck.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

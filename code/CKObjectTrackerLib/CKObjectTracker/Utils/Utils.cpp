@@ -13,6 +13,19 @@ using namespace std;
 
 namespace ck {
     
+#pragma mark conversion
+    
+    void utils::get2DCoordinatesOfMatches(const vector<DMatch>& matches, const vector<KeyPoint>& keypoints1, const vector<KeyPoint>& keypoints2, vector<Point2f>& coordinates1, vector<Point2f>& coordinates2)
+    {
+        if (!coordinates1.empty()) { coordinates1.clear(); }
+        if (!coordinates2.empty()) { coordinates2.clear(); }
+        for (vector<DMatch>::const_iterator iter = matches.begin(); iter != matches.end(); iter++) {
+            // get indices of keypoints from matches and add keypoint positions to coordinate lists
+            coordinates1.push_back(keypoints1[(*iter).queryIdx].pt);
+            coordinates2.push_back(keypoints2[(*iter).trainIdx].pt);
+        }
+    }
+    
 #pragma mark matching
     
     void utils::ratioTest(const vector<vector<DMatch> >& matches, vector<DMatch>& result, float ratio)
@@ -128,13 +141,14 @@ namespace ck {
         }
     }
     
-    void utils::stripNeighbors(const std::vector<std::vector<cv::DMatch> >& matches, std::vector<cv::DMatch>& result)
+    vector<DMatch> utils::stripNeighbors(const vector<vector<DMatch> >& matches)
     {
-        if (!result.empty()) { result.clear(); }
-        // for all matches - add first neighbor to result and ignore others 
+        vector<DMatch> result;
+        // for all matches - add first neighbor to result and ignore others
 		for (vector<vector<DMatch> >::const_iterator iter = matches.begin(); iter!= matches.end(); iter++) {
             result.push_back((*iter)[0]);
 		}
+        return result;
     }
     
 } // end of namespace

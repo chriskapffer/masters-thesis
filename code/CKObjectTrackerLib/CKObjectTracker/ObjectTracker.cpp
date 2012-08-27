@@ -8,6 +8,7 @@
 
 #include "ObjectTrackerImpl.h"
 #include "ObjectTracker.h"
+#include "Profiler.h"
 
 namespace ck {
 
@@ -18,6 +19,7 @@ ObjectTracker::ObjectTracker()
 
 ObjectTracker::~ObjectTracker()
 {
+    Profiler::Finish();
     delete mImpl;
 }
 
