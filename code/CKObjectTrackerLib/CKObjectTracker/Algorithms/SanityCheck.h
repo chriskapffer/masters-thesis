@@ -14,6 +14,8 @@ namespace ck {
     struct SanityCheck {
         // points must be arranged in a clock wise manner
         static bool checkRectangle(const std::vector<cv::Point2f>& corners);
+        static bool checkBoundaries(const std::vector<cv::Point2f>& corners, int width, int height);
+        
     };
     
 } // end of namepsace

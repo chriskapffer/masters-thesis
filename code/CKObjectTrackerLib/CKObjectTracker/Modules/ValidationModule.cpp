@@ -30,11 +30,12 @@ ValidationModule::ValidationModule() : AbstractModule(MODULE_TYPE_VALIDATION)
     
     _filterFlags = vector<FilterFlag>();
     _filterFlags.push_back(FILTER_FLAG_RATIO);
+    //_filterFlags.push_back(FILTER_FLAG_CROP);
     //_filterFlags.push_back(FILTER_FLAG_SYMMETRY);
-    _filterFlags.push_back(FILTER_FLAG_CROP);
+
     _sortMatches = true;
-    _nBestMatches = 32;
-    _ratio = 0.65f;
+    _nBestMatches = 8;
+    _ratio = 0.7f;
     
     _estimationMethod = CV_RANSAC;
     _ransacThreshold = 3;
@@ -67,6 +68,9 @@ void ValidationModule::initWithObjectImage(const cv::Mat &objectImage) // TODO d
 
 bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& debugInfo)
 {
+    // clear module specific debug information
+    debugInfo.namedMatches.clear();
+    
     Mat sceneImage;
     Mat sceneDescriptors;
     vector<KeyPoint> sceneKeyPoints;
@@ -92,7 +96,7 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     debugInfo.objectKeyPoints = _objectKeyPoints;
     debugInfo.objectImage = _objectImage;
     debugInfo.sceneKeyPoints = sceneKeyPoints;
-    debugInfo.sceneImage = sceneImage;
+    debugInfo.sceneImagePart = sceneImage;
     
     // match and filter descriptors
     MatcherFilter::getFilteredMatches(*_matcher, _objectDescriptors, sceneDescriptors, matches, _filterFlags, _sortMatches, _ratio, _nBestMatches, debugInfo.namedMatches);
@@ -127,7 +131,9 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     profiler->startTimer(TIMER_VALIDATE);
     vector<Point2f> objectCornersTransformed;
     perspectiveTransform(_objectCorners, objectCornersTransformed, homography);
-    bool validHomography = SanityCheck::checkRectangle(objectCornersTransformed);
+    bool validHomography = true
+        //&& SanityCheck::checkBoundaries(objectCornersTransformed, sceneImage.cols, sceneImage.rows)
+        && SanityCheck::checkRectangle(objectCornersTransformed);
     profiler->stopTimer(TIMER_VALIDATE);
 
     // set out params

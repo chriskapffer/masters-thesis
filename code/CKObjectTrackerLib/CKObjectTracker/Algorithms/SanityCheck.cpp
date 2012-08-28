@@ -8,6 +8,9 @@
 
 #include "SanityCheck.h"
 
+using namespace std;
+using namespace cv;
+
 namespace ck {
 
 struct Line2f
@@ -19,8 +22,8 @@ struct Line2f
     
     Line2f(float sX, float sY, float eX, float eY) : sX(sX), sY(sY), eX(eX), eY(eY) { }
 };
-    
-bool SanityCheck::checkRectangle(const std::vector<cv::Point2f>& corners)
+
+bool SanityCheck::checkRectangle(const vector<Point2f>& corners)
 {
     // The rectangle is convex and not twisted, if the lines
     // between opposing points intersect with each other.
@@ -45,6 +48,16 @@ bool SanityCheck::checkRectangle(const std::vector<cv::Point2f>& corners)
     // intersect. If the fractional calculation is larger than 1 or smaller
     // than 0 the lines would need to be longer to intersect.
     return (ua != 0.0f && ub != 0.0f) && (ua >= 0.0f && ua <= 1.0f) && (ub >= 0.0f && ub <= 1.0f);
+}
+
+bool SanityCheck::checkBoundaries(const vector<Point2f>& corners, int width, int height)
+{
+    for (vector<Point2f>::const_iterator iter = corners.begin(); iter != corners.end(); iter++) {
+        if ((*iter).x < 0 || (*iter).x >= width || (*iter).y < 0 || (*iter).y >= height) {
+            return false;
+        }
+    }
+    return true;
 }
     
 } // end of namepsace

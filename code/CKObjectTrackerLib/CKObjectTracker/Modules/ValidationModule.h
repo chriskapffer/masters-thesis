@@ -12,7 +12,7 @@
 #include "AbstractModule.h"
 #include "MatchAndFilterDescriptors.h"
 
-#define MIN_MATCHES 8
+#define MIN_MATCHES 4
 
 namespace ck {
 

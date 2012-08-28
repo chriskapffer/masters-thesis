@@ -52,7 +52,7 @@ void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
     
     TrackerOutput output;
     TrackerDebugInfo debugInfo;
-    
+    vector<TrackerDebugInfoStripped> completeInfo;
     Mat frame;
     bool firstRun = true;
     bool endCapture = false;
@@ -63,7 +63,7 @@ void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
         }
 
         tracker.trackObjectInVideo(frame, output, debugInfo);
-        vector<pair<string, Mat> > debugImages = ObjectTrackerDebugger::debugImages(debugInfo);
+        vector<pair<string, Mat> > debugImages = ObjectTrackerDebugger::debugImages(debugInfo, true, false, true);
         for (int i = 0; i < debugImages.size(); i++) {
             pair<string, Mat> item = debugImages[i];
             if (firstRun) { namedWindow(item.first); }
@@ -71,10 +71,10 @@ void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
         }
         firstRun = false;
         
-        cout << debugInfo.currentModuleType << " ";
-        cout << "took " <<  debugInfo.totalProcessingTime << " ms";
-        cout << " which results in " << 1000 / debugInfo.totalProcessingTime << " FPS." << endl;
-    
+        TrackerDebugInfoStripped stripped = TrackerDebugInfoStripped(debugInfo);
+        cout << ObjectTrackerDebugger::debugString(stripped) << endl;
+        completeInfo.push_back(stripped);
+        
         if (waitKey(1000 / sceneVideo.get(CV_CAP_PROP_FPS)) >= 0) {
             cout << "User stopped playback." << endl;
             endCapture = true;
@@ -86,6 +86,7 @@ void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
             endCapture = true;
         }
     }
+    cout << "\n" << ObjectTrackerDebugger::debugString(completeInfo) << endl;;
 }
 
 void trackObjectInStillImage(const Mat& objectImage, const Mat& sceneImage)
