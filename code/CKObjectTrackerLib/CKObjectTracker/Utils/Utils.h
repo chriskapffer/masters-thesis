@@ -20,7 +20,7 @@ inline static bool contains(const std::vector<T>& vec, T elem) {
     return find(vec.begin(), vec.end(), elem) != vec.end();
 }
     
-inline static bool compareKnnMatch (std::vector<cv::DMatch> i, std::vector<cv::DMatch> j)
+inline static bool compareKnnMatch(std::vector<cv::DMatch> i, std::vector<cv::DMatch> j)
 {
     // DMatch has '<' operator defined
     return (i[0] < j[0]);

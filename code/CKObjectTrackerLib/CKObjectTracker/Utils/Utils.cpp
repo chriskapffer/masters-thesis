@@ -28,7 +28,6 @@ namespace ck {
     {
         // do simple copy, because src is already gray
         if (imgIn.type() == CV_8UC1) {
-            imgOut = Mat(imgOut.rows, imgOut.cols, CV_8UC1);
             imgIn.copyTo(imgOut);
             return;
         }

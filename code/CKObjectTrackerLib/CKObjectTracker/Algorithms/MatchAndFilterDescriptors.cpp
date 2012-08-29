@@ -10,6 +10,9 @@
 #include "Profiler.h"
 #include "Utils.h"
 
+#define TIMER_MATCH "matching"
+#define TIMER_FILTER "filtering"
+
 #define MATCHES_TOTAL "total"
 #define MATCHES_MASKED "masked"
 #define MATCHES_CROPPED "cropped"

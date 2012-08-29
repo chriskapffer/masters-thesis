@@ -14,6 +14,11 @@ using namespace cv;
 
 namespace ck {
 
+inline static bool compareTimers(pair<string, double> i, pair<string, double> j)
+{
+    return (i.second > j.second);
+}
+    
 string ObjectTrackerDebugger::debugString(TrackerDebugInfoStripped info)
 {
     int length = 1024;
@@ -21,21 +26,39 @@ string ObjectTrackerDebugger::debugString(TrackerDebugInfoStripped info)
     
     snprintf(buffer, length, "%s took %.2f ms --> %.2f FPS\n", info.currentModuleType.c_str(), info.totalProcessingTime, 1000 / info.totalProcessingTime);
     
+    // general info
+    double sumSubTimers = 0;
+    sort(info.subTaskProcessingTimes.begin(), info.subTaskProcessingTimes.end(), compareTimers);
+    for (int i = 0; i < info.subTaskProcessingTimes.size(); i++) {
+        std::pair<std::string, double> item = info.subTaskProcessingTimes[i];
+        snprintf(buffer, length, "%s%s:\t%f ms (%.2f%%)\n", buffer, item.first.c_str(), item.second, item.second / info.totalProcessingTime * 100);
+        sumSubTimers += item.second;
+    }
+    double timeOther = info.totalProcessingTime - sumSubTimers;
+    snprintf(buffer, length, "%sother:\t\t%f ms (%.2f%%)\n", buffer, timeOther, timeOther / info.totalProcessingTime * 100);
+    
+    // module specific info
     if (info.currentModuleType == ModuleType2String::convert(MODULE_TYPE_VALIDATION)) {
-        snprintf(buffer, length, "%sObjectKeyPoints: %d\n", buffer, info.objectKeyPointCount);
-        snprintf(buffer, length, "%sSceneKeyPoints: %d\n", buffer, info.sceneKeyPointCount);
+        snprintf(buffer, length, "%sobjectKeyPoints: %d\n", buffer, info.objectKeyPointCount);
+        snprintf(buffer, length, "%ssceneKeyPoints: %d\n", buffer, info.sceneKeyPointCount);
         for (int i = 0; i < info.namedMatchCounts.size(); i++) {
             snprintf(buffer, length, "%smatches %s: %d\n", buffer, info.namedMatchCounts[i].first.c_str(), info.namedMatchCounts[i].second);
         }
-        double sumSubTimers = 0;
-        for (int i = 0; i < info.subTaskProcessingTimes.size(); i++) {
-            std::pair<std::string, double> item = info.subTaskProcessingTimes[i];
-            snprintf(buffer, length, "%s%s:\t%f ms (%.2f%%)\n", buffer, item.first.c_str(), item.second, item.second / info.totalProcessingTime * 100);
-            sumSubTimers += item.second;
+
+    } else if (info.currentModuleType == ModuleType2String::convert(MODULE_TYPE_TRACKING)) {
+        snprintf(buffer, length, "%sinitial point set: %d\n", buffer, info.initialPointCount);
+        for (int i = 0; i < info.namedPointCounts.size(); i++) {
+            if (i == 0) {
+                snprintf(buffer, length, "%scurrent point set: %d\n", buffer, info.namedPointCounts[i].second);
+            } else {
+                snprintf(buffer, length, "%slost after %s: %d\n", buffer, info.namedPointCounts[i].first.c_str(), info.namedPointCounts[i - 1].second - info.namedPointCounts[i].second);
+            }
         }
-        double timeOther = info.totalProcessingTime - sumSubTimers;
-        snprintf(buffer, length, "%sother:\t\t%f ms (%.2f%%)\n", buffer, timeOther, timeOther / info.totalProcessingTime * 100);
+        snprintf(buffer, length, "%saverage error: %.3f\n", buffer, info.avgError);
+        snprintf(buffer, length, "%sdistance range: %.3f\n", buffer, info.distanceRange);
+        snprintf(buffer, length, "%sdivergence: %.3f\n", buffer, info.divergence);
     }
+
     
     return string(buffer);
 }
@@ -65,6 +88,9 @@ string ObjectTrackerDebugger::debugString(vector<TrackerDebugInfoStripped> info)
         } else if (frame.currentModuleType == ModuleType2String::convert(MODULE_TYPE_TRACKING)) {
             averageTracking += frame;
             frameCountTracking++;
+            if (frame.badHomography) {
+                badHomographyCount++;
+            }
         }
     }
     
@@ -85,6 +111,15 @@ string ObjectTrackerDebugger::debugString(vector<TrackerDebugInfoStripped> info)
 
 // -------------------- drawing --------------------
 
+static void drawPoints(Mat& result, const vector<Point2f>& points, Scalar color, Point2f offset, float scale)
+{
+    vector<Point2f>::const_iterator iter;
+    for (iter = points.begin(); iter != points.end(); iter++) {
+        Point2f p = (*iter) * scale + offset;
+        circle(result, p, 2, color);
+    }
+}
+    
 static void drawKeyPoints(Mat& result, const vector<KeyPoint>& keyPoints, Scalar color, Point2f offset, float scale)
 {
     vector<KeyPoint>::const_iterator iter;
@@ -176,6 +211,31 @@ static Mat drawValidationImage(TrackerDebugInfo info, bool drawTransformedRect, 
     }
     return result;
 }
+
+static Mat drawTrackingImage(TrackerDebugInfo info, bool drawTransformedRect, bool drawfilteredPoints, bool drawAllPoints)
+{
+    Mat result = info.sceneImageFull;
+    Point2f offset = Point2f(0, 0);
+    float scale = 1.0f;
+    if (!drawAllPoints && drawfilteredPoints && info.namedPoints.size() > 0) {
+        drawPoints(result, info.namedPoints[info.namedPoints.size() - 1].second, Scalar(0, 255, 255), offset, scale);
+    }
+    
+    if (drawAllPoints) {
+        int size = (int)info.namedPoints.size();
+        for (int i = 0; i < size; i++) {
+            int brightness = (int)(255 * (i + 1) / size);
+            drawPoints(result, info.namedPoints[i].second, Scalar(0, brightness, brightness), offset, scale);
+        }
+    }
+    
+    if (drawTransformedRect) {
+        Point2f offset = Point2f(info.searchRect.x, info.searchRect.y);
+        Scalar color = info.badHomography ? Scalar(0, 0, 255) : Scalar(0, 255, 0);
+        drawTransformedRectToImage(result, info.transformedObjectCorners, offset, 1, color, 2);
+    }
+    return result;
+}
     
 vector<pair<string, Mat> > ObjectTrackerDebugger::debugImages(TrackerDebugInfo info, bool drawTransformedRect, bool drawFilteredMatches, bool drawAllMatches, bool drawObjectKeyPoints, bool drawSceneKeyPoints)
 {
@@ -186,7 +246,7 @@ vector<pair<string, Mat> > ObjectTrackerDebugger::debugImages(TrackerDebugInfo i
     } else if (info.currentModuleType == ModuleType2String::convert(MODULE_TYPE_VALIDATION)) {
         debugImages.push_back(make_pair("validation", drawValidationImage(info, drawTransformedRect, drawFilteredMatches, drawAllMatches, drawObjectKeyPoints, drawSceneKeyPoints)));
     } else if (info.currentModuleType == ModuleType2String::convert(MODULE_TYPE_TRACKING)) {
-        debugImages.push_back(make_pair("tracking", info.sceneImageFull));
+        debugImages.push_back(make_pair("tracking", drawTrackingImage(info, drawTransformedRect, drawFilteredMatches, drawAllMatches)));
     } else if (info.currentModuleType == ModuleType2String::convert(MODULE_TYPE_EMPTY)) {
         debugImages.push_back(make_pair("empty", info.sceneImageFull));
     }

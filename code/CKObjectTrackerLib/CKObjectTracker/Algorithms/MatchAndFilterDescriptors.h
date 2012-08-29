@@ -9,9 +9,6 @@
 #ifndef CKObjectTrackerLib_MatchAndFilterDescriptors_h
 #define CKObjectTrackerLib_MatchAndFilterDescriptors_h
 
-#define TIMER_MATCH "matching"
-#define TIMER_FILTER "filtering"
-
 enum FilterFlag {
     FILTER_FLAG_CROP,
     FILTER_FLAG_RATIO,

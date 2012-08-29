@@ -16,6 +16,28 @@ namespace ck {
 class TrackingModule : public AbstractModule {
 
 private:
+    cv::TermCriteria _terminationCriteria;
+    cv::Size _winSizeSubPix;
+    cv::Size _winSizeFlow;
+    cv::Size _zeroZone;
+    float _minEigenThreshold;
+    int _maxLevel;
+    int _lkFlags;
+    
+    int _maxPointsAbsolute;
+    int _minPointsAbsolute;
+    float _minPointsRelative;
+    float _regularityThreshold;
+    bool _filterIrregularPoints;
+    bool _useSubPixels;
+    bool _byPass;
+    int _maxSuccessiveFrames;
+    int _succFrameCount;
+    
+    bool _isInitialPointSet;
+    int _initialCount;
+ 
+    std::vector<cv::Point2f> _objectCorners;
     
 public:
     TrackingModule();

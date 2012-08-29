@@ -15,8 +15,9 @@ namespace ck {
     
     struct ModuleParams {
         ModuleType successor;            // OUT: abstract             IN: abstract
-        cv::Mat sceneImage;              // OUT: -                    IN: detection, validation, tracking
         cv::Rect searchRect;             // OUT: detection            IN: validation
+        cv::Mat sceneImageCurrent;       // OUT: -                    IN: detection, validation, tracking
+        cv::Mat sceneImagePrevious;      // OUT: validation, tracking IN: tracking
         cv::Mat homography;              // OUT: validation, tracking IN: tracking
         std::vector<cv::Point2f> points; // OUT: validation, tracking IN: tracking
         bool isObjectPresent;            // OUT: validation, tracking IN: -

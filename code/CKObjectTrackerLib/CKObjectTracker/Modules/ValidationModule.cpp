@@ -13,12 +13,11 @@
 
 #include <opencv2/nonfree/nonfree.hpp>
 
-#define TIMER_CONVERT "conversion"
-#define TIMER_DETECT "detection"
-#define TIMER_OPTIMIZATION "optimization"
-#define TIMER_EXTRACT "extraction"
-#define TIMER_ESTIMATE "estimation"
-#define TIMER_VALIDATE "validation"
+#define TIMER_CONVERT "converting"
+#define TIMER_DETECT "detecting"
+#define TIMER_EXTRACT "extracting"
+#define TIMER_ESTIMATE "estimating"
+#define TIMER_VALIDATE "validating"
 
 using namespace std;
 using namespace cv;
@@ -39,7 +38,7 @@ ValidationModule::ValidationModule() : AbstractModule(MODULE_TYPE_VALIDATION)
     //_filterFlags.push_back(FILTER_FLAG_CROP);
     //_filterFlags.push_back(FILTER_FLAG_SYMMETRY);
 
-    _convertGray = false;
+    _convertToGray = false;
     _sortMatches = true;
     _nBestMatches = 8;
     _ratio = 0.7f;
@@ -58,12 +57,11 @@ void ValidationModule::initWithObjectImage(const cv::Mat &objectImage) // TODO d
 {
     Profiler* profiler = Profiler::Instance();
 
-    if (_convertGray) {
+    if (_convertToGray) {
         profiler->startTimer(TIMER_CONVERT);
         utils::bgr_a_2Gray(objectImage, _objectImage, COLOR_CONV_CV);
         profiler->stopTimer(TIMER_CONVERT);
     } else {
-        _objectImage = Mat(objectImage.rows, objectImage.cols, objectImage.type());
         objectImage.copyTo(_objectImage);
     }
     
@@ -83,9 +81,6 @@ void ValidationModule::initWithObjectImage(const cv::Mat &objectImage) // TODO d
 
 bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& debugInfo)
 {
-    // clear module specific debug information
-    debugInfo.namedMatches.clear();
-    
     Mat sceneImage;
     Mat sceneDescriptors;
     vector<KeyPoint> sceneKeyPoints;
@@ -97,21 +92,24 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     
     Profiler* profiler = Profiler::Instance();
     
+    // clear module specific debug information
+    debugInfo.namedMatches.clear();
+    
     // get region of interest and convert if desired
-    if (_convertGray) {
+    if (_convertToGray) {
         profiler->startTimer(TIMER_CONVERT);
-        utils::bgr_a_2Gray(params.sceneImage(params.searchRect), sceneImage, COLOR_CONV_CV);
+        utils::bgr_a_2Gray(params.sceneImageCurrent(params.searchRect), sceneImage, COLOR_CONV_CV);
         profiler->stopTimer(TIMER_CONVERT);
     } else {
-        sceneImage = params.sceneImage(params.searchRect);
+        sceneImage = params.sceneImageCurrent(params.searchRect);
     }
 
     // detect keypoints and extract features
     profiler->startTimer(TIMER_DETECT);
-    _detector->detect(params.sceneImage, sceneKeyPoints);
+    _detector->detect(sceneImage, sceneKeyPoints);
     profiler->stopTimer(TIMER_DETECT);
     profiler->startTimer(TIMER_EXTRACT);
-    _extractor->compute(params.sceneImage, sceneKeyPoints, sceneDescriptors);
+    _extractor->compute(sceneImage, sceneKeyPoints, sceneDescriptors);
     profiler->stopTimer(TIMER_EXTRACT);
 
     // set first bit of debug info values
@@ -160,13 +158,14 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     profiler->stopTimer(TIMER_VALIDATE);
 
     // set out params
-    params.points = sceneCoordinates; // These are only matches, but using the whole keypoint set is ok
+    //params.points = sceneCoordinates; // These are only matches, but using the whole keypoint set is ok
                                       // since tracker calculates relative homographies and not absolute ones.
     utils::get2DCoordinatesOfKeyPoints(sceneKeyPoints, params.points);
+    params.sceneImageCurrent.copyTo(params.sceneImagePrevious);
     params.isObjectPresent = validHomography;
     params.homography = homography;
     
-    // set rest of debug info value
+    // set rest of debug info values
     map<string, double> timerValues = profiler->getCurrentTimerValues();
     map<string, double>::const_iterator iter;
     for (iter = timerValues.begin(); iter != timerValues.end(); iter++) {

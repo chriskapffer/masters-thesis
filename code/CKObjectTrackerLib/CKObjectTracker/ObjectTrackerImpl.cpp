@@ -105,7 +105,7 @@ void ObjectTracker::Impl::trackObjectInVideo(const Mat& frame, TrackerOutput& ou
 
 void ObjectTracker::Impl::track(const Mat& frame, TrackerOutput& output, TrackerDebugInfo& debugInfo, bool trackInSequence)
 {
-    _moduleParams.sceneImage = frame;
+    _moduleParams.sceneImageCurrent = frame;
     _currentModule->process(_moduleParams, debugInfo);
     _currentModule = _allModules[_moduleParams.successor];
 

@@ -21,7 +21,7 @@ void AbstractModule::process(ModuleParams& params, TrackerDebugInfo& debugInfo)
     params.successor = ModuleTransition::getSuccessor(_moduleType, internalProcess(params, debugInfo));
     debugInfo.totalProcessingTime = ((double)cv::getTickCount() - startTime) / cv::getTickFrequency() * 1000;
     debugInfo.currentModuleType = ModuleType2String::convert(_moduleType);
-    debugInfo.sceneImageFull = params.sceneImage;
+    debugInfo.sceneImageFull = params.sceneImageCurrent;
     Profiler::Instance()->clearAll();
 }
 

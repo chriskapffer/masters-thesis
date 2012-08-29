@@ -17,6 +17,7 @@ class DetectionModule : public AbstractModule {
     
 private:
     float _detectionThreshold;
+    bool _byPass;
     
 public:
     DetectionModule();
