@@ -70,6 +70,16 @@ double Profiler::elapsedTime(std::string timerName) const
     return 0;
 }
 
+map<string, double> Profiler::getCurrentTimerValues() const
+{
+    map<string, double> result;
+    map<string, Timer>::const_iterator iter;
+    for (iter = _timers->begin(); iter != _timers->end(); iter++) {
+        result[(*iter).first] = (*iter).second.elapsedTotal();
+    }
+    return result;
+}
+    
 //---------------------------------------------------------------
 
 Profiler::Timer::Timer()

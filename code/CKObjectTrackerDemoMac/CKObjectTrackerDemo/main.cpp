@@ -9,6 +9,7 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include "ObjectTracker.h"
+#include "ObjectTrackerDebugger.h"
 
 using namespace std;
 using namespace cv;
@@ -37,10 +38,11 @@ int main(int argc, const char * argv[])
     ObjectTracker tracker = ObjectTracker();
 
     TrackerOutput output;
-    TrackerDebugInfo info;
+    TrackerDebugInfo debugInfo;
+    vector<TrackerDebugInfoStripped> completeInfo;
     
     Mat frame;
-    namedWindow("video");
+    bool firstRun = true;
     bool endCapture = false;    
     while (!endCapture) {
         if (!capture.read(frame)) {
@@ -48,9 +50,19 @@ int main(int argc, const char * argv[])
             endCapture = true;
         }
         
-        tracker.trackObjectInVideo(frame, output, info);
+        tracker.trackObjectInVideo(frame, output, debugInfo);
+        vector<pair<string, Mat> > debugImages = ObjectTrackerDebugger::debugImages(debugInfo, true, false, true, true, true);
+        for (int i = 0; i < debugImages.size(); i++) {
+            pair<string, Mat> item = debugImages[i];
+            if (firstRun) { namedWindow(item.first); }
+            imshow(item.first, item.second);
+        }
+        firstRun = false;
         
-        imshow("video", frame);
+        TrackerDebugInfoStripped stripped = TrackerDebugInfoStripped(debugInfo);
+        cout << ObjectTrackerDebugger::debugString(stripped) << endl;
+        completeInfo.push_back(stripped);
+        
         char key = (char)waitKey(30);
         switch(key)
         {
@@ -66,6 +78,8 @@ int main(int argc, const char * argv[])
                 break;
         }
     }
+    
+    cout << "\n" << ObjectTrackerDebugger::debugString(completeInfo) << endl;
     
 //    Mat edges;
 //    namedWindow("edges",1);

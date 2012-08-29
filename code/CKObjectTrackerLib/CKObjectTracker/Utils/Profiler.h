@@ -27,6 +27,8 @@ public:
     inline void setEnabled(bool value) { _enabled = value; }
     inline void clearAll() { _timers->clear(); }
     
+    std::map<std::string, double> getCurrentTimerValues() const;
+    
 private:
     class Timer {
     public:

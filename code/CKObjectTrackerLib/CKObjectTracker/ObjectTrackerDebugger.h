@@ -21,7 +21,7 @@ public:
     // only usefull in videos module settings should not have changed during playback
     static std::string debugString(std::vector<TrackerDebugInfoStripped> info);
 
-    static std::vector<std::pair<std::string, cv::Mat> > debugImages(TrackerDebugInfo info, bool drawTransformedRect = true, bool drawFilteredMatches = false, bool drawAllMatches = false);
+    static std::vector<std::pair<std::string, cv::Mat> > debugImages(TrackerDebugInfo info, bool drawTransformedRect = true, bool drawFilteredMatches = false, bool drawAllMatches = false, bool drawObjectKeyPoints = false, bool drawSceneKeyPoints = false);
 };
 
 } // end of namespace

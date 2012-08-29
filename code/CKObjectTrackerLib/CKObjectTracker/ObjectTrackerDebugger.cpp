@@ -85,6 +85,15 @@ string ObjectTrackerDebugger::debugString(vector<TrackerDebugInfoStripped> info)
 
 // -------------------- drawing --------------------
 
+static void drawKeyPoints(Mat& result, const vector<KeyPoint>& keyPoints, Scalar color, Point2f offset, float scale)
+{
+    vector<KeyPoint>::const_iterator iter;
+    for (iter = keyPoints.begin(); iter != keyPoints.end(); iter++) {
+        Point2f p = (*iter).pt * scale + offset;
+        circle(result, p, 2, color);
+    }
+}
+    
 static void drawMatches(Mat& result, const vector<DMatch>& matches, const vector<KeyPoint>& keyPoints1, const vector<KeyPoint>& keyPoints2, Scalar color, Point2f offset1, Point2f offset2, float scale1, float scale2)
 {
     for (vector<DMatch>::const_iterator iter = matches.begin(); iter != matches.end(); iter++) {
@@ -107,7 +116,7 @@ static void drawTransformedRectToImage(Mat& image, const vector<Point2f>& corner
     line(image, corners[3] * scale + offset, corners[0] * scale + offset, color, lineWidth);
 }
     
-static Mat drawValidationImage(TrackerDebugInfo info, bool drawTransformedRect, bool drawFilteredMatches, bool drawAllMatches)
+static Mat drawValidationImage(TrackerDebugInfo info, bool drawTransformedRect, bool drawFilteredMatches, bool drawAllMatches, bool drawObjectKeyPoints, bool drawSceneKeyPoints)
 {
     Mat result;
     if (drawFilteredMatches || drawAllMatches) {
@@ -115,6 +124,8 @@ static Mat drawValidationImage(TrackerDebugInfo info, bool drawTransformedRect, 
         
         Mat imgScene = info.sceneImagePart;
         Mat imgObject = info.objectImage;
+        if (imgScene.type() == CV_8UC1) { cvtColor(imgScene, imgScene, CV_GRAY2BGR); }
+        if (imgObject.type() == CV_8UC1) { cvtColor(imgObject, imgObject, CV_GRAY2BGR); }        
         
         float factorObj = MIN(result.cols / (float)imgObject.cols, result.rows * 0.5f / (float)imgObject.rows);
         resize(imgObject, imgObject, Size(imgObject.cols * factorObj, imgObject.rows * factorObj));
@@ -128,6 +139,13 @@ static Mat drawValidationImage(TrackerDebugInfo info, bool drawTransformedRect, 
         
         if (!drawAllMatches && drawFilteredMatches && info.namedMatches.size() > 0) {
             drawMatches(result, info.namedMatches[info.namedMatches.size() - 1].second, info.objectKeyPoints, info.sceneKeyPoints, Scalar(0, 255, 255), offsetObj, offsetScn, factorObj, factorScn);
+        }
+        
+        if (drawObjectKeyPoints) {
+            drawKeyPoints(result, info.objectKeyPoints, Scalar(255, 0, 0), offsetObj, factorObj);
+        }
+        if (drawSceneKeyPoints) {
+            drawKeyPoints(result, info.sceneKeyPoints, Scalar(255, 0, 0), offsetScn, factorScn);
         }
         
         if (drawAllMatches) {
@@ -159,25 +177,20 @@ static Mat drawValidationImage(TrackerDebugInfo info, bool drawTransformedRect, 
     return result;
 }
     
-vector<pair<string, Mat> > ObjectTrackerDebugger::debugImages(TrackerDebugInfo info, bool drawTransformedRect, bool drawFilteredMatches, bool drawAllMatches)
+vector<pair<string, Mat> > ObjectTrackerDebugger::debugImages(TrackerDebugInfo info, bool drawTransformedRect, bool drawFilteredMatches, bool drawAllMatches, bool drawObjectKeyPoints, bool drawSceneKeyPoints)
 {
     vector<pair<string, Mat> > debugImages = vector<pair<string, Mat> >();
-    Mat blackImage = Mat(info.sceneImageFull.rows, info.sceneImageFull.cols, CV_8UC1, Scalar(0));
-    
+
     if (info.currentModuleType == ModuleType2String::convert(MODULE_TYPE_DETECTION)) {
-        debugImages.push_back(make_pair("detection", blackImage));
-        debugImages.push_back(make_pair("validation", blackImage));
-        debugImages.push_back(make_pair("tracking", blackImage));
+        debugImages.push_back(make_pair("detection", info.sceneImageFull));
     } else if (info.currentModuleType == ModuleType2String::convert(MODULE_TYPE_VALIDATION)) {
-        debugImages.push_back(make_pair("detection", blackImage));
-        debugImages.push_back(make_pair("validation", drawValidationImage(info, drawTransformedRect, drawFilteredMatches, drawAllMatches)));
-        debugImages.push_back(make_pair("tracking", blackImage));
+        debugImages.push_back(make_pair("validation", drawValidationImage(info, drawTransformedRect, drawFilteredMatches, drawAllMatches, drawObjectKeyPoints, drawSceneKeyPoints)));
     } else if (info.currentModuleType == ModuleType2String::convert(MODULE_TYPE_TRACKING)) {
-        debugImages.push_back(make_pair("detection", blackImage));
-        debugImages.push_back(make_pair("validation", blackImage));
-        debugImages.push_back(make_pair("tracking", blackImage));
+        debugImages.push_back(make_pair("tracking", info.sceneImageFull));
+    } else if (info.currentModuleType == ModuleType2String::convert(MODULE_TYPE_EMPTY)) {
+        debugImages.push_back(make_pair("empty", info.sceneImageFull));
     }
-    
+
     return debugImages;
 }
 

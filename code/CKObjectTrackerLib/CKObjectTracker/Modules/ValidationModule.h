@@ -32,6 +32,7 @@ private:
     int _ransacThreshold;
     int _nBestMatches;
     bool _sortMatches;
+    bool _convertGray;
     float _ratio;
     
     int _estimationMethod;

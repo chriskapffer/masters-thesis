@@ -9,8 +9,12 @@
 #ifndef CKObjectTrackerLib_Utils_h
 #define CKObjectTrackerLib_Utils_h
 
-namespace ck {
+#define COLOR_CONV_CV       0
+#define COLOR_CONV_NEON     1
+#define COLOR_CONV_NEON_ASM 2
 
+namespace ck {
+    
 template <typename T>
 inline static bool contains(const std::vector<T>& vec, T elem) {
     return find(vec.begin(), vec.end(), elem) != vec.end();
@@ -23,6 +27,11 @@ inline static bool compareKnnMatch (std::vector<cv::DMatch> i, std::vector<cv::D
 }
     
 struct utils {
+    
+    // source image can also be gray scale
+    static void bgr_a_2Gray(const cv::Mat& imgIn, cv::Mat& imgOut, int method = COLOR_CONV_CV);
+    
+    static void get2DCoordinatesOfKeyPoints(const std::vector<cv::KeyPoint>& keypoints, std::vector<cv::Point2f>& coordinates);
     
     static void get2DCoordinatesOfMatches(const std::vector<cv::DMatch>& matches, const std::vector<cv::KeyPoint>& keypoints1, const std::vector<cv::KeyPoint>& keypoints2, std::vector<cv::Point2f>& coordinates1, std::vector<cv::Point2f>& coordinates2);
     

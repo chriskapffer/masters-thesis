@@ -63,7 +63,7 @@ void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
         }
 
         tracker.trackObjectInVideo(frame, output, debugInfo);
-        vector<pair<string, Mat> > debugImages = ObjectTrackerDebugger::debugImages(debugInfo, true, false, true);
+        vector<pair<string, Mat> > debugImages = ObjectTrackerDebugger::debugImages(debugInfo, true, false, true, true, true);
         for (int i = 0; i < debugImages.size(); i++) {
             pair<string, Mat> item = debugImages[i];
             if (firstRun) { namedWindow(item.first); }
@@ -86,7 +86,7 @@ void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
             endCapture = true;
         }
     }
-    cout << "\n" << ObjectTrackerDebugger::debugString(completeInfo) << endl;;
+    cout << "\n" << ObjectTrackerDebugger::debugString(completeInfo) << endl;
 }
 
 void trackObjectInStillImage(const Mat& objectImage, const Mat& sceneImage)

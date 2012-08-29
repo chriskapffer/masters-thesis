@@ -7,17 +7,19 @@
 //
 
 #include "ObjectTrackerImpl.h"
-
-#if defined(__has_include) && __has_include(<future>) && __has_feature(cxx_lambdas)
-#define __NECESSARY_CPP11_FEATURES_AVAILABLE__
-#include <future>
-#endif
-
-#if !defined(__NECESSARY_CPP11_FEATURES_PRESENT__) && defined(__APPLE__)
-#include <dispatch/dispatch.h>
-#endif
-
 #include "ModuleManagement.h"
+
+#if defined(__has_include)
+    #if __has_include(<future>) && __has_feature(cxx_lambdas)
+        #define __NECESSARY_CPP11_FEATURES_AVAILABLE__
+        #include <future>
+    #endif
+
+    #if !defined(__NECESSARY_CPP11_FEATURES_PRESENT__) && __has_include(<dispatch/dispatch.h>)
+        #define __NECESSARY_APPLE_FEATURES_AVAILABLE__
+        #include <dispatch/dispatch.h>
+    #endif
+#endif
 
 using namespace std;
 using namespace cv;
@@ -58,13 +60,13 @@ void ObjectTracker::Impl::setObject(const Mat& objectImage)
     _moduleParams.successor = MODULE_TYPE_EMPTY;
     _currentModule = _allModules[MODULE_TYPE_EMPTY];
 
-#ifdef __NECESSARY_CPP11_FEATURES_AVAILABLE__
+#if defined(__NECESSARY_CPP11_FEATURES_AVAILABLE__)
     // use C++11 features for concurrency
     auto function = [] (CKObjectTracker::Impl& tracker, const cv::Mat &objectImage) {
         tracker.initModules(objectImage);
     };
     async(launch::async, function, ref(*this), objectImage);
-#elif defined(__APPLE__)
+#elif defined(__NECESSARY_APPLE_FEATURES_AVAILABLE__)
     // use apple features for concurrency
     static dispatch_queue_t queue;
     // if queue is still running wait until it completes
