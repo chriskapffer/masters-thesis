@@ -54,18 +54,19 @@ TrackingModule::TrackingModule() : AbstractModule(MODULE_TYPE_TRACKING)
     // all 0
     
     _maxPointsAbsolute = 200;
-    _minPointsAbsolute = 10;
-    _minPointsRelative = 0.2f;
+    _minPointsAbsolute = 20;
+    _minPointsRelative = 0.5f;
     _regularityThreshold = 1.0f;
     _filterIrregularPoints = true;
+    _relativeHomography = false;
     _useSubPixels = false;
 
     _byPass = false;
-    _maxSuccessiveFrames = 60;
+    _maxSuccessiveFrames = -1; //40;
     _succFrameCount = 0;
     
     _isInitialPointSet = true;
-    _initialCount = 0;
+    _initialPointCount = 0;
 }
 
 TrackingModule::~TrackingModule()
@@ -108,15 +109,17 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
     // store number of points, if they are the initial point set to start with
     // (previous module was not tracker itself)
     if (_isInitialPointSet) {
-        _succFrameCount = 0;
-        _initialCount = (int)pointsIn.size();
-        debugInfo.initialPointCount = _initialCount;
         _isInitialPointSet = false;
+        _initialPointSet = pointsIn;
+        _initialPointCount = (int)pointsIn.size();
+        params.homography.copyTo(_initialHomography);
+        debugInfo.initialPointCount = _initialPointCount;
+        _succFrameCount = 0;
     }
     
     // stop tracking after max successive frames (used for homography refinemend via validation module)
     _succFrameCount++;
-    if (_succFrameCount > _maxSuccessiveFrames) {
+    if (_maxSuccessiveFrames > 0 && _succFrameCount > _maxSuccessiveFrames) {
         _isInitialPointSet = true;
         return false;
     }
@@ -150,6 +153,7 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
     for (int i = (int)pointsOut.size() - 1; i >= 0; i--) {
         if (!status[i]) {
             // if point could not be tracked remove it (from both lists, to keep them in sync)
+            _initialPointSet.erase(_initialPointSet.begin() + i);
             pointsOut.erase(pointsOut.begin() + i);
             pointsIn.erase(pointsIn.begin() + i);
             continue;
@@ -177,6 +181,7 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
             Point2f vec = pointsOut[i] - pointsIn[i];
             float distanceSquared = vec.x * vec.x + vec.y * vec.y;
             if (fabs(distanceSquared - avgDistSq) / avgDistSq > _regularityThreshold) {
+                _initialPointSet.erase(_initialPointSet.begin() + i);
                 pointsOut.erase(pointsOut.begin() + i);
                 pointsIn.erase(pointsIn.begin() + i);
             }
@@ -187,7 +192,7 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
 
     // check if there are enough points left
     int currentCount = (int)pointsOut.size();
-    if (currentCount < _minPointsAbsolute || currentCount < _initialCount * _minPointsRelative) {
+    if (currentCount < _minPointsAbsolute || currentCount < _initialPointCount * _minPointsRelative) {
         cout << "Lost too many points." << endl;
         _isInitialPointSet = true;
         return false;
@@ -195,7 +200,15 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
     
     // compute homography from points
     profiler->startTimer(TIMER_ESTIMATE);
-    homography *= findHomography(pointsIn, pointsOut, CV_RANSAC, 5);
+    if (_relativeHomography) {
+        homography *= findHomography(pointsIn, pointsOut);
+    } else {
+        if (_initialPointSet.size() == pointsOut.size()) {
+            homography = findHomography(_initialPointSet, pointsOut) * _initialHomography;
+        } else {
+            cout << "This should not happen!!" << endl; //TODO throw
+        }
+    }
     profiler->stopTimer(TIMER_ESTIMATE);
 
     // validate homography matrix

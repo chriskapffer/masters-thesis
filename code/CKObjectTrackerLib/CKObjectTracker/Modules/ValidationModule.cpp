@@ -171,6 +171,16 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     for (iter = timerValues.begin(); iter != timerValues.end(); iter++) {
         debugInfo.subTaskProcessingTimes.push_back(make_pair((*iter).first, (*iter).second));
     }
+    float divergence = 0;
+    vector<Point2f> prevObjectCornersTrans = debugInfo.transformedObjectCorners;
+    if (objectCornersTransformed.size() == prevObjectCornersTrans.size()) {
+        for (int i = 0; i < prevObjectCornersTrans.size(); i++) {
+            Point2f vec = (objectCornersTransformed[i] - prevObjectCornersTrans[i]);
+            divergence += sqrt(vec.x * vec.x + vec.y * vec.y);
+        }
+        divergence /= prevObjectCornersTrans.size();
+    }
+    debugInfo.divergence = divergence;
     debugInfo.transformedObjectCorners = objectCornersTransformed;
     debugInfo.badHomography = !validHomography;
     debugInfo.homography = homography;

@@ -54,8 +54,8 @@ string ObjectTrackerDebugger::debugString(TrackerDebugInfoStripped info)
                 snprintf(buffer, length, "%slost after %s: %d\n", buffer, info.namedPointCounts[i].first.c_str(), info.namedPointCounts[i - 1].second - info.namedPointCounts[i].second);
             }
         }
-        snprintf(buffer, length, "%saverage error: %.3f\n", buffer, info.avgError);
         snprintf(buffer, length, "%sdistance range: %.3f\n", buffer, info.distanceRange);
+        snprintf(buffer, length, "%saverage error: %.3f\n", buffer, info.avgError);
         snprintf(buffer, length, "%sdivergence: %.3f\n", buffer, info.divergence);
     }
 
