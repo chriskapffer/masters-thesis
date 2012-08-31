@@ -16,8 +16,20 @@ namespace ck {
 class DetectionModule : public AbstractModule {
     
 private:
+    cv::Mat _objectImage;
+    std::vector<cv::Vec4i> _objectHierarchy;
+    std::vector<std::vector<cv::Point> > _objectContours;
+    
+    cv::MatND _objectHist;
+    
     float _detectionThreshold;
+    bool _preProcess;
     bool _byPass;
+    
+    void initEdges(const cv::Mat &objectImage);
+    void initHist(const cv::Mat &objectImage);
+    bool matchEdges(ModuleParams& params, TrackerDebugInfo& debugInfo);
+    bool matchHist(ModuleParams& params, TrackerDebugInfo& debugInfo);
     
 public:
     DetectionModule();

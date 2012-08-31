@@ -17,6 +17,13 @@ struct TrackerOutput {
     bool failed;
 };
 
+struct CMatch {
+    int queryIdx;
+    int trainIdx;
+    float score;
+    CMatch(int queryIdx, int trainIdx, float score) : queryIdx(queryIdx), trainIdx(trainIdx), score(score) {};
+};
+    
 struct TrackerDebugInfo {
     // general
     std::string currentModuleType;
@@ -24,6 +31,10 @@ struct TrackerDebugInfo {
     double totalProcessingTime;
     
     // detection
+    std::vector<std::vector<cv::Point> > objectContours;
+    std::vector<std::vector<cv::Point> > sceneContours;
+    std::vector<CMatch> contourMatches;
+    cv::Mat probabilityMap;
     cv::Rect searchRect;
     
     // validation
@@ -58,6 +69,8 @@ struct TrackerDebugInfoStripped
     double totalProcessingTime;
     
     // detection
+    int objectContourCount;
+    int sceneContourCount;
     
     // validation
     std::vector<std::pair<std::string, int> > namedMatchCounts;
@@ -79,6 +92,8 @@ struct TrackerDebugInfoStripped
         currentModuleType = "undefined";
         subTaskProcessingTimes = std::vector<std::pair<std::string, double> >();
         totalProcessingTime = 0;
+        objectContourCount = 0;
+        sceneContourCount = 0;
         objectKeyPointCount = 0;
         sceneKeyPointCount = 0;
         badHomography = false;
@@ -95,6 +110,8 @@ struct TrackerDebugInfoStripped
         currentModuleType = params.currentModuleType;
         subTaskProcessingTimes = params.subTaskProcessingTimes;
         totalProcessingTime = params.totalProcessingTime;
+        objectContourCount = (int)params.objectContours.size();
+        sceneContourCount = (int)params.sceneContours.size();
         objectKeyPointCount = (int)params.objectKeyPoints.size();
         sceneKeyPointCount = (int)params.sceneKeyPoints.size();
         badHomography = params.badHomography;
@@ -136,6 +153,8 @@ struct TrackerDebugInfoStripped
         }
 
         // detection
+        objectContourCount += other.objectContourCount;
+        sceneContourCount += other.sceneContourCount;
         // validation
         objectKeyPointCount += other.objectKeyPointCount; 
         sceneKeyPointCount += other.sceneKeyPointCount;
@@ -186,7 +205,8 @@ struct TrackerDebugInfoStripped
         }
         
         // detection
-        
+        res.objectContourCount = objectContourCount / factor;
+        res.sceneContourCount = sceneContourCount / factor;
         // validation
         res.objectKeyPointCount = objectKeyPointCount / factor;
         res.sceneKeyPointCount = sceneKeyPointCount / factor;

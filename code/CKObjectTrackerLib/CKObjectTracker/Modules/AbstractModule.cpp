@@ -10,19 +10,32 @@
 #include "ModuleManagement.h"
 #include "Profiler.h"
 
+#define TIMER_TOTAL "TotalProcessingTimeAbstract"
+
+using namespace std;
+
 namespace ck {
 
 void AbstractModule::process(ModuleParams& params, TrackerDebugInfo& debugInfo)
 {
-    double startTime = (double)cv::getTickCount();
     assert(params.successor == _moduleType);
+    
+    Profiler* profiler = Profiler::Instance();
+    profiler->clearAll();
+    profiler->startTimer(TIMER_TOTAL);
+
     debugInfo.subTaskProcessingTimes.clear();
     params.isObjectPresent = false;
     params.successor = ModuleTransition::getSuccessor(_moduleType, internalProcess(params, debugInfo));
-    debugInfo.totalProcessingTime = ((double)cv::getTickCount() - startTime) / cv::getTickFrequency() * 1000;
+    debugInfo.totalProcessingTime = profiler->elapsedTime(TIMER_TOTAL);
     debugInfo.currentModuleType = ModuleType2String::convert(_moduleType);
     debugInfo.sceneImageFull = params.sceneImageCurrent;
-    Profiler::Instance()->clearAll();
+    
+    profiler->clearTimer(TIMER_TOTAL);
+    map<string, double> timerValues = profiler->getCurrentTimerValues();
+    for (map<string, double>::const_iterator iter = timerValues.begin(); iter != timerValues.end(); iter++) {
+        debugInfo.subTaskProcessingTimes.push_back(make_pair((*iter).first, (*iter).second));
+    }
 }
 
 } // end of namespace

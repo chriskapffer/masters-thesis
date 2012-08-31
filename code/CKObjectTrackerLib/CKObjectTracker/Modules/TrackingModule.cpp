@@ -55,7 +55,7 @@ TrackingModule::TrackingModule() : AbstractModule(MODULE_TYPE_TRACKING)
     
     _maxPointsAbsolute = 200;
     _minPointsAbsolute = 20;
-    _minPointsRelative = 0.5f;
+    _minPointsRelative = 0.4f;
     _regularityThreshold = 1.0f;
     _filterIrregularPoints = true;
     _relativeHomography = false;
@@ -227,11 +227,6 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
     params.points = pointsOut;
     
     // set debug info values
-    map<string, double> timerValues = profiler->getCurrentTimerValues();
-    map<string, double>::const_iterator iter;
-    for (iter = timerValues.begin(); iter != timerValues.end(); iter++) {
-        debugInfo.subTaskProcessingTimes.push_back(make_pair((*iter).first, (*iter).second));
-    }
     float divergence = 0;
     vector<Point2f> prevObjectCornersTrans = debugInfo.transformedObjectCorners;
     if (objectCornersTransformed.size() == prevObjectCornersTrans.size()) {

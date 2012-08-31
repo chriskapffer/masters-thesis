@@ -21,7 +21,7 @@ inline static bool compareTimers(pair<string, double> i, pair<string, double> j)
     
 string ObjectTrackerDebugger::debugString(TrackerDebugInfoStripped info)
 {
-    int length = 1024;
+    int length = 1028;
     char buffer[length];
     
     snprintf(buffer, length, "%s took %.2f ms --> %.2f FPS\n", info.currentModuleType.c_str(), info.totalProcessingTime, 1000 / info.totalProcessingTime);
@@ -38,7 +38,10 @@ string ObjectTrackerDebugger::debugString(TrackerDebugInfoStripped info)
     snprintf(buffer, length, "%sother:\t\t%f ms (%.2f%%)\n", buffer, timeOther, timeOther / info.totalProcessingTime * 100);
     
     // module specific info
-    if (info.currentModuleType == ModuleType2String::convert(MODULE_TYPE_VALIDATION)) {
+    if (info.currentModuleType == ModuleType2String::convert(MODULE_TYPE_DETECTION)) {
+        snprintf(buffer, length, "%sobjectContours: %d\n", buffer, info.objectContourCount);
+        snprintf(buffer, length, "%ssceneCountours: %d\n", buffer, info.sceneContourCount);
+    } else if (info.currentModuleType == ModuleType2String::convert(MODULE_TYPE_VALIDATION)) {
         snprintf(buffer, length, "%sobjectKeyPoints: %d\n", buffer, info.objectKeyPointCount);
         snprintf(buffer, length, "%ssceneKeyPoints: %d\n", buffer, info.sceneKeyPointCount);
         for (int i = 0; i < info.namedMatchCounts.size(); i++) {
@@ -94,7 +97,7 @@ string ObjectTrackerDebugger::debugString(vector<TrackerDebugInfoStripped> info)
         }
     }
     
-    int length = 1024;
+    int length = 2048;
     char buffer[length];
     
     snprintf(buffer, length, "%s\nProcessed %ld frames (%d detection, %d validation, %d tracking)\n\n",
@@ -140,6 +143,24 @@ static void drawMatches(Mat& result, const vector<DMatch>& matches, const vector
     }
 }
     
+static void drawContourImages(Mat& img1, Mat& img2, const vector<CMatch>& matches, const vector<vector<Point> >& contours1, const vector<vector<Point> >& contours2)
+{
+    for (vector<CMatch>::const_iterator iter = matches.begin(); iter != matches.end(); iter++) {
+        Scalar color = Scalar(rand()&255, rand()&255, rand()&255);
+        drawContours(img1, contours1, (*iter).queryIdx, color, 1);
+        drawContours(img2, contours2, (*iter).trainIdx, color, 1);
+    }
+//    for (int i = 0; i < contours1.size(); i++) {
+//        Scalar color = Scalar(rand()&255, rand()&255, rand()&255);
+//        drawContours(img1, contours1, i, color, 1);
+//    }
+//    for (int i = 0; i < contours2.size(); i++) {
+//        Scalar color = Scalar(rand()&255, rand()&255, rand()&255);
+//        drawContours(img2, contours2, i, color, 1);
+//    }
+
+}
+    
 static void drawTransformedRectToImage(Mat& image, const vector<Point2f>& corners, Point2f offset, float scale, Scalar color, int lineWidth)
 {
     if (corners.size() != 4)
@@ -149,6 +170,31 @@ static void drawTransformedRectToImage(Mat& image, const vector<Point2f>& corner
     line(image, corners[1] * scale + offset, corners[2] * scale + offset, color, lineWidth);
     line(image, corners[2] * scale + offset, corners[3] * scale + offset, color, lineWidth);
     line(image, corners[3] * scale + offset, corners[0] * scale + offset, color, lineWidth);
+}
+
+static Mat drawDetectionImage(TrackerDebugInfo info) {
+    Mat result = Mat(info.sceneImageFull.cols, info.sceneImageFull.rows, CV_8UC3, Scalar(0, 0, 0));
+    Mat imgObject = Mat(info.objectImage.rows, info.objectImage.cols, CV_8UC3, Scalar(0, 0, 0));
+    Mat imgScene = Mat(info.sceneImageFull.rows, info.sceneImageFull.cols, CV_8UC3, Scalar(0, 0, 0));
+    if (imgObject.type() == CV_8UC1) { cvtColor(imgObject, imgObject, CV_GRAY2BGR); }
+    if (imgScene.type() == CV_8UC1) { cvtColor(imgScene, imgScene, CV_GRAY2BGR); }
+    
+    drawContourImages(imgObject, imgScene, info.contourMatches, info.objectContours, info.sceneContours);
+    
+    float scaleObj = MIN(result.cols / (float)imgObject.cols, result.rows * 0.5f / (float)imgObject.rows);
+    resize(imgObject, imgObject, Size(imgObject.cols * scaleObj, imgObject.rows * scaleObj));
+    Point2f offsetObj = Point2f((result.cols - imgObject.cols) * 0.5f, 0);
+    imgObject.copyTo(result(Rect(offsetObj.x, offsetObj.y, imgObject.cols, imgObject.rows)));
+    
+    float scaleScn = MIN(result.cols / (float)imgScene.cols, result.rows * 0.5f / (float)imgScene.rows);
+    resize(imgScene, imgScene, Size(imgScene.cols * scaleScn, imgScene.rows * scaleScn));
+    Point2f offsetScn = Point2f((result.cols - imgScene.cols) * 0.5f, result.rows * 0.5f);
+    imgScene.copyTo(result(Rect(offsetScn.x, offsetScn.y, imgScene.cols, imgScene.rows)));
+    
+    // rotate image
+    flip(result, result, 1);
+    transpose(result, result);
+    return result;
 }
     
 static Mat drawValidationImage(TrackerDebugInfo info, bool drawTransformedRect, bool drawFilteredMatches, bool drawAllMatches, bool drawObjectKeyPoints, bool drawSceneKeyPoints)
@@ -162,25 +208,25 @@ static Mat drawValidationImage(TrackerDebugInfo info, bool drawTransformedRect, 
         if (imgScene.type() == CV_8UC1) { cvtColor(imgScene, imgScene, CV_GRAY2BGR); }
         if (imgObject.type() == CV_8UC1) { cvtColor(imgObject, imgObject, CV_GRAY2BGR); }        
         
-        float factorObj = MIN(result.cols / (float)imgObject.cols, result.rows * 0.5f / (float)imgObject.rows);
-        resize(imgObject, imgObject, Size(imgObject.cols * factorObj, imgObject.rows * factorObj));
+        float scaleObj = MIN(result.cols / (float)imgObject.cols, result.rows * 0.5f / (float)imgObject.rows);
+        resize(imgObject, imgObject, Size(imgObject.cols * scaleObj, imgObject.rows * scaleObj));
         Point2f offsetObj = Point2f((result.cols - imgObject.cols) * 0.5f, 0);
         imgObject.copyTo(result(Rect(offsetObj.x, offsetObj.y, imgObject.cols, imgObject.rows)));
         
-        float factorScn = MIN(result.cols / (float)imgScene.cols, result.rows * 0.5f / (float)imgScene.rows);
-        resize(imgScene, imgScene, Size(imgScene.cols * factorScn, imgScene.rows * factorScn));
+        float scaleScn = MIN(result.cols / (float)imgScene.cols, result.rows * 0.5f / (float)imgScene.rows);
+        resize(imgScene, imgScene, Size(imgScene.cols * scaleScn, imgScene.rows * scaleScn));
         Point2f offsetScn = Point2f((result.cols - imgScene.cols) * 0.5f, result.rows * 0.5f);
         imgScene.copyTo(result(Rect(offsetScn.x, offsetScn.y, imgScene.cols, imgScene.rows)));
         
         if (!drawAllMatches && drawFilteredMatches && info.namedMatches.size() > 0) {
-            drawMatches(result, info.namedMatches[info.namedMatches.size() - 1].second, info.objectKeyPoints, info.sceneKeyPoints, Scalar(0, 255, 255), offsetObj, offsetScn, factorObj, factorScn);
+            drawMatches(result, info.namedMatches[info.namedMatches.size() - 1].second, info.objectKeyPoints, info.sceneKeyPoints, Scalar(0, 255, 255), offsetObj, offsetScn, scaleObj, scaleScn);
         }
         
         if (drawObjectKeyPoints) {
-            drawKeyPoints(result, info.objectKeyPoints, Scalar(255, 0, 0), offsetObj, factorObj);
+            drawKeyPoints(result, info.objectKeyPoints, Scalar(255, 0, 0), offsetObj, scaleObj);
         }
         if (drawSceneKeyPoints) {
-            drawKeyPoints(result, info.sceneKeyPoints, Scalar(255, 0, 0), offsetScn, factorScn);
+            drawKeyPoints(result, info.sceneKeyPoints, Scalar(255, 0, 0), offsetScn, scaleScn);
         }
         
         if (drawAllMatches) {
@@ -189,13 +235,13 @@ static Mat drawValidationImage(TrackerDebugInfo info, bool drawTransformedRect, 
                 if (i == 0 && size > 1)
                     continue;
                 int brightness = (int)(255 * (i + 1) / size);
-                drawMatches(result, info.namedMatches[i].second, info.objectKeyPoints, info.sceneKeyPoints, Scalar(0, brightness, brightness), offsetObj, offsetScn, factorObj, factorScn);
+                drawMatches(result, info.namedMatches[i].second, info.objectKeyPoints, info.sceneKeyPoints, Scalar(0, brightness, brightness), offsetObj, offsetScn, scaleObj, scaleScn);
             }
         }
 
         if (drawTransformedRect) {
             Scalar color = info.badHomography ? Scalar(0, 0, 255) : Scalar(0, 255, 0);
-            drawTransformedRectToImage(result, info.transformedObjectCorners, offsetScn, factorScn, color, 2);
+            drawTransformedRectToImage(result, info.transformedObjectCorners, offsetScn, scaleScn, color, 2);
         }
         
         // rotate image
@@ -215,7 +261,7 @@ static Mat drawValidationImage(TrackerDebugInfo info, bool drawTransformedRect, 
 static Mat drawTrackingImage(TrackerDebugInfo info, bool drawTransformedRect, bool drawfilteredPoints, bool drawAllPoints)
 {
     Mat result = info.sceneImageFull;
-    Point2f offset = Point2f(0, 0);
+    Point2f offset = info.searchRect.tl();
     float scale = 1.0f;
     if (!drawAllPoints && drawfilteredPoints && info.namedPoints.size() > 0) {
         drawPoints(result, info.namedPoints[info.namedPoints.size() - 1].second, Scalar(0, 255, 255), offset, scale);
@@ -230,7 +276,6 @@ static Mat drawTrackingImage(TrackerDebugInfo info, bool drawTransformedRect, bo
     }
     
     if (drawTransformedRect) {
-        Point2f offset = Point2f(info.searchRect.x, info.searchRect.y);
         Scalar color = info.badHomography ? Scalar(0, 0, 255) : Scalar(0, 255, 0);
         drawTransformedRectToImage(result, info.transformedObjectCorners, offset, 1, color, 2);
     }
@@ -242,7 +287,7 @@ vector<pair<string, Mat> > ObjectTrackerDebugger::debugImages(TrackerDebugInfo i
     vector<pair<string, Mat> > debugImages = vector<pair<string, Mat> >();
 
     if (info.currentModuleType == ModuleType2String::convert(MODULE_TYPE_DETECTION)) {
-        debugImages.push_back(make_pair("detection", info.sceneImageFull));
+        debugImages.push_back(make_pair("detection", info.probabilityMap));//drawDetectionImage(info)));
     } else if (info.currentModuleType == ModuleType2String::convert(MODULE_TYPE_VALIDATION)) {
         debugImages.push_back(make_pair("validation", drawValidationImage(info, drawTransformedRect, drawFilteredMatches, drawAllMatches, drawObjectKeyPoints, drawSceneKeyPoints)));
     } else if (info.currentModuleType == ModuleType2String::convert(MODULE_TYPE_TRACKING)) {

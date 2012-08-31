@@ -166,11 +166,6 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     params.homography = homography;
     
     // set rest of debug info values
-    map<string, double> timerValues = profiler->getCurrentTimerValues();
-    map<string, double>::const_iterator iter;
-    for (iter = timerValues.begin(); iter != timerValues.end(); iter++) {
-        debugInfo.subTaskProcessingTimes.push_back(make_pair((*iter).first, (*iter).second));
-    }
     float divergence = 0;
     vector<Point2f> prevObjectCornersTrans = debugInfo.transformedObjectCorners;
     if (objectCornersTransformed.size() == prevObjectCornersTrans.size()) {
