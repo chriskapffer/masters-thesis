@@ -18,6 +18,9 @@ class TrackingModule : public AbstractModule {
 public:
     TrackingModule(int maxPoints, int minPointsAbs = 10, float minPointsRel = 0.1f, bool useSubPixels = false, bool calcHomRelToFrame = false, bool filterDistortions = true, float distortionThreshold = 1.0f);
     ~TrackingModule();
+
+    void initWithObjectImage(const cv::Mat& objectImage);
+    bool internalProcess(ModuleParams& params, TrackerDebugInfo& debugInfo);
     
 #pragma mark
     
@@ -71,11 +74,6 @@ public:
     
     inline void setLKFlags(int value) { _lkFlags = value; }
     inline int getLKFlags() const { return _lkFlags; }
-    
-#pragma mark
-    
-    void initWithObjectImage(const cv::Mat& objectImage);
-    bool internalProcess(ModuleParams& params, TrackerDebugInfo& debugInfo);
 
 private:
     // tracker params

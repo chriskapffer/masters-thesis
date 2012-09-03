@@ -49,7 +49,7 @@ namespace ck {
     
     
     template<class TClass>
-    void Settings::registerInt(const std::string& name, TClass owner, void (TClass::*setter)(const int&), int (TClass::*getter)() const, int minValue, int maxValue)
+    void Settings::registerInt(const std::string& name, TClass owner, void (TClass::*setter)(const int&), int (TClass::*getter)() const, int minValue, int maxValue, vector<int> values)
     {
         
     }
@@ -108,7 +108,7 @@ namespace ck {
         
     }
     
-    void Settings::getIntInfo(const std::string& name, int& minValue, int& maxValue) const
+    void Settings::getIntInfo(const std::string& name, int& minValue, int& maxValue, vector<int>& values) const
     {
         
     }

@@ -32,7 +32,8 @@ namespace ck {
         void registerInt(const std::string& name, TClass owner,
                          void (TClass::*setter)(const int&),
                          int (TClass::*getter)() const,
-                         int minValue, int maxValue);
+                         int minValue, int maxValue,
+                         std::vector<int> values);
         
         template<class TClass>
         void registerFloat(const std::string& name, TClass owner,
@@ -56,7 +57,7 @@ namespace ck {
         float getFloatValue(const std::string& name) const;
         std::string getStringValue(const std::string& name) const;
         
-        void getIntInfo(const std::string& name, int& minValue, int& maxValue) const;
+        void getIntInfo(const std::string& name, int& minValue, int& maxValue, std::vector<int>& values) const;
         void getFloatInfo(const std::string& name, float& minValue, float& maxValue) const;
         void getIntInfo(const std::string& name, std::vector<std::string>& values) const;
         

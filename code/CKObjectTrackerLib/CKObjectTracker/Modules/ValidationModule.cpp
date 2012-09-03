@@ -11,7 +11,7 @@
 #include "Profiler.h"
 #include "Utils.h"
 
-#include <opencv2/nonfree/nonfree.hpp>
+//#include <opencv2/nonfree/nonfree.hpp>
 
 #define TIMER_CONVERT "converting"
 #define TIMER_DETECT "detecting"
@@ -24,28 +24,24 @@ using namespace cv;
 
 namespace ck {
 
-ValidationModule::ValidationModule() : AbstractModule(MODULE_TYPE_VALIDATION)
+    ValidationModule::ValidationModule(const vector<FilterFlag>& filterFlags, int estimationMethod, bool refineHomography, bool convertToGray, bool sortMatches, int ransacThreshold, float ratio, int nBestMatches) : AbstractModule(MODULE_TYPE_VALIDATION)
 {
+    // validator params
+    _filterFlags = filterFlags;
+    _convertToGray = convertToGray;
+    _sortMatches = sortMatches;
+    _refineHomography = refineHomography;
+    
+    _estimationMethod = estimationMethod;
+    _ransacThreshold = ransacThreshold;
+    _nBestMatches = nBestMatches;
+    _ratio = ratio;
+    
+    // detector, extractor, matcher params
     Ptr<Feature2D> orb = new ORB();
-    Ptr<Feature2D> sift = new SIFT();
-    Ptr<Feature2D> surf = new SURF();
     _detector = orb;
     _extractor = orb;
     _matcher = new BFMatcher(NORM_HAMMING);
-    
-    _filterFlags = vector<FilterFlag>();
-    _filterFlags.push_back(FILTER_FLAG_RATIO);
-    //_filterFlags.push_back(FILTER_FLAG_CROP);
-    //_filterFlags.push_back(FILTER_FLAG_SYMMETRY);
-
-    _convertToGray = false;
-    _sortMatches = true;
-    _nBestMatches = 8;
-    _ratio = 0.7f;
-    
-    _estimationMethod = CV_RANSAC;
-    _ransacThreshold = 3;
-    _refineHomography = true;
 }
 
 ValidationModule::~ValidationModule()
@@ -123,11 +119,6 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     if (matches.size() < MIN_MATCHES) {
         cout << "Not enough matches!" << endl;
         // set rest of debug info values in case of failure
-        map<string, double> timerValues = profiler->getCurrentTimerValues();
-        map<string, double>::const_iterator iter;
-        for (iter = timerValues.begin(); iter != timerValues.end(); iter++) {
-            debugInfo.subTaskProcessingTimes.push_back(make_pair((*iter).first, (*iter).second));
-        }
         debugInfo.transformedObjectCorners.clear();
         debugInfo.badHomography = false;
         return false;

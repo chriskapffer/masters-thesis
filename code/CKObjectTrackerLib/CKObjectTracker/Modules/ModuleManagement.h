@@ -20,9 +20,12 @@ namespace ck {
 
 struct ModuleCollection {
     inline static std::map<ModuleType, AbstractModule*> create() {
+        std::vector<FilterFlag> flags;
+        flags.push_back(FILTER_FLAG_RATIO);
+        
         std::map<ModuleType, AbstractModule*> modules;
         modules[MODULE_TYPE_DETECTION] = new DetectionModule();
-        modules[MODULE_TYPE_VALIDATION] = new ValidationModule();
+        modules[MODULE_TYPE_VALIDATION] = new ValidationModule(flags);
         modules[MODULE_TYPE_TRACKING] = new TrackingModule(500);
         modules[MODULE_TYPE_EMPTY] = new EmptyModule();
         return modules;
