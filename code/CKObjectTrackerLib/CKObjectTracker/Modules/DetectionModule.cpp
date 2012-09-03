@@ -24,7 +24,7 @@ DetectionModule::DetectionModule() : AbstractModule(MODULE_TYPE_DETECTION)
 {
     _detectionThreshold = 0.7f;
     _preProcess = true;
-    _byPass = true;
+    _byPass = false;
 }
 
 DetectionModule::~DetectionModule()

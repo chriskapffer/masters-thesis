@@ -14,20 +14,26 @@
 
 namespace ck {
     
-class ObjectTracker::Impl {
+class ObjectTracker::Implementation {
 
 private:
+    friend class Initializer;
+    
     ModuleParams _moduleParams;
     AbstractModule* _currentModule;
 
     std::map<ModuleType, AbstractModule*> _allModules;
-
+    Settings _settings;
+    
     void initModules(const cv::Mat& objectImage);
     void track(const cv::Mat& frame, TrackerOutput& output, TrackerDebugInfo& debugInfo, bool trackInSequence);
-    
 public:
-    Impl();
-    ~Impl();
+    Implementation();
+    ~Implementation();
+    
+    inline Settings getSettings() const {
+        return _settings;
+    }
     
     void setObject(const cv::Mat& objectImage);
     void trackObjectInVideo(const cv::Mat& frame, TrackerOutput& output, TrackerDebugInfo& debugInfo);

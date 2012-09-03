@@ -7,6 +7,7 @@
 //
 
 #include "ObjectTrackerImpl.h"
+#include "ObjectTrackerInitializer.h"
 #include "ModuleManagement.h"
 
 #if defined(__has_include)
@@ -26,14 +27,16 @@ using namespace cv;
 
 namespace ck {
 
-ObjectTracker::Impl::Impl()
+ObjectTracker::Implementation::Implementation()
 {
     _allModules = ModuleCollection::create();
     _moduleParams.successor = MODULE_TYPE_EMPTY;
     _currentModule = _allModules[MODULE_TYPE_EMPTY];
+    
+    Initializer::initTracker(*this);
 }
 
-ObjectTracker::Impl::~Impl()
+ObjectTracker::Implementation::~Implementation()
 {
     std::map<ModuleType, AbstractModule*>::iterator it;
     for (it = _allModules.begin(); it != _allModules.end(); it++) {
@@ -42,7 +45,7 @@ ObjectTracker::Impl::~Impl()
     _allModules.clear();
 }
 
-void ObjectTracker::Impl::initModules(const cv::Mat& objectImage)
+void ObjectTracker::Implementation::initModules(const cv::Mat& objectImage)
 {
     double startTime = (double)cv::getTickCount();
     std::map<ModuleType, AbstractModule*>::iterator it;
@@ -55,7 +58,7 @@ void ObjectTracker::Impl::initModules(const cv::Mat& objectImage)
     _currentModule = _allModules[MODULE_TYPE_DETECTION];
 }
 
-void ObjectTracker::Impl::setObject(const Mat& objectImage)
+void ObjectTracker::Implementation::setObject(const Mat& objectImage)
 {
     _moduleParams.successor = MODULE_TYPE_EMPTY;
     _currentModule = _allModules[MODULE_TYPE_EMPTY];
@@ -87,7 +90,7 @@ void ObjectTracker::Impl::setObject(const Mat& objectImage)
 #endif
 }
 
-void ObjectTracker::Impl::trackObjectInStillImage(const Mat& image, vector<TrackerOutput>& output, vector<TrackerDebugInfo>& debugInfo)
+void ObjectTracker::Implementation::trackObjectInStillImage(const Mat& image, vector<TrackerOutput>& output, vector<TrackerDebugInfo>& debugInfo)
 {
     TrackerOutput outputItem;
     TrackerDebugInfo debugInfoItem;
@@ -98,12 +101,12 @@ void ObjectTracker::Impl::trackObjectInStillImage(const Mat& image, vector<Track
     }
 }
 
-void ObjectTracker::Impl::trackObjectInVideo(const Mat& frame, TrackerOutput& output, TrackerDebugInfo& debugInfo)
+void ObjectTracker::Implementation::trackObjectInVideo(const Mat& frame, TrackerOutput& output, TrackerDebugInfo& debugInfo)
 {
     track(frame, output, debugInfo, true);
 }
 
-void ObjectTracker::Impl::track(const Mat& frame, TrackerOutput& output, TrackerDebugInfo& debugInfo, bool trackInSequence)
+void ObjectTracker::Implementation::track(const Mat& frame, TrackerOutput& output, TrackerDebugInfo& debugInfo, bool trackInSequence)
 {
     _moduleParams.sceneImageCurrent = frame;
     _currentModule->process(_moduleParams, debugInfo);

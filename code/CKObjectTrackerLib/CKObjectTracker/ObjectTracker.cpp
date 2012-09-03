@@ -14,7 +14,7 @@ namespace ck {
 
 ObjectTracker::ObjectTracker()
 {
-    mImpl = new Impl();
+    mImpl = new Implementation();
 }
 
 ObjectTracker::~ObjectTracker()
@@ -23,6 +23,10 @@ ObjectTracker::~ObjectTracker()
     delete mImpl;
 }
 
+Settings ObjectTracker::settings() const {
+    return mImpl->getSettings();
+}
+    
 void ObjectTracker::setObject(const cv::Mat& objectImage) {
     mImpl->setObject(objectImage);
 }

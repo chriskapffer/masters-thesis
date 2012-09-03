@@ -32,6 +32,12 @@ private:
     bool matchHist(ModuleParams& params, TrackerDebugInfo& debugInfo);
     
 public:
+    
+     void setDetectionThreshold(const float& threshold) {
+         _detectionThreshold = threshold; }
+     float getDetectionThreshold() {
+         return _detectionThreshold; }
+    
     DetectionModule();
     ~DetectionModule();
     void initWithObjectImage(const cv::Mat& objectImage);
