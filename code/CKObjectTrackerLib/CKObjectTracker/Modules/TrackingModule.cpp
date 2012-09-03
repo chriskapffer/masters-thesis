@@ -27,46 +27,39 @@ using namespace cv;
 
 namespace ck {
 
-TrackingModule::TrackingModule() : AbstractModule(MODULE_TYPE_TRACKING)
+TrackingModule::TrackingModule(int maxPoints, int minPointsAbs, float minPointsRel, bool useSubPixels, bool calcHomRelToFrame, bool filterDistortions, float distortionThreshold)
+    : AbstractModule(MODULE_TYPE_TRACKING)
 {
-    // https://github.com/nghiaho12/NAR_Demo
-    // https://github.com/takmin/OpenCV-Marker-less-AR
-    // http://answers.opencv.org/question/176/which-values-for-window-size-and-number-of/
-    _terminationCriteria = TermCriteria(CV_TERMCRIT_ITER | CV_TERMCRIT_EPS, 30, 0.01);
-    // default 30, 0.01
-    // lk demo and success labs: 20, 0.03
-    _winSizeSubPix = Size(10, 10);
-    // lk demo: 10
-    _winSizeFlow = Size(21, 21);
-    // default 21
-    // Rui Marques 41
-    // lk demo: 31
-    // success labs: 3 - 5
+    // tracker params
+    _enabled = true;
+    
+    _maxSuccessiveFrames = -1;
+    _maxPointsAbsolute = maxPoints;
+    _minPointsAbsolute = minPointsAbs;
+    _minPointsRelative = minPointsRel;
+    
+    _useSubPixels = useSubPixels;
+    _calcHomRelToFrame = calcHomRelToFrame;
+    _filterDistortions = filterDistortions;
+    _distortionThreshold = distortionThreshold;
+    
+    // LK: opencv lucas kanade sample project
+    // SL: success labs (adapted version of LK) see: TODO: website
+    // RM: rui marques on http://answers.opencv.org/question/176/which-values-for-window-size-and-number-of/
 
+    // optical flow and sub pix params
+    _terminationCriteria = TermCriteria(CV_TERMCRIT_ITER | CV_TERMCRIT_EPS, 30, 0.01); // LK/SL: 20, 0.03
+    _winSizeSubPix = Size(10, 10); // LK/SL: 10
+    _winSizeFlow = Size(21, 21); // RM: 41 LK: 31 SL: 3-5
     _zeroZone = Size(-1, -1);
-    // lk demo: -1
-    _minEigenThreshold = 0.0001f;
-    // lk demo: 0.001f
-    _maxLevel = 3;
-    // default 3
-    // Rui Marques: 2
+    _minEigenThreshold = 0.0001f; // LK: 0.001f
+    _maxLevel = 3; // RM: 2
     _lkFlags = 0;
-    // all 0
     
-    _maxPointsAbsolute = 200;
-    _minPointsAbsolute = 20;
-    _minPointsRelative = 0.4f;
-    _regularityThreshold = 1.0f;
-    _filterIrregularPoints = true;
-    _relativeHomography = false;
-    _useSubPixels = false;
-
-    _byPass = false;
-    _maxSuccessiveFrames = -1; //40;
-    _succFrameCount = 0;
-    
-    _isInitialPointSet = true;
+    // internal data
     _initialPointCount = 0;
+    _isInitialCall = true;
+    _succFrameCount = 0;
 }
 
 TrackingModule::~TrackingModule()
@@ -96,8 +89,8 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
     // clear module specific debug information
     debugInfo.namedPoints.clear();
     
-    // don't go any further, if tracker is set to bypass
-    if (_byPass || pointsIn.empty()) {
+    // don't go any further, if tracker is set not enabled
+    if (!_enabled || pointsIn.empty()) {
         return false;
     }
     
@@ -108,8 +101,8 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
     
     // store number of points, if they are the initial point set to start with
     // (previous module was not tracker itself)
-    if (_isInitialPointSet) {
-        _isInitialPointSet = false;
+    if (_isInitialCall) {
+        _isInitialCall = false;
         _initialPointSet = pointsIn;
         _initialPointCount = (int)pointsIn.size();
         params.homography.copyTo(_initialHomography);
@@ -120,7 +113,7 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
     // stop tracking after max successive frames (used for homography refinemend via validation module)
     _succFrameCount++;
     if (_maxSuccessiveFrames > 0 && _succFrameCount > _maxSuccessiveFrames) {
-        _isInitialPointSet = true;
+        _isInitialCall = true;
         return false;
     }
     
@@ -175,12 +168,12 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
     debugInfo.avgError = avgError;
     
     // filter new points
-    if (_filterIrregularPoints) {
+    if (_filterDistortions) {
         profiler->startTimer(TIMER_FILTER);
         for (int i = (int)pointsOut.size(); i >= 0; i--) {
             Point2f vec = pointsOut[i] - pointsIn[i];
             float distanceSquared = vec.x * vec.x + vec.y * vec.y;
-            if (fabs(distanceSquared - avgDistSq) / avgDistSq > _regularityThreshold) {
+            if (fabs(distanceSquared - avgDistSq) / avgDistSq > _distortionThreshold) {
                 _initialPointSet.erase(_initialPointSet.begin() + i);
                 pointsOut.erase(pointsOut.begin() + i);
                 pointsIn.erase(pointsIn.begin() + i);
@@ -194,13 +187,13 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
     int currentCount = (int)pointsOut.size();
     if (currentCount < _minPointsAbsolute || currentCount < _initialPointCount * _minPointsRelative) {
         cout << "Lost too many points." << endl;
-        _isInitialPointSet = true;
+        _isInitialCall = true;
         return false;
     }
     
     // compute homography from points
     profiler->startTimer(TIMER_ESTIMATE);
-    if (_relativeHomography) {
+    if (_calcHomRelToFrame) {
         homography *= findHomography(pointsIn, pointsOut);
     } else {
         if (_initialPointSet.size() == pointsOut.size()) {
