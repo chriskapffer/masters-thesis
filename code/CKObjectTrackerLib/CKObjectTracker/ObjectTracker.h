@@ -12,7 +12,7 @@
 // http://opencv-users.1802565.n2.nabble.com/BRISK-td7452653.html <-- TODO read
 
 #include "ObjectTrackerTypeDefinitions.h"
-#include "Settings.h"
+#include "SettingsPublicScope.h"
 
 namespace ck {
 

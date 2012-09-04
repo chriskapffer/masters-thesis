@@ -6,8 +6,8 @@
 //  Copyright (c) 2012 HTW Berlin. All rights reserved.
 //
 
-#ifndef CKObjectTrackerLib_Settings_h
-#define CKObjectTrackerLib_Settings_h
+#ifndef CKObjectTrackerLib_SettingsPublicScope_h
+#define CKObjectTrackerLib_SettingsPublicScope_h
 
 namespace ck {
     
@@ -18,7 +18,7 @@ namespace ck {
         TYPE_STRING,
     };
     
-    // WHATCH OUT!! You need to include settings.cpp somewhere and declare instantiations
+    // WHATCH OUT!! You need to include settingsTemplates.cpp somewhere and declare instantiations
     // for each consumer of the templates in order to avoid linker errors.
     class Settings {
     public:
@@ -27,12 +27,12 @@ namespace ck {
         
         template<class TClass>
         void registerBool(const std::string& name, TClass owner,
-                          void (TClass::*setter)(const bool&),
+                          void (TClass::*setter)(bool),
                           bool (TClass::*getter)() const);
         
         template<class TClass>
         void registerInt(const std::string& name, TClass owner,
-                         void (TClass::*setter)(const int&),
+                         void (TClass::*setter)(int),
                          int (TClass::*getter)() const,
                          int minValue, int maxValue,
                          std::vector<int> values);

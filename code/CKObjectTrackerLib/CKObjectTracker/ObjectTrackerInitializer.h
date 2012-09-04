@@ -9,9 +9,9 @@
 #ifndef CKObjectTrackerLib_ObjectTrackerInitializer_h
 #define CKObjectTrackerLib_ObjectTrackerInitializer_h
 
-#include "ObjectTrackerImpl.h"
+#include "ObjectTrackerImplementation.h"
+#include "SettingsProjectScope.h"
 #include "ValidationModule.h"
-#include "Settings.h"
 
 namespace ck {
     
@@ -20,8 +20,8 @@ namespace ck {
         {
             ValidationModule module = ValidationModule(std::vector<FilterFlag>(0));
             
-            Settings settings = tracker._settings;
-            settings.registerFloat("test", module, &ValidationModule::setRatio, &ValidationModule::getRatio, 0.0f, 1.0f);
+            Settings* settings = &tracker._settings;
+            settings->registerFloat("test", module, &ValidationModule::setRatio, &ValidationModule::getRatio, 0.0f, 1.0f);
             
         }
     };

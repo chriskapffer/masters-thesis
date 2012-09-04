@@ -6,13 +6,13 @@
 //  Copyright (c) 2012 HTW Berlin. All rights reserved.
 //
 
-#include "Settings.h"
+#include "SettingsProjectScope.h"
 #include "Callback.h"
 
 using namespace std;
 
 namespace ck {
-    
+
     template<typename T>
     struct Param {
         CallBackSingleArg<T>* setter;
@@ -40,31 +40,7 @@ namespace ck {
     }
     
 #pragma mark
-    
-    template<class TClass>
-    void Settings::registerBool(const std::string& name, TClass owner, void (TClass::*setter)(const bool&), bool (TClass::*getter)() const)
-    {
-        
-    }
-    
-    template<class TClass>
-    void Settings::registerInt(const std::string& name, TClass owner, void (TClass::*setter)(const int&), int (TClass::*getter)() const, int minValue, int maxValue, vector<int> values)
-    {
-        
-    }
-    
-    template<class TClass>
-    void Settings::registerFloat(const std::string& name, TClass owner, void (TClass::*setter)(float), float (TClass::*getter)() const, float minValue, float maxValue)
-    {
-        
-    }
-    
-    template<class TClass>
-    void Settings::registerString(const std::string& name, TClass owner, void (TClass::*setter)(const std::string&), std::string (TClass::*getter)() const, std::vector<std::string> values)
-    {
-        
-    }
-    
+
     void Settings::setBoolValue(const std::string& name, bool value) const
     {
         
@@ -105,6 +81,8 @@ namespace ck {
         return string();
     }
     
+#pragma mark
+    
     void Settings::getIntInfo(const std::string& name, int& minValue, int& maxValue, vector<int>& values) const
     {
         
@@ -119,6 +97,8 @@ namespace ck {
     {
         
     }
+    
+#pragma mark
     
     Type Settings::getParameterType(const std::string& name) const
     {
@@ -144,7 +124,5 @@ namespace ck {
     {
         return vector<Settings>();
     }
-    
-#pragma mark
     
 } // end of namespace

@@ -6,8 +6,10 @@
 //  Copyright (c) 2012 HTW Berlin. All rights reserved.
 //
 
-#include "ObjectTrackerImpl.h"
+#include "ObjectTrackerImplementation.h"
+#include "ObjectTrackerInitializer.h"
 #include "ModuleManagement.h"
+#include "Profiler.h"
 
 #if defined(__has_include)
     #if __has_include(<future>) && __has_feature(cxx_lambdas)
@@ -31,6 +33,8 @@ ObjectTracker::Implementation::Implementation()
     _allModules = ModuleCollection::create();
     _moduleParams.successor = MODULE_TYPE_EMPTY;
     _currentModule = _allModules[MODULE_TYPE_EMPTY];
+
+    Initializer::initTracker(*this);
 }
 
 ObjectTracker::Implementation::~Implementation()
@@ -40,6 +44,8 @@ ObjectTracker::Implementation::~Implementation()
         delete (*it).second;
     }
     _allModules.clear();
+    
+    Profiler::Finish();
 }
 
 void ObjectTracker::Implementation::initModules(const cv::Mat& objectImage)

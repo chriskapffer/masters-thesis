@@ -7,21 +7,17 @@
 //
 
 #include "ObjectTracker.h"
-#include "ObjectTrackerImpl.h"
-#include "ObjectTrackerInitializer.h"
-#include "Profiler.h"
+#include "ObjectTrackerImplementation.h"
 
 namespace ck {
 
 ObjectTracker::ObjectTracker()
 {
     mImpl = new Implementation();
-    Initializer::initTracker(*mImpl);
 }
 
 ObjectTracker::~ObjectTracker()
 {
-    Profiler::Finish();
     delete mImpl;
 }
 
