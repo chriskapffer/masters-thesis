@@ -18,9 +18,10 @@ namespace ck {
         cv::Mat sceneImageCurrent;       // OUT: -                    IN: detection, validation, tracking
         cv::Mat sceneImagePrevious;      // OUT: validation, tracking IN: tracking
         cv::Rect searchRect;             // OUT: detection, tracking  IN: detection, validation
+        bool isObjectPresent;            // OUT: validation, tracking IN: -
         cv::Mat homography;              // OUT: validation, tracking IN: tracking
         std::vector<cv::Point2f> points; // OUT: validation, tracking IN: tracking
-        bool isObjectPresent;            // OUT: validation, tracking IN: -
+        std::vector<cv::Point2f> previosTransformedCorners; // OUT: tracking IN: tracking
         
         ModuleParams() : successor(MODULE_TYPE_EMPTY), homography(cv::Mat()) {};
     };

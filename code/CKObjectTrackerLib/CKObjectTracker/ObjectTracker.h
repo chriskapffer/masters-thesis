@@ -22,7 +22,7 @@ public:
     ObjectTracker();
     ~ObjectTracker();
     
-    Settings settings() const;
+    const Settings getSettings() const;
     
     void setObject(const cv::Mat& objectImage);
     void trackObjectInVideo(const cv::Mat& frame, TrackerOutput& output, TrackerDebugInfo& debugInfo);

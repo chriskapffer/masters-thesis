@@ -15,7 +15,7 @@ namespace ck {
     class CallBackSingleArg
     {
     public:
-        virtual ~CallBackSingleArg() { }
+        virtual ~CallBackSingleArg() { std::cout << "base" << std::endl; }
         virtual void call(const TParam& p) = 0;
     };
         
@@ -25,7 +25,6 @@ namespace ck {
         void (*function)(const TParam&);
     public:
         CallBackToStaticSingleArg(void(*function)(const TParam&)) : function(function) { };
-        virtual ~CallBackToStaticSingleArg() { if (function != NULL) delete function; }
         void call(const TParam& p) {
             (*function)(p);
         }
@@ -38,7 +37,7 @@ namespace ck {
         TClass* object;
     public:
         CallBackToMemberSingleArg(TClass* object, void(TClass::*function)(const TParam&)) : object(object), function(function) { };
-        virtual ~CallBackToMemberSingleArg() { if (function != NULL) delete function; }
+        ~CallBackToMemberSingleArg() { std::cout << "sub" << std::endl; }
         void call(const TParam& p) {
             (*object.*function)(p);
         }
@@ -58,7 +57,6 @@ namespace ck {
         TParam (*function)();
     public:
         CallBackToStaticReturn(TParam(*function)()) : function(function) { };
-        virtual ~CallBackToStaticReturn() { if (function != NULL) delete function; }
         TParam call() {
             return (*function)();
         }
@@ -71,7 +69,7 @@ namespace ck {
         TClass* object;
     public:
         CallBackToMemberReturn(TClass* object, TParam(TClass::*function)()) : object(object), function(function) { };
-        virtual ~CallBackToMemberReturn() { if (function != NULL) delete function; }
+        ~CallBackToMemberReturn() { std::cout << "sub" << std::endl; }
         TParam call() {
             return (*object.*function)();
         }

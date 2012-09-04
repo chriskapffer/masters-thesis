@@ -24,41 +24,15 @@ DetectionModule::DetectionModule() : AbstractModule(MODULE_TYPE_DETECTION)
 {
     _detectionThreshold = 0.7f;
     _preProcess = true;
-    _byPass = false;
+    _byPass = true;
 }
 
 DetectionModule::~DetectionModule()
 {
 
 }
-    
-void DetectionModule::initEdges(const cv::Mat &objectImage)
-{
-    Profiler* profiler = Profiler::Instance();
-    
-    profiler->startTimer(TIMER_CONVERT);
-    Mat gray;
-    utils::bgrOrBgra2Gray(objectImage, gray);
-    _objectImage = gray < 128;
-    profiler->stopTimer(TIMER_CONVERT);
-    
-    if (_preProcess) {
-        profiler->startTimer(TIMER_PREPROC);
-        blur(_objectImage, _objectImage, Size(5,5));
-        profiler->stopTimer(TIMER_PREPROC);
-    }
-    
-    profiler->startTimer(TIMER_EXTRACT);
-    vector<vector<Point> > tmp;
-    findContours(_objectImage, tmp, _objectHierarchy, CV_RETR_CCOMP, CHAIN_APPROX_SIMPLE);
-    for(int i = 0; i >= 0; i = _objectHierarchy[i][0])
-    {
-        _objectContours.push_back(tmp[i]);
-    }
-    profiler->stopTimer(TIMER_EXTRACT);
-}
-    
-void DetectionModule::initHist(const cv::Mat &objectImage)
+
+void DetectionModule::initWithObjectImage(const cv::Mat &objectImage)
 {
     Mat hsv, hue, mask, hist;
     int vmin = 5, vmax = 256, smin = 60;
@@ -95,98 +69,26 @@ void DetectionModule::initHist(const cv::Mat &objectImage)
     namedWindow("histimg");
     imshow("histimg", histimg);
 }
-
-void DetectionModule::initWithObjectImage(const cv::Mat &objectImage)
+ 
+bool DetectionModule::internalProcess(ModuleParams& params, TrackerDebugInfo& debugInfo)
 {
-    if (false) {
-        initEdges(objectImage);
-    } else {
-        initHist(objectImage);
+    if (_byPass) {
+        // search in whole image
+        params.searchRect = Rect(0, 0, params.sceneImageCurrent.cols, params.sceneImageCurrent.rows);
+        debugInfo.searchRect = params.searchRect;
+        debugInfo.probabilityMap = Mat(params.sceneImageCurrent.rows, params.sceneImageCurrent.cols, CV_8UC1, Scalar(0));
+        return true;
     }
-}
-    
-bool DetectionModule::matchEdges(ModuleParams& params, TrackerDebugInfo& debugInfo) {
-    
-    Mat sceneImage;
-    vector<Vec4i> sceneHierarchy;
-    vector<vector<Point> > sceneContours;
-    vector<CMatch> matches;
     
     Profiler* profiler = Profiler::Instance();
     
-    profiler->startTimer(TIMER_CONVERT);
-    Mat gray;
-    utils::bgrOrBgra2Gray(params.sceneImageCurrent, gray);
-    sceneImage = gray < 128;
-    profiler->stopTimer(TIMER_CONVERT);
-    
-    // blur, etc.
-    if (_preProcess) {
-        profiler->startTimer(TIMER_PREPROC);
-        blur(sceneImage, sceneImage, Size(5,5));
-        profiler->stopTimer(TIMER_PREPROC);
-    }
-
-    // find contours
-    profiler->startTimer(TIMER_EXTRACT);
-    vector<vector<Point> > tmp;
-    findContours(sceneImage, tmp, sceneHierarchy, CV_RETR_CCOMP, CHAIN_APPROX_SIMPLE);
-    for(int i = 0; i >= 0; i = sceneHierarchy[i][0])
-    {
-        sceneContours.push_back(tmp[i]);
-    }
-    profiler->stopTimer(TIMER_EXTRACT);
-    
-    // match contours
-    profiler->startTimer(TIMER_MATCH);
-//    for (int i = 0; i >= 0; i = _objectHierarchy[i][0]) {
-//        float maxScore = 0;
-//        int bestMatchIdx = 0;
-//        for (int j = 0; j >= 0; j = sceneHierarchy[j][0]) {
-//            float score = matchShapes(_objectContours[i], sceneContours[j], CV_CONTOURS_MATCH_I2, 0);
-//            if (score > maxScore) {
-//                maxScore = score;
-//                bestMatchIdx = j;
-//            }
-//        }
-//        matches.push_back(CMatch(i, bestMatchIdx, maxScore));
-//    }
-    for (int i = 0; i < _objectContours.size(); i++) {
-        float maxScore = 0;
-        int bestMatchIdx = 0;
-        for (int j = 0; j < sceneContours.size(); j++) {
-            float score = matchShapes(_objectContours[i], sceneContours[j], CV_CONTOURS_MATCH_I1, 0);
-            if (score > maxScore) {
-                maxScore = score;
-                bestMatchIdx = j;
-            }
-        }
-        matches.push_back(CMatch(i, bestMatchIdx, maxScore));
-    }
-    profiler->stopTimer(TIMER_MATCH);
-    
-    debugInfo.objectImage = _objectImage;
-    debugInfo.objectContours = _objectContours;
-    debugInfo.sceneContours = sceneContours;
-    debugInfo.contourMatches = matches;
-    
-    // TODO create probability map and extract regions
-    params.searchRect = Rect(0, 0, params.sceneImageCurrent.cols, params.sceneImageCurrent.rows);
-    debugInfo.searchRect = params.searchRect;
-    return true;
-}
-    
-bool DetectionModule::matchHist(ModuleParams& params, TrackerDebugInfo& debugInfo) {
-    
-    Profiler* profiler = Profiler::Instance();
-
     float hranges[] = {0,180};
     const float* phranges = hranges;
     int vmin = 5, vmax = 256, smin = 60;
     Mat image, hsv, hue, mask, backproj;
     
     params.sceneImageCurrent.copyTo(image);
-
+    
     cvtColor(image, hsv, CV_BGR2HSV);
     inRange(hsv, Scalar(0, smin, MIN(vmin,vmax)), Scalar(180, 256, MAX(vmin, vmax)), mask);
     
@@ -212,26 +114,11 @@ bool DetectionModule::matchHist(ModuleParams& params, TrackerDebugInfo& debugInf
     boundingBox.height = MIN(boundingBox.height, backproj.rows - boundingBox.y);
     cvtColor(backproj, backproj, CV_GRAY2BGR);
     rectangle(backproj, boundingBox.tl(), boundingBox.br(), Scalar(0,0,255), 3);
-
+    
     params.searchRect = boundingBox;
     debugInfo.searchRect = boundingBox;
     debugInfo.probabilityMap = backproj;
     return boundingBox.area() > 10 && boundingBox.area() < backproj.cols * backproj.rows * 0.8f;
-}
-    
-bool DetectionModule::internalProcess(ModuleParams& params, TrackerDebugInfo& debugInfo)
-{
-    if (_byPass) {
-        // search in whole image
-        params.searchRect = Rect(0, 0, params.sceneImageCurrent.cols, params.sceneImageCurrent.rows);
-        debugInfo.probabilityMap = Mat(params.sceneImageCurrent.rows, params.sceneImageCurrent.cols, CV_8UC1, Scalar(0));
-        return true;
-    }
-    
-    if (false)
-        return matchEdges(params, debugInfo);
-    else
-        return matchHist(params, debugInfo);
 }
 
 } // end of namespaces

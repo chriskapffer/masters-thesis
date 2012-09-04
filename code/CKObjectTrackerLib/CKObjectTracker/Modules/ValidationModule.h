@@ -47,8 +47,8 @@ public:
     inline void setNBestMatches(int value) { _nBestMatches = value; }
     inline int getNBestMatches() const { return _nBestMatches; }
     
-    inline void setRatio(float value) { _ratio = value; }
-    inline float getRatio() const { return _ratio; }
+    void setRatio(float value) { _ratio = value; }
+    float getRatio() const { return _ratio; }
     
     // TODO: getter and setter for detector, extractor, matcher
     

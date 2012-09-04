@@ -33,6 +33,7 @@ TrackingModule::TrackingModule(int maxPoints, int minPointsAbs, float minPointsR
     // tracker params
     _enabled = true;
     
+    _maxTransformationDelta = 50;
     _maxSuccessiveFrames = -1;
     _maxPointsAbsolute = maxPoints;
     _minPointsAbsolute = minPointsAbs;
@@ -87,7 +88,9 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
     vector<Point2f> pointsIn;
     vector<Point2f> pointsOut;
     vector<Point2f> objectCornersTransformed;
+    vector<Point2f> objectCornersTransformedPreviousFrame;
     float avgError, avgDistance, maxDistance, minDistance;
+    float transformationDelta;
     bool isHomographyValid;
     Rect boundingRect;
     Mat previousImage;
@@ -108,9 +111,10 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
     homography = params.homography;
     currentImage = params.sceneImageCurrent;
     previousImage = params.sceneImagePrevious;
+    objectCornersTransformedPreviousFrame = params.previosTransformedCorners;
     
     // perform necessary steps in order to proceed
-    if(!prepareForProcessing(homography, pointsIn, debugInfo)) {
+    if(!prepareForProcessing(homography, pointsIn, objectCornersTransformedPreviousFrame, debugInfo)) {
         // stop tracking and prepare for a new initial call to this module in the future
         _isInitialCall = true;
         return false;
@@ -132,7 +136,7 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
     // calculate optical flow
     profiler->startTimer(TIMER_TRACK);
     calcOpticalFlowPyrLK(previousImage, currentImage, pointsIn, pointsOut, status, error, _winSizeFlow, _maxLevel, _terminationCriteria, _lkFlags, _minEigenThreshold);
-    removeUntrackedPoints(pointsIn, pointsOut, _initialPointSet, status, error, avgError, avgDistance, maxDistance, minDistance);
+    removeUntrackedPoints(pointsIn, pointsOut, _initialPoints, status, error, avgError, avgDistance, maxDistance, minDistance);
     profiler->stopTimer(TIMER_TRACK);
     
     // store remaining points and other metrics in debug info
@@ -143,7 +147,7 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
     // filter new points 
     if (_filterDistortions) {
         profiler->startTimer(TIMER_FILTER);
-        filterPointsByMovingDistance(pointsIn, pointsOut, _initialPointSet, avgDistance, _distortionThreshold);
+        filterPointsByMovingDistance(pointsIn, pointsOut, _initialPoints, avgDistance, _distortionThreshold);
         profiler->stopTimer(TIMER_FILTER);
     }
     // store remaining points in debug info
@@ -165,23 +169,26 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
         homography *= findHomography(pointsIn, pointsOut);
     } else {
         // multiply homography with transformation between current points and initial point set
-        homography = findHomography(_initialPointSet, pointsOut) * _initialHomography;
+        homography = findHomography(_initialPoints, pointsOut) * _initialHomography;
     }
     profiler->stopTimer(TIMER_ESTIMATE);
 
     // validate homography matrix
     profiler->startTimer(TIMER_VALIDATE);
     isHomographyValid = SanityCheck::validate(homography, Size(currentImage.cols, currentImage.rows), _objectCorners, objectCornersTransformed, boundingRect, true);
+    transformationDelta = utils::averageDistance(objectCornersTransformed, objectCornersTransformedPreviousFrame);
+    isHomographyValid &= transformationDelta <= _maxTransformationDelta;
     profiler->stopTimer(TIMER_VALIDATE);
 
     // set output params
     params.sceneImageCurrent.copyTo(params.sceneImagePrevious);
+    params.previosTransformedCorners = objectCornersTransformed;
     params.isObjectPresent = isHomographyValid;
     params.homography = homography;
     params.points = pointsOut;
 
     // set debug info values
-    debugInfo.jitterAmount = utils::averageDistance(objectCornersTransformed, debugInfo.objectCornersTransformed);
+    debugInfo.jitterAmount = transformationDelta;
     debugInfo.objectCornersTransformed = objectCornersTransformed;
     debugInfo.badHomography = !isHomographyValid;
     debugInfo.homography = homography;
@@ -191,12 +198,14 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
         debugInfo.searchRect = boundingRect;
     }
     
+    // set initial call to true if homography is invalid and tracking fails
+    _isInitialCall = !isHomographyValid;
     return isHomographyValid;
 }
 
 #pragma mark
     
-bool TrackingModule::prepareForProcessing(const Mat& homography, vector<Point2f>& pointsIn, TrackerDebugInfo& debugInfo)
+bool TrackingModule::prepareForProcessing(const Mat& homography, vector<Point2f>& pointsIn, vector<Point2f>& prevCorners, TrackerDebugInfo& debugInfo)
 {
     // strip end of list, if there are more input points than desired
     if (pointsIn.size() > _maxPointsAbsolute) {
@@ -211,11 +220,11 @@ bool TrackingModule::prepareForProcessing(const Mat& homography, vector<Point2f>
         // reset frame count (used for maxSuccessiveFrames)
         _succFrameCount = 0;
         _isInitialCall = false;
-        _initialPointSet = pointsIn;
+        _initialPoints = pointsIn;
         _initialPointCount = (int)pointsIn.size(); // store inital point count seperately,
-        // cause initial point set will be changed over time
+                                                   // cause initial point set will be changed over time
         homography.copyTo(_initialHomography);
-        
+        prevCorners.clear();
         // store initial point count in debug info
         debugInfo.initialPointCount = _initialPointCount;
     }

@@ -10,14 +10,19 @@
 #define CKObjectTrackerLib_ObjectTrackerInitializer_h
 
 #include "ObjectTrackerImpl.h"
+#include "ValidationModule.h"
+#include "Settings.h"
 
 namespace ck {
     
     struct ObjectTracker::Initializer {
         static void initTracker(ObjectTracker::Implementation& tracker)
         {
-            Settings asd;
-            tracker._settings = asd;
+            ValidationModule module = ValidationModule(std::vector<FilterFlag>(0));
+            
+            Settings settings = tracker._settings;
+            settings.registerFloat("test", module, &ValidationModule::setRatio, &ValidationModule::getRatio, 0.0f, 1.0f);
+            
         }
     };
     

@@ -27,6 +27,9 @@ public:
     inline void setEnabled(bool value) { _enabled = value; }
     inline bool isEnabled() const { return _enabled; }
     
+    inline void setMaxTransformationDelta(float value) { _maxTransformationDelta = value; }
+    inline float getMaxTransformationDelta() const { return _maxTransformationDelta; }
+    
     inline void setMaxSuccessiveFrames(int value) { _maxSuccessiveFrames = value; }
     inline int getMaxSuccessiveFrames() const { return _maxSuccessiveFrames; }
     
@@ -76,7 +79,7 @@ public:
     inline int getLKFlags() const { return _lkFlags; }
 
 private:
-    bool prepareForProcessing(const cv::Mat& homography, std::vector<cv::Point2f>& pointsIn, TrackerDebugInfo& debugInfo);
+    bool prepareForProcessing(const cv::Mat& homography, std::vector<cv::Point2f>& pointsIn, std::vector<cv::Point2f>& prevCorners, TrackerDebugInfo& debugInfo);
     
     static void removeUntrackedPoints(std::vector<cv::Point2f>& pointsIn, std::vector<cv::Point2f>& pointsOut, std::vector<cv::Point2f>& initialPoints, const std::vector<uchar>& status, const std::vector<float>& error, float& avgError, float& avgDistance, float& maxDistance, float& minDistance);
     static void filterPointsByMovingDistance(std::vector<cv::Point2f>& pointsIn, std::vector<cv::Point2f>& pointsOut, std::vector<cv::Point2f>& initialPoints, float averageDistance, float distortionThreshold);
@@ -84,6 +87,7 @@ private:
     // tracker params
     bool _enabled;
     
+    float _maxTransformationDelta;
     int _maxSuccessiveFrames;
     int _maxPointsAbsolute;
     int _minPointsAbsolute;
@@ -105,7 +109,7 @@ private:
 
     // internal data
     std::vector<cv::Point2f> _objectCorners;
-    std::vector<cv::Point2f> _initialPointSet;
+    std::vector<cv::Point2f> _initialPoints;
     int _initialPointCount;
     cv::Mat _initialHomography;
     bool _isInitialCall;

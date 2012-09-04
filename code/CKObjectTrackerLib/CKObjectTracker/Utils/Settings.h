@@ -18,6 +18,8 @@ namespace ck {
         TYPE_STRING,
     };
     
+    // WHATCH OUT!! You need to include settings.cpp somewhere and declare instantiations
+    // for each consumer of the templates in order to avoid linker errors.
     class Settings {
     public:
         Settings();
@@ -37,7 +39,7 @@ namespace ck {
         
         template<class TClass>
         void registerFloat(const std::string& name, TClass owner,
-                           void (TClass::*setter)(const float&),
+                           void (TClass::*setter)(float),
                            float (TClass::*getter)() const,
                            float minValue, float maxValue);
         
@@ -62,11 +64,11 @@ namespace ck {
         void getIntInfo(const std::string& name, std::vector<std::string>& values) const;
         
         Type getParameterType(const std::string& name) const;
-        const std::vector<const std::string&>& getParameterNames() const;
+        const std::vector<std::string> getParameterNames() const;
         
         void addCategory(const Settings& category);
-        const Settings& getSubCategory(std::string categoryName) const;
-        const std::vector<const Settings&>& getSubCategories() const;
+        const Settings getSubCategory(std::string categoryName) const;
+        const std::vector<Settings> getSubCategories() const;
         
     private:
         struct ParameterCollection;

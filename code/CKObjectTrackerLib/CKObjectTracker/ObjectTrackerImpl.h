@@ -31,7 +31,7 @@ public:
     Implementation();
     ~Implementation();
     
-    inline Settings getSettings() const {
+    const inline Settings getSettings() const {
         return _settings;
     }
     

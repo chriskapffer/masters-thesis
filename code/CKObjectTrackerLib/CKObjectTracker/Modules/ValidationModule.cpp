@@ -110,7 +110,7 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
         profiler->stopTimer(TIMER_CONVERT);
     }
 
-    // detect keypoints and extract features
+    // detect keypoints and extract features (part scene image space)
     profiler->startTimer(TIMER_DETECT);
     _detector->detect(sceneImagePart, sceneKeyPoints);
     profiler->stopTimer(TIMER_DETECT);
@@ -124,7 +124,7 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     debugInfo.sceneImagePart = sceneImagePart;
     debugInfo.sceneKeyPoints = sceneKeyPoints;
     
-    // match and filter descriptors (uses internal profiling)
+    // match and filter descriptors (uses internal profiling) (partial scene image space)
     MatcherFilter::getFilteredMatches(*_matcher, _objectDescriptors, sceneDescriptors, matches, _filterFlags, _sortMatches, _ratio, _nBestMatches, debugInfo.namedMatches);
     
     // check if there are enough matches left, stop validation if not
@@ -133,13 +133,13 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
         return false;
     }
 
-    // compute homography from matches
+    // compute homography from matches (full scene image space)
     profiler->startTimer(TIMER_ESTIMATE);
     utils::get2DCoordinatesOfMatches(matches, _objectKeyPoints, sceneKeyPoints, objectCoordinates, sceneCoordinates, Point2f(), searchRect.tl());
     homography = findHomography(objectCoordinates, sceneCoordinates, _estimationMethod, _ransacThreshold, mask);
     profiler->stopTimer(TIMER_ESTIMATE);
     
-    // recalculate homography using only inliers from first calculation
+    // recalculate homography using only inliers from first calculation (full scene image space)
     if (_refineHomography) {
         vector<DMatch> noOutliers;
         // filter matches with mask and compute homography again (uses internal profiling)
@@ -155,7 +155,7 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     isHomographyValid = SanityCheck::validate(homography, Size(sceneImageFull.cols, sceneImageFull.rows), _objectCorners, objectCornersTransformed);
     profiler->stopTimer(TIMER_VALIDATE);
     
-    // get positions of all scene keypoints again (sceneCoordinates contained positions of matches only)
+    // get positions of all scene keypoints again (sceneCoordinates contained positions of matches only) (full scene image space)
     utils::get2DCoordinatesOfKeyPoints(sceneKeyPoints, sceneCoordinates, searchRect.tl());
 
     // set output params

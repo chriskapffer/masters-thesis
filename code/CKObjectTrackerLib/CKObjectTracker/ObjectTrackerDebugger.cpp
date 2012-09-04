@@ -39,14 +39,15 @@ string ObjectTrackerDebugger::debugString(TrackerDebugInfoStripped info)
     
     // module specific info
     if (info.currentModuleType == ModuleType2String::convert(MODULE_TYPE_DETECTION)) {
-        snprintf(buffer, length, "%sobjectContours: %d\n", buffer, info.objectContourCount);
-        snprintf(buffer, length, "%ssceneCountours: %d\n", buffer, info.sceneContourCount);
+
+        
     } else if (info.currentModuleType == ModuleType2String::convert(MODULE_TYPE_VALIDATION)) {
         snprintf(buffer, length, "%sobjectKeyPoints: %d\n", buffer, info.objectKeyPointCount);
         snprintf(buffer, length, "%ssceneKeyPoints: %d\n", buffer, info.sceneKeyPointCount);
         for (int i = 0; i < info.namedMatchCounts.size(); i++) {
             snprintf(buffer, length, "%smatches %s: %d\n", buffer, info.namedMatchCounts[i].first.c_str(), info.namedMatchCounts[i].second);
         }
+        snprintf(buffer, length, "%sjitterAmount: %.3f\n", buffer, info.jitterAmount);
 
     } else if (info.currentModuleType == ModuleType2String::convert(MODULE_TYPE_TRACKING)) {
         snprintf(buffer, length, "%sinitial point set: %d\n", buffer, info.initialPointCount);
@@ -170,31 +171,6 @@ static void drawTransformedRectToImage(Mat& image, const vector<Point2f>& corner
     line(image, corners[1] * scale + offset, corners[2] * scale + offset, color, lineWidth);
     line(image, corners[2] * scale + offset, corners[3] * scale + offset, color, lineWidth);
     line(image, corners[3] * scale + offset, corners[0] * scale + offset, color, lineWidth);
-}
-
-static Mat drawDetectionImage(TrackerDebugInfo info) {
-    Mat result = Mat(info.sceneImageFull.cols, info.sceneImageFull.rows, CV_8UC3, Scalar(0, 0, 0));
-    Mat imgObject = Mat(info.objectImage.rows, info.objectImage.cols, CV_8UC3, Scalar(0, 0, 0));
-    Mat imgScene = Mat(info.sceneImageFull.rows, info.sceneImageFull.cols, CV_8UC3, Scalar(0, 0, 0));
-    if (imgObject.type() == CV_8UC1) { cvtColor(imgObject, imgObject, CV_GRAY2BGR); }
-    if (imgScene.type() == CV_8UC1) { cvtColor(imgScene, imgScene, CV_GRAY2BGR); }
-    
-    drawContourImages(imgObject, imgScene, info.contourMatches, info.objectContours, info.sceneContours);
-    
-    float scaleObj = MIN(result.cols / (float)imgObject.cols, result.rows * 0.5f / (float)imgObject.rows);
-    resize(imgObject, imgObject, Size(imgObject.cols * scaleObj, imgObject.rows * scaleObj));
-    Point2f offsetObj = Point2f((result.cols - imgObject.cols) * 0.5f, 0);
-    imgObject.copyTo(result(Rect(offsetObj.x, offsetObj.y, imgObject.cols, imgObject.rows)));
-    
-    float scaleScn = MIN(result.cols / (float)imgScene.cols, result.rows * 0.5f / (float)imgScene.rows);
-    resize(imgScene, imgScene, Size(imgScene.cols * scaleScn, imgScene.rows * scaleScn));
-    Point2f offsetScn = Point2f((result.cols - imgScene.cols) * 0.5f, result.rows * 0.5f);
-    imgScene.copyTo(result(Rect(offsetScn.x, offsetScn.y, imgScene.cols, imgScene.rows)));
-    
-    // rotate image
-    flip(result, result, 1);
-    transpose(result, result);
-    return result;
 }
     
 static Mat drawValidationImage(TrackerDebugInfo info, bool drawTransformedRect, bool drawFilteredMatches, bool drawAllMatches, bool drawObjectKeyPoints, bool drawSceneKeyPoints)

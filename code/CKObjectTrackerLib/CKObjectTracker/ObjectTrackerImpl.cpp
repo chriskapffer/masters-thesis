@@ -7,7 +7,6 @@
 //
 
 #include "ObjectTrackerImpl.h"
-#include "ObjectTrackerInitializer.h"
 #include "ModuleManagement.h"
 
 #if defined(__has_include)
@@ -32,8 +31,6 @@ ObjectTracker::Implementation::Implementation()
     _allModules = ModuleCollection::create();
     _moduleParams.successor = MODULE_TYPE_EMPTY;
     _currentModule = _allModules[MODULE_TYPE_EMPTY];
-    
-    Initializer::initTracker(*this);
 }
 
 ObjectTracker::Implementation::~Implementation()

@@ -6,6 +6,9 @@
 //  Copyright (c) 2012 HTW Berlin. All rights reserved.
 //
 
+#define _USE_MATH_DEFINES
+
+#include <math.h>
 #include "SanityCheck.h"
 
 using namespace std;
@@ -61,9 +64,34 @@ bool SanityCheck::checkBoundaries(const vector<Point2f>& cornersTransformed, int
     return true;
 }
     
-bool SanityCheck::checkMaxMinAngles(const std::vector<cv::Point2f>& cornersTransformed, float maxAngleDeg, float minAngleDeg)
+static float angleBetween(const Point2f& v1, const Point2f& v2)
 {
-    return true; // TODO: implementation
+    float length1 = sqrt(v1.x * v1.x + v1.y * v1.y);
+    float length2 = sqrt(v2.x * v2.x + v2.y * v2.y);
+    float dot = v1.x * v2.x + v1.y * v2.y;
+    return acos(dot / (length1 * length2));
+}
+    
+bool SanityCheck::checkAngleSimilarity(const vector<Point2f>& cornersTransformed, float maxAngleOffsetInDeg)
+{
+    Point2f tlr = cornersTransformed[3] - cornersTransformed[0];
+    Point2f tll = cornersTransformed[1] - cornersTransformed[0];
+    Point2f trr = cornersTransformed[0] - cornersTransformed[1];
+    Point2f trl = cornersTransformed[2] - cornersTransformed[1];
+    Point2f brr = cornersTransformed[1] - cornersTransformed[2];
+    Point2f brl = cornersTransformed[3] - cornersTransformed[2];
+    Point2f blr = cornersTransformed[2] - cornersTransformed[3];
+    Point2f bll = cornersTransformed[0] - cornersTransformed[3];
+
+    float atl = angleBetween(tlr, tll);
+    float atr = angleBetween(trr, trl);
+    float abr = angleBetween(brr, brl);
+    float abl = angleBetween(blr, bll);
+    
+    float maxOffset = maxAngleOffsetInDeg * (M_PI / 180.0f);
+    
+    return (fabs(atl - atr) <= maxOffset || fabs(atl - abl) <= maxOffset)
+        && (fabs(abr - abl) <= maxOffset || fabs(abr - atr) <= maxOffset);
 }
 
 bool SanityCheck::validate(const cv::Mat& homography, const cv::Size& imageSize, const std::vector<cv::Point2f>& corners, std::vector<cv::Point2f>& cornersTransformed)
@@ -77,7 +105,7 @@ bool SanityCheck::validate(const cv::Mat& homography, const cv::Size& imageSize,
     perspectiveTransform(corners, cornersTransformed, homography);
     bool isValid = true
         //&& checkBoundaries(cornersTransformed, imageSize.width, imageSize.height)
-        && checkMaxMinAngles(cornersTransformed, MAX_ANGLE_DEG, MIN_ANGLE_DEG)
+        //&& checkAngleSimilarity(cornersTransformed, MAX_ANGLE_OFFSET_DEG)
         && checkRectangle(cornersTransformed);
 
     boundingRect = cv::boundingRect(cornersTransformed);

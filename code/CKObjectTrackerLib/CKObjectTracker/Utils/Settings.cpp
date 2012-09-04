@@ -20,21 +20,13 @@ namespace ck {
         std::vector<T> values;
         std::string name;
         T min; T max;
-        
-        Param() { getter = NULL; setter = NULL; }
-        ~Param() {
-            if(getter != NULL)
-                delete getter;
-            if(setter != NULL)
-                delete setter;
-        };
     };
     
     struct Settings::ParameterCollection {
-        std::vector<Param<bool> > boolParams;
-        std::vector<Param<int> > intParams;
-        std::vector<Param<float> > floatParams;
-        std::vector<Param<std::string> > stringParams;
+        vector<Param<bool> > boolParams;
+        vector<Param<int> > intParams;
+        vector<Param<float> > floatParams;
+        vector<Param<std::string> > stringParams;
     };
     
     Settings::Settings()
@@ -55,20 +47,17 @@ namespace ck {
         
     }
     
-    
     template<class TClass>
     void Settings::registerInt(const std::string& name, TClass owner, void (TClass::*setter)(const int&), int (TClass::*getter)() const, int minValue, int maxValue, vector<int> values)
     {
         
     }
     
-    
     template<class TClass>
-    void Settings::registerFloat(const std::string& name, TClass owner, void (TClass::*setter)(const float&), float (TClass::*getter)() const, float minValue, float maxValue)
+    void Settings::registerFloat(const std::string& name, TClass owner, void (TClass::*setter)(float), float (TClass::*getter)() const, float minValue, float maxValue)
     {
         
     }
-    
     
     template<class TClass>
     void Settings::registerString(const std::string& name, TClass owner, void (TClass::*setter)(const std::string&), std::string (TClass::*getter)() const, std::vector<std::string> values)
@@ -98,22 +87,22 @@ namespace ck {
     
     bool Settings::getBoolValue(const std::string& name) const
     {
-        
+        return false;
     }
     
     int Settings::getIntValue(const std::string& name) const
     {
-        
+        return 0;
     }
     
     float Settings::getFloatValue(const std::string& name) const
     {
-        
+        return 0;
     }
     
     std::string Settings::getStringValue(const std::string& name) const
     {
-        
+        return string();
     }
     
     void Settings::getIntInfo(const std::string& name, int& minValue, int& maxValue, vector<int>& values) const
@@ -133,12 +122,12 @@ namespace ck {
     
     Type Settings::getParameterType(const std::string& name) const
     {
-        
+        return TYPE_BOOL;
     }
     
-    const std::vector<const std::string&>& Settings::getParameterNames() const
+    const std::vector<std::string> Settings::getParameterNames() const
     {
-        
+        return vector<string>();
     }
     
     void Settings::addCategory(const Settings& category)
@@ -146,14 +135,14 @@ namespace ck {
         
     }
     
-    const Settings& Settings::getSubCategory(std::string categoryName) const
+    const Settings Settings::getSubCategory(std::string categoryName) const
     {
-        
+        return Settings();
     }
     
-    const std::vector<const Settings&>& Settings::getSubCategories() const
+    const std::vector<Settings> Settings::getSubCategories() const
     {
-    
+        return vector<Settings>();
     }
     
 #pragma mark

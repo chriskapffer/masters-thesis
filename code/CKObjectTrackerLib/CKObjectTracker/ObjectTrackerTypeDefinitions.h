@@ -31,9 +31,6 @@ struct TrackerDebugInfo {
     double totalProcessingTime;
     
     // detection
-    std::vector<std::vector<cv::Point> > objectContours;
-    std::vector<std::vector<cv::Point> > sceneContours;
-    std::vector<CMatch> contourMatches;
     cv::Mat probabilityMap;
     cv::Rect searchRect;
     
@@ -68,10 +65,6 @@ struct TrackerDebugInfoStripped
     std::vector<std::pair<std::string, double> > subTaskProcessingTimes;
     double totalProcessingTime;
     
-    // detection
-    int objectContourCount;
-    int sceneContourCount;
-    
     // validation
     std::vector<std::pair<std::string, int> > namedMatchCounts;
     int objectKeyPointCount;
@@ -92,8 +85,6 @@ struct TrackerDebugInfoStripped
         currentModuleType = "undefined";
         subTaskProcessingTimes = std::vector<std::pair<std::string, double> >();
         totalProcessingTime = 0;
-        objectContourCount = 0;
-        sceneContourCount = 0;
         objectKeyPointCount = 0;
         sceneKeyPointCount = 0;
         badHomography = false;
@@ -110,8 +101,6 @@ struct TrackerDebugInfoStripped
         currentModuleType = params.currentModuleType;
         subTaskProcessingTimes = params.subTaskProcessingTimes;
         totalProcessingTime = params.totalProcessingTime;
-        objectContourCount = (int)params.objectContours.size();
-        sceneContourCount = (int)params.sceneContours.size();
         objectKeyPointCount = (int)params.objectKeyPoints.size();
         sceneKeyPointCount = (int)params.sceneKeyPoints.size();
         badHomography = params.badHomography;
@@ -152,9 +141,6 @@ struct TrackerDebugInfoStripped
             }
         }
 
-        // detection
-        objectContourCount += other.objectContourCount;
-        sceneContourCount += other.sceneContourCount;
         // validation
         objectKeyPointCount += other.objectKeyPointCount; 
         sceneKeyPointCount += other.sceneKeyPointCount;
@@ -204,9 +190,6 @@ struct TrackerDebugInfoStripped
             res.subTaskProcessingTimes.push_back(std::make_pair(thisPair.first, thisPair.second / factor));
         }
         
-        // detection
-        res.objectContourCount = objectContourCount / factor;
-        res.sceneContourCount = sceneContourCount / factor;
         // validation
         res.objectKeyPointCount = objectKeyPointCount / factor;
         res.sceneKeyPointCount = sceneKeyPointCount / factor;

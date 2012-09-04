@@ -6,8 +6,9 @@
 //  Copyright (c) 2012 HTW Berlin. All rights reserved.
 //
 
-#include "ObjectTrackerImpl.h"
 #include "ObjectTracker.h"
+#include "ObjectTrackerImpl.h"
+#include "ObjectTrackerInitializer.h"
 #include "Profiler.h"
 
 namespace ck {
@@ -15,6 +16,7 @@ namespace ck {
 ObjectTracker::ObjectTracker()
 {
     mImpl = new Implementation();
+    Initializer::initTracker(*mImpl);
 }
 
 ObjectTracker::~ObjectTracker()
@@ -23,7 +25,7 @@ ObjectTracker::~ObjectTracker()
     delete mImpl;
 }
 
-Settings ObjectTracker::settings() const {
+const Settings ObjectTracker::getSettings() const {
     return mImpl->getSettings();
 }
     
