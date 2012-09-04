@@ -52,13 +52,13 @@ struct TrackerDebugInfo {
     bool badHomography;
 
     // tracking
-    std::vector<std::pair<std::string, std::vector<cv::Point2f> > > namedPoints;
+    std::vector<std::pair<std::string, std::vector<cv::Point2f> > > namedPointSets;
     int initialPointCount;
-    float distanceRange;
-    float divergence;
+    float movementVariation;
+    float jitterAmount;
     float avgError;
     
-    TrackerDebugInfo() : totalProcessingTime(0), initialPointCount(0), distanceRange(0), divergence(0), avgError(0), badHomography(false) {}
+    TrackerDebugInfo() : totalProcessingTime(0), initialPointCount(0), movementVariation(0), jitterAmount(0), avgError(0), badHomography(false) {}
 };
 
 struct TrackerDebugInfoStripped
@@ -83,8 +83,8 @@ struct TrackerDebugInfoStripped
     // tracking
     std::vector<std::pair<std::string, int> > namedPointCounts;
     int initialPointCount;
-    float distanceRange;
-    float divergence;
+    float movementVariation;
+    float jitterAmount;
     float avgError;
     
     // constructor
@@ -101,8 +101,8 @@ struct TrackerDebugInfoStripped
         namedMatchCounts = std::vector<std::pair<std::string, int> >();
         namedPointCounts = std::vector<std::pair<std::string, int> >();
         initialPointCount = 0;
-        distanceRange = 0;
-        divergence = 0;
+        movementVariation = 0;
+        jitterAmount = 0;
         avgError = 0;
     }
     
@@ -123,12 +123,12 @@ struct TrackerDebugInfoStripped
         }
         namedPointCounts = std::vector<std::pair<std::string, int> >();
         std::vector<std::pair<std::string, std::vector<cv::Point2f> > >::const_iterator iterP;
-        for (iterP = params.namedPoints.begin(); iterP != params.namedPoints.end(); iterP++) {
+        for (iterP = params.namedPointSets.begin(); iterP != params.namedPointSets.end(); iterP++) {
             namedPointCounts.push_back(make_pair((*iterP).first, (*iterP).second.size()));
         }
         initialPointCount = params.initialPointCount;
-        distanceRange = params.distanceRange;
-        divergence = params.divergence;
+        movementVariation = params.movementVariation;
+        jitterAmount = params.jitterAmount;
         avgError = params.avgError;
     }
     
@@ -188,8 +188,8 @@ struct TrackerDebugInfoStripped
             }
         }
         initialPointCount += other.initialPointCount;
-        distanceRange += other.distanceRange;
-        divergence += other.divergence;
+        movementVariation += other.movementVariation;
+        jitterAmount += other.jitterAmount;
         avgError += other.avgError;
         return *this;
     }
@@ -221,8 +221,8 @@ struct TrackerDebugInfoStripped
             res.namedPointCounts.push_back(std::make_pair(thisPair.first, thisPair.second / factor));
         }
         res.initialPointCount = initialPointCount / factor;
-        res.distanceRange = distanceRange / factor;
-        res.divergence = divergence / factor;
+        res.movementVariation = movementVariation / factor;
+        res.jitterAmount = jitterAmount / factor;
         res.avgError = avgError / factor;
         return res;
     }

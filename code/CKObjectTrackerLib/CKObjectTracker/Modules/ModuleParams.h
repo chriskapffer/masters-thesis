@@ -14,13 +14,13 @@
 namespace ck {
     
     struct ModuleParams {
-        ModuleType successor;            // OUT: abstract             IN: abstract
-        cv::Rect searchRect;             // OUT: detection            IN: validation
-        cv::Mat sceneImageCurrent;       // OUT: -                    IN: detection, validation, tracking
-        cv::Mat sceneImagePrevious;      // OUT: validation, tracking IN: tracking
-        cv::Mat homography;              // OUT: validation, tracking IN: tracking
-        std::vector<cv::Point2f> points; // OUT: validation, tracking IN: tracking
-        bool isObjectPresent;            // OUT: validation, tracking IN: -
+        ModuleType successor;            // OUT: abstract                        IN: abstract
+        cv::Rect searchRect;             // OUT: detection, validation, tracking IN: validation
+        cv::Mat sceneImageCurrent;       // OUT: -                               IN: detection, validation, tracking
+        cv::Mat sceneImagePrevious;      // OUT: validation, tracking            IN: tracking
+        cv::Mat homography;              // OUT: validation, tracking            IN: tracking
+        std::vector<cv::Point2f> points; // OUT: validation, tracking            IN: tracking
+        bool isObjectPresent;            // OUT: validation, tracking            IN: -
         
         ModuleParams() : successor(MODULE_TYPE_EMPTY), homography(cv::Mat()) {};
     };

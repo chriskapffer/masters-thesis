@@ -57,9 +57,9 @@ string ObjectTrackerDebugger::debugString(TrackerDebugInfoStripped info)
                 snprintf(buffer, length, "%slost after %s: %d\n", buffer, info.namedPointCounts[i].first.c_str(), info.namedPointCounts[i - 1].second - info.namedPointCounts[i].second);
             }
         }
-        snprintf(buffer, length, "%sdistance range: %.3f\n", buffer, info.distanceRange);
+        snprintf(buffer, length, "%sdistance range: %.3f\n", buffer, info.movementVariation);
         snprintf(buffer, length, "%saverage error: %.3f\n", buffer, info.avgError);
-        snprintf(buffer, length, "%sdivergence: %.3f\n", buffer, info.divergence);
+        snprintf(buffer, length, "%sjitterAmount: %.3f\n", buffer, info.jitterAmount);
     }
 
     
@@ -263,15 +263,15 @@ static Mat drawTrackingImage(TrackerDebugInfo info, bool drawTransformedRect, bo
     Mat result = info.sceneImageFull;
     Point2f offset = info.searchRect.tl();
     float scale = 1.0f;
-    if (!drawAllPoints && drawfilteredPoints && info.namedPoints.size() > 0) {
-        drawPoints(result, info.namedPoints[info.namedPoints.size() - 1].second, Scalar(0, 255, 255), offset, scale);
+    if (!drawAllPoints && drawfilteredPoints && info.namedPointSets.size() > 0) {
+        drawPoints(result, info.namedPointSets[info.namedPointSets.size() - 1].second, Scalar(0, 255, 255), offset, scale);
     }
     
     if (drawAllPoints) {
-        int size = (int)info.namedPoints.size();
+        int size = (int)info.namedPointSets.size();
         for (int i = 0; i < size; i++) {
             int brightness = (int)(255 * (i + 1) / size);
-            drawPoints(result, info.namedPoints[i].second, Scalar(0, brightness, brightness), offset, scale);
+            drawPoints(result, info.namedPointSets[i].second, Scalar(0, brightness, brightness), offset, scale);
         }
     }
     

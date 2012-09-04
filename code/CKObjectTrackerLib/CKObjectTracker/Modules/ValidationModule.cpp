@@ -55,7 +55,7 @@ void ValidationModule::initWithObjectImage(const cv::Mat &objectImage) // TODO d
 
     if (_convertToGray) {
         profiler->startTimer(TIMER_CONVERT);
-        utils::bgr_a_2Gray(objectImage, _objectImage, COLOR_CONV_CV);
+        utils::bgrOrBgra2Gray(objectImage, _objectImage, COLOR_CONV_CV);
         profiler->stopTimer(TIMER_CONVERT);
     } else {
         objectImage.copyTo(_objectImage);
@@ -94,7 +94,7 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     // get region of interest and convert if desired
     if (_convertToGray) {
         profiler->startTimer(TIMER_CONVERT);
-        utils::bgr_a_2Gray(params.sceneImageCurrent(params.searchRect), sceneImage, COLOR_CONV_CV);
+        utils::bgrOrBgra2Gray(params.sceneImageCurrent(params.searchRect), sceneImage, COLOR_CONV_CV);
         profiler->stopTimer(TIMER_CONVERT);
     } else {
         sceneImage = params.sceneImageCurrent(params.searchRect);
@@ -155,18 +155,25 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     params.sceneImageCurrent.copyTo(params.sceneImagePrevious);
     params.isObjectPresent = validHomography;
     params.homography = homography;
+    if (validHomography) {
+        params.searchRect = boundingRect(objectCornersTransformed);
+        params.searchRect.x = MAX(MIN(params.searchRect.x, params.sceneImageCurrent.cols), 0);
+        params.searchRect.y = MAX(MIN(params.searchRect.y, params.sceneImageCurrent.rows), 0);
+        params.searchRect.width = MAX(MIN(params.searchRect.width, params.sceneImageCurrent.cols - params.searchRect.x), 0);
+        params.searchRect.height = MAX(MIN(params.searchRect.height, params.sceneImageCurrent.rows - params.searchRect.y), 0);
+    }
     
     // set rest of debug info values
-    float divergence = 0;
+    float jitterAmount = 0;
     vector<Point2f> prevObjectCornersTrans = debugInfo.transformedObjectCorners;
     if (objectCornersTransformed.size() == prevObjectCornersTrans.size()) {
         for (int i = 0; i < prevObjectCornersTrans.size(); i++) {
             Point2f vec = (objectCornersTransformed[i] - prevObjectCornersTrans[i]);
-            divergence += sqrt(vec.x * vec.x + vec.y * vec.y);
+            jitterAmount += sqrt(vec.x * vec.x + vec.y * vec.y);
         }
-        divergence /= prevObjectCornersTrans.size();
+        jitterAmount /= prevObjectCornersTrans.size();
     }
-    debugInfo.divergence = divergence;
+    debugInfo.jitterAmount = jitterAmount;
     debugInfo.transformedObjectCorners = objectCornersTransformed;
     debugInfo.badHomography = !validHomography;
     debugInfo.homography = homography;

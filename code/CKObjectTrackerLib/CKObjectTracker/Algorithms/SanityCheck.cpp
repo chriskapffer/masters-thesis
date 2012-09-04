@@ -23,14 +23,14 @@ struct Line2f
     Line2f(float sX, float sY, float eX, float eY) : sX(sX), sY(sY), eX(eX), eY(eY) { }
 };
 
-bool SanityCheck::checkRectangle(const vector<Point2f>& corners)
+bool SanityCheck::checkRectangle(const vector<Point2f>& cornersTransformed)
 {
     // The rectangle is convex and not twisted, if the lines
     // between opposing points intersect with each other.
     
     // intersection test based on: http://paulbourke.net/geometry/lineline2d/
-    Line2f l1 = Line2f(corners[0].x, corners[0].y, corners[2].x, corners[2].y);
-    Line2f l2 = Line2f(corners[1].x, corners[1].y, corners[3].x, corners[3].y);
+    Line2f l1 = Line2f(cornersTransformed[0].x, cornersTransformed[0].y, cornersTransformed[2].x, cornersTransformed[2].y);
+    Line2f l2 = Line2f(cornersTransformed[1].x, cornersTransformed[1].y, cornersTransformed[3].x, cornersTransformed[3].y);
     
     // equal denominator for ua and ub
     float d = (l2.eY - l2.sY) * (l1.eX - l1.sX) - (l2.eX - l2.sX) * (l1.eY - l1.sY);
@@ -50,14 +50,39 @@ bool SanityCheck::checkRectangle(const vector<Point2f>& corners)
     return (ua != 0.0f && ub != 0.0f) && (ua >= 0.0f && ua <= 1.0f) && (ub >= 0.0f && ub <= 1.0f);
 }
 
-bool SanityCheck::checkBoundaries(const vector<Point2f>& corners, int width, int height)
+bool SanityCheck::checkBoundaries(const vector<Point2f>& cornersTransformed, int width, int height)
 {
-    for (vector<Point2f>::const_iterator iter = corners.begin(); iter != corners.end(); iter++) {
+    // check if all transformed corners are within specified dimensions
+    for (vector<Point2f>::const_iterator iter = cornersTransformed.begin(); iter != cornersTransformed.end(); iter++) {
         if ((*iter).x < 0 || (*iter).x >= width || (*iter).y < 0 || (*iter).y >= height) {
             return false;
         }
     }
     return true;
+}
+    
+bool SanityCheck::checkMaxMinAngles(const std::vector<cv::Point2f>& cornersTransformed, float maxAngleDeg, float minAngleDeg)
+{
+    return true; // TODO: implementation
+}
+
+bool SanityCheck::validate(const cv::Mat& homography, const cv::Size& imageSize, const std::vector<cv::Point2f>& corners, std::vector<cv::Point2f>& cornersTransformed, cv::Rect& boundingRect, bool cropBoundingRectToImageSize)
+{
+    perspectiveTransform(corners, cornersTransformed, homography);
+    bool isValid = true
+        //&& checkBoundaries(cornersTransformed, imageSize.width, imageSize.height)
+        && checkMaxMinAngles(cornersTransformed, MAX_ANGLE_DEG, MIN_ANGLE_DEG)
+        && checkRectangle(cornersTransformed);
+
+    boundingRect = cv::boundingRect(cornersTransformed);
+    if (cropBoundingRectToImageSize) {
+        boundingRect.x = MAX(MIN(boundingRect.x, imageSize.width), 0);
+        boundingRect.y = MAX(MIN(boundingRect.y, imageSize.height), 0);
+        boundingRect.width = MAX(MIN(boundingRect.width, imageSize.width - boundingRect.x), 0);
+        boundingRect.height = MAX(MIN(boundingRect.height, imageSize.height - boundingRect.y), 0);
+    }
+    
+    return isValid;
 }
     
 } // end of namepsace

@@ -28,8 +28,10 @@ inline static bool compareKnnMatch(std::vector<cv::DMatch> i, std::vector<cv::DM
     
 struct utils {
     
+    static float averageDistance(const std::vector<cv::Point2f>& points1, const std::vector<cv::Point2f>& points2);
+    
     // source image can also be gray scale
-    static void bgr_a_2Gray(const cv::Mat& imgIn, cv::Mat& imgOut, int method = COLOR_CONV_CV);
+    static void bgrOrBgra2Gray(const cv::Mat& imgIn, cv::Mat& imgOut, int method = COLOR_CONV_CV);
     
     static void get2DCoordinatesOfKeyPoints(const std::vector<cv::KeyPoint>& keypoints, std::vector<cv::Point2f>& coordinates);
     

@@ -44,7 +44,7 @@ TrackingModule::TrackingModule(int maxPoints, int minPointsAbs, float minPointsR
     _distortionThreshold = distortionThreshold;
     
     // LK: opencv lucas kanade sample project
-    // SL: success labs (adapted version of LK) see: TODO: website
+    // SL: success labs (adapted version of LK) TODO: see: website
     // RM: rui marques on http://answers.opencv.org/question/176/which-values-for-window-size-and-number-of/
 
     // optical flow and sub pix params
@@ -67,6 +67,8 @@ TrackingModule::~TrackingModule()
     
 }
 
+#pragma mark
+    
 void TrackingModule::initWithObjectImage(const cv::Mat &objectImage)
 {
     _objectCorners = vector<Point2f>(4); // clock wise
@@ -78,55 +80,43 @@ void TrackingModule::initWithObjectImage(const cv::Mat &objectImage)
 
 bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& debugInfo)
 {
-    Mat previousImage;
-    Mat currentImage;
-    Mat homography = params.homography;
-    vector<Point2f> pointsIn = params.points;
-    vector<Point2f> pointsOut;
-    
-    Profiler* profiler = Profiler::Instance();
-    
+    // declaration
+    Profiler* profiler;
+    vector<float> error;
+    vector<uchar> status;
+    vector<Point2f> pointsIn, pointsOut, objectCornersTransformed;
+    float avgError, avgDistance, maxDistance, minDistance;
+    Mat previousImage, currentImage, homography;
+    bool isHomographyValid;
+    Rect boundingRect;
+
     // clear module specific debug information
-    debugInfo.namedPoints.clear();
+    debugInfo.namedPointSets.clear();
     
     // don't go any further, if tracker is set not enabled
-    if (!_enabled || pointsIn.empty()) {
+    if (!_enabled) {
         return false;
     }
     
-    // strip end of list, if there are too many points
-    if (pointsIn.size() > _maxPointsAbsolute) {
-        pointsIn.erase(pointsIn.begin() + _maxPointsAbsolute, pointsIn.end());
-    }
+    // initialization
+    profiler = Profiler::Instance();
+    homography = params.homography;
+    pointsIn = params.points;
     
-    // store number of points, if they are the initial point set to start with
-    // (previous module was not tracker itself)
-    if (_isInitialCall) {
-        _isInitialCall = false;
-        _initialPointSet = pointsIn;
-        _initialPointCount = (int)pointsIn.size();
-        params.homography.copyTo(_initialHomography);
-        debugInfo.initialPointCount = _initialPointCount;
-        _succFrameCount = 0;
-    }
-    
-    // stop tracking after max successive frames (used for homography refinemend via validation module)
-    _succFrameCount++;
-    if (_maxSuccessiveFrames > 0 && _succFrameCount > _maxSuccessiveFrames) {
+    // perform necessary steps in order to proceed
+    if(!prepareForProcessing(homography, pointsIn, debugInfo)) {
+        // stop tracking and prepare for a new initial call to this module in the future
         _isInitialCall = true;
         return false;
     }
     
-    // store original points array
-    debugInfo.namedPoints.push_back(make_pair(POINTS_TOTAL, pointsIn));
-    
     // convert to gray
     profiler->startTimer(TIMER_CONVERT);
-    utils::bgr_a_2Gray(params.sceneImagePrevious, previousImage, COLOR_CONV_CV);
-    utils::bgr_a_2Gray(params.sceneImageCurrent, currentImage, COLOR_CONV_CV);
+    utils::bgrOrBgra2Gray(params.sceneImagePrevious, previousImage, COLOR_CONV_CV);
+    utils::bgrOrBgra2Gray(params.sceneImageCurrent, currentImage, COLOR_CONV_CV);
     profiler->stopTimer(TIMER_CONVERT);
     
-    // calculate sub pixel locations
+    // calculate sub pixel locations if desired
     if (_useSubPixels) {
         profiler->startTimer(TIMER_OPTIMIZE);
         cornerSubPix(previousImage, pointsIn, _winSizeSubPix, _zeroZone, _terminationCriteria);
@@ -134,107 +124,143 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
     }
     
     // calculate optical flow
-    float avgError = 0;
-    float avgDistSq = 0;
-    float maxDistSq = 0;
-    float minDistSq = MAX(currentImage.cols, currentImage.rows);
-    vector<uchar> status;
-    vector<float> error;
-    
     profiler->startTimer(TIMER_TRACK);
     calcOpticalFlowPyrLK(previousImage, currentImage, pointsIn, pointsOut, status, error, _winSizeFlow, _maxLevel, _terminationCriteria, _lkFlags, _minEigenThreshold);
-    for (int i = (int)pointsOut.size() - 1; i >= 0; i--) {
-        if (!status[i]) {
-            // if point could not be tracked remove it (from both lists, to keep them in sync)
-            _initialPointSet.erase(_initialPointSet.begin() + i);
-            pointsOut.erase(pointsOut.begin() + i);
-            pointsIn.erase(pointsIn.begin() + i);
-            continue;
-        }
-        Point2f vec = pointsOut[i] - pointsIn[i];
-        float distSq = vec.x * vec.x + vec.y * vec.y;
-        maxDistSq = MAX(maxDistSq, distSq);
-        minDistSq = MIN(minDistSq, distSq);
-        avgDistSq += distSq;
-        avgError += error[i];
-    }
-    avgDistSq /= pointsOut.size();
-    avgError /= pointsOut.size();
+    removeUntrackedPoints(pointsIn, pointsOut, _initialPointSet, status, error, avgError, avgDistance, maxDistance, minDistance);
     profiler->stopTimer(TIMER_TRACK);
     
-    // store remaining points after tracking
-    debugInfo.namedPoints.push_back(make_pair(POINTS_TRACKED, pointsOut));
-    debugInfo.distanceRange = sqrt(maxDistSq - minDistSq);
+    // store remaining points and other metrics in debug info
+    debugInfo.namedPointSets.push_back(make_pair(POINTS_TRACKED, pointsOut));
+    debugInfo.movementVariation = maxDistance - minDistance;
     debugInfo.avgError = avgError;
     
-    // filter new points
+    // filter new points 
     if (_filterDistortions) {
         profiler->startTimer(TIMER_FILTER);
-        for (int i = (int)pointsOut.size(); i >= 0; i--) {
-            Point2f vec = pointsOut[i] - pointsIn[i];
-            float distanceSquared = vec.x * vec.x + vec.y * vec.y;
-            if (fabs(distanceSquared - avgDistSq) / avgDistSq > _distortionThreshold) {
-                _initialPointSet.erase(_initialPointSet.begin() + i);
-                pointsOut.erase(pointsOut.begin() + i);
-                pointsIn.erase(pointsIn.begin() + i);
-            }
-        }
+        filterPointsByMovingDistance(pointsIn, pointsOut, _initialPointSet, avgDistance, _distortionThreshold);
         profiler->stopTimer(TIMER_FILTER);
     }
-    debugInfo.namedPoints.push_back(make_pair(POINTS_FILTERED, pointsOut));
+    // store remaining points in debug info
+    debugInfo.namedPointSets.push_back(make_pair(POINTS_FILTERED, pointsOut));
 
-    // check if there are enough points left
     int currentCount = (int)pointsOut.size();
+    // check if there are enough points left, stop tracking if not
     if (currentCount < _minPointsAbsolute || currentCount < _initialPointCount * _minPointsRelative) {
         cout << "Lost too many points." << endl;
+        // stop tracking and prepare for a new initial call to this module in the future
         _isInitialCall = true;
         return false;
     }
     
-    // compute homography from points
+    // compute homography
     profiler->startTimer(TIMER_ESTIMATE);
     if (_calcHomRelToFrame) {
+        // multiply homography with transformation between current points and previous points (from last frame)
         homography *= findHomography(pointsIn, pointsOut);
     } else {
-        if (_initialPointSet.size() == pointsOut.size()) {
-            homography = findHomography(_initialPointSet, pointsOut) * _initialHomography;
-        } else {
-            cout << "This should not happen!!" << endl; //TODO throw
-        }
+        // multiply homography with transformation between current points and initial point set
+        homography = findHomography(_initialPointSet, pointsOut) * _initialHomography;
     }
     profiler->stopTimer(TIMER_ESTIMATE);
 
     // validate homography matrix
     profiler->startTimer(TIMER_VALIDATE);
-    vector<Point2f> objectCornersTransformed;
-    perspectiveTransform(_objectCorners, objectCornersTransformed, homography);
-    bool validHomography = true
-        //&& SanityCheck::checkBoundaries(objectCornersTransformed, sceneImage.cols, sceneImage.rows)
-        && SanityCheck::checkRectangle(objectCornersTransformed);
+    isHomographyValid = SanityCheck::validate(homography, Size(currentImage.cols, currentImage.rows), _objectCorners, objectCornersTransformed, boundingRect, false);
     profiler->stopTimer(TIMER_VALIDATE);
-        
-    // set out params
+
+    // set output params
     currentImage.copyTo(params.sceneImagePrevious);
-    params.isObjectPresent = validHomography;
+    params.isObjectPresent = isHomographyValid;
     params.homography = homography;
     params.points = pointsOut;
-    
+
     // set debug info values
-    float divergence = 0;
-    vector<Point2f> prevObjectCornersTrans = debugInfo.transformedObjectCorners;
-    if (objectCornersTransformed.size() == prevObjectCornersTrans.size()) {
-        for (int i = 0; i < prevObjectCornersTrans.size(); i++) {
-            Point2f vec = (objectCornersTransformed[i] - prevObjectCornersTrans[i]);
-            divergence += sqrt(vec.x * vec.x + vec.y * vec.y);
-        }
-        divergence /= prevObjectCornersTrans.size();
-    }
-    debugInfo.divergence = divergence;
+    debugInfo.jitterAmount = utils::averageDistance(objectCornersTransformed, debugInfo.transformedObjectCorners);
     debugInfo.transformedObjectCorners = objectCornersTransformed;
-    debugInfo.badHomography = !validHomography;
+    debugInfo.badHomography = !isHomographyValid;
     debugInfo.homography = homography;
     
-    return validHomography;
+    return isHomographyValid;
 }
 
+#pragma mark
+    
+bool TrackingModule::prepareForProcessing(const Mat& homography, vector<Point2f>& pointsIn, TrackerDebugInfo& debugInfo)
+{
+    // strip end of list, if there are more input points than desired
+    if (pointsIn.size() > _maxPointsAbsolute) {
+        pointsIn.erase(pointsIn.begin() + _maxPointsAbsolute, pointsIn.end());
+    }
+    // store current input points in debug info
+    debugInfo.namedPointSets.push_back(make_pair(POINTS_TOTAL, pointsIn));
+    
+    // if this is the initial call to the tracking module, store current points
+    // and homography, in order to calculate their relative transformation
+    if (_isInitialCall) {
+        // reset frame count (used for maxSuccessiveFrames)
+        _succFrameCount = 0;
+        _isInitialCall = false;
+        _initialPointSet = pointsIn;
+        _initialPointCount = (int)pointsIn.size(); // store inital point count seperately,
+        // cause initial point set will be changed over time
+        homography.copyTo(_initialHomography);
+        
+        // store initial point count in debug info
+        debugInfo.initialPointCount = _initialPointCount;
+    }
+
+    _succFrameCount++;
+    
+    // stop tracking after max successive frames (used for homography refinemend via validation module)
+    // -1 indicates, that there is no frame limit
+    return _maxSuccessiveFrames == -1 || _succFrameCount <= _maxSuccessiveFrames;
+}
+
+void TrackingModule::removeUntrackedPoints(vector<Point2f>& pointsIn, vector<Point2f>& pointsOut, vector<Point2f>& initialPoints, const vector<uchar>& status, const vector<float>& error, float& avgError, float& avgDistance, float& maxDistance, float& minDistance)
+{
+    avgError = 0;
+    avgDistance = 0;
+    maxDistance = 0;
+    minDistance = FLT_MAX;
+    
+    for (int i = (int)pointsOut.size() - 1; i >= 0; i--) {
+        if (!status[i]) {
+            // if point could not be tracked remove it (from all lists, to keep them in sync)
+            initialPoints.erase(initialPoints.begin() + i);
+            pointsOut.erase(pointsOut.begin() + i);
+            pointsIn.erase(pointsIn.begin() + i);
+            continue;
+        }
+        // calculate metrics for remaining points (distance between previous and current points, etc.)
+        Point2f vec = pointsOut[i] - pointsIn[i];
+        float distanceSquared = vec.x * vec.x + vec.y * vec.y;
+        maxDistance = MAX(maxDistance, distanceSquared);
+        minDistance = MIN(minDistance, distanceSquared);
+        avgDistance += distanceSquared;
+        avgError += error[i];
+    }
+    avgDistance /= pointsOut.size();
+    avgError /= pointsOut.size();
+    
+    // apply square root to distances
+    maxDistance = sqrt(maxDistance);
+    minDistance = sqrt(minDistance);
+    avgDistance = sqrt(avgDistance);
+}
+    
+void TrackingModule::filterPointsByMovingDistance(vector<Point2f>& pointsIn, vector<Point2f>& pointsOut, vector<Point2f>& initialPoints, float averageDistance, float distortionThreshold)
+{
+    float averageDistanceSquared = averageDistance * averageDistance;
+    for (int i = (int)pointsOut.size(); i >= 0; i--) {
+        Point2f vec = pointsOut[i] - pointsIn[i];
+        float distanceSquared = vec.x * vec.x + vec.y * vec.y; // moving distance (squared)
+        // remove points if their moving dinstance is more than distortionThreshold times larger than averageDistanceSquared
+        if (fabs(distanceSquared - averageDistanceSquared) / averageDistanceSquared > distortionThreshold) {
+            initialPoints.erase(initialPoints.begin() + i);
+            pointsOut.erase(pointsOut.begin() + i);
+            pointsIn.erase(pointsIn.begin() + i);
+        }
+    }
+}
+    
 } // end of namespace

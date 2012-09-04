@@ -38,7 +38,7 @@ void DetectionModule::initEdges(const cv::Mat &objectImage)
     
     profiler->startTimer(TIMER_CONVERT);
     Mat gray;
-    utils::bgr_a_2Gray(objectImage, gray);
+    utils::bgrOrBgra2Gray(objectImage, gray);
     _objectImage = gray < 128;
     profiler->stopTimer(TIMER_CONVERT);
     
@@ -116,7 +116,7 @@ bool DetectionModule::matchEdges(ModuleParams& params, TrackerDebugInfo& debugIn
     
     profiler->startTimer(TIMER_CONVERT);
     Mat gray;
-    utils::bgr_a_2Gray(params.sceneImageCurrent, gray);
+    utils::bgrOrBgra2Gray(params.sceneImageCurrent, gray);
     sceneImage = gray < 128;
     profiler->stopTimer(TIMER_CONVERT);
     

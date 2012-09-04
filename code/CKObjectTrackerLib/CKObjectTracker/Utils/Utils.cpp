@@ -20,14 +20,29 @@ using namespace std;
 
 namespace ck {
     
+#pragma mark other
+
+    float utils::averageDistance(const std::vector<cv::Point2f>& points1, const std::vector<cv::Point2f>& points2)
+    {
+        float avgDistance = 0;
+        size_t count = points1.size();
+        assert(count == points2.size());
+        for (int i = 0; i < count; i++) {
+            Point2f vec = (points2[i] - points1[i]);
+            avgDistance += vec.x * vec.x + vec.y * vec.y;
+        }
+        avgDistance /= count;
+        return sqrt(avgDistance);
+    }
+    
 #pragma mark conversion
     
     static void bgr2GrayNeon(const Mat& imgIn, Mat& imgOut, bool assembler);
     
-    void utils::bgr_a_2Gray(const Mat& imgIn, Mat& imgOut, int method)
+    void utils::bgrOrBgra2Gray(const Mat& imgIn, Mat& imgOut, int method)
     {
-        // do simple copy, because src is already gray
         if (imgIn.type() == CV_8UC1) {
+            // do simple copy, because src is already gray
             imgIn.copyTo(imgOut);
             return;
         }

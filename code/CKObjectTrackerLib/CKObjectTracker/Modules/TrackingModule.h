@@ -76,6 +76,11 @@ public:
     inline int getLKFlags() const { return _lkFlags; }
 
 private:
+    bool prepareForProcessing(const cv::Mat& homography, std::vector<cv::Point2f>& pointsIn, TrackerDebugInfo& debugInfo);
+    
+    static void removeUntrackedPoints(std::vector<cv::Point2f>& pointsIn, std::vector<cv::Point2f>& pointsOut, std::vector<cv::Point2f>& initialPoints, const std::vector<uchar>& status, const std::vector<float>& error, float& avgError, float& avgDistance, float& maxDistance, float& minDistance);
+    static void filterPointsByMovingDistance(std::vector<cv::Point2f>& pointsIn, std::vector<cv::Point2f>& pointsOut, std::vector<cv::Point2f>& initialPoints, float averageDistance, float distortionThreshold);
+    
     // tracker params
     bool _enabled;
     
