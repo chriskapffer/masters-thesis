@@ -84,24 +84,30 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
     Profiler* profiler;
     vector<float> error;
     vector<uchar> status;
-    vector<Point2f> pointsIn, pointsOut, objectCornersTransformed;
+    vector<Point2f> pointsIn;
+    vector<Point2f> pointsOut;
+    vector<Point2f> objectCornersTransformed;
     float avgError, avgDistance, maxDistance, minDistance;
-    Mat previousImage, currentImage, homography;
     bool isHomographyValid;
     Rect boundingRect;
+    Mat previousImage;
+    Mat currentImage;
+    Mat homography;
 
     // clear module specific debug information
     debugInfo.namedPointSets.clear();
     
-    // don't go any further, if tracker is set not enabled
+    // don't go any further, if tracker is not enabled
     if (!_enabled) {
         return false;
     }
     
     // initialization
     profiler = Profiler::Instance();
-    homography = params.homography;
     pointsIn = params.points;
+    homography = params.homography;
+    currentImage = params.sceneImageCurrent;
+    previousImage = params.sceneImagePrevious;
     
     // perform necessary steps in order to proceed
     if(!prepareForProcessing(homography, pointsIn, debugInfo)) {
@@ -112,8 +118,8 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
     
     // convert to gray
     profiler->startTimer(TIMER_CONVERT);
-    utils::bgrOrBgra2Gray(params.sceneImagePrevious, previousImage, COLOR_CONV_CV);
-    utils::bgrOrBgra2Gray(params.sceneImageCurrent, currentImage, COLOR_CONV_CV);
+    utils::bgrOrBgra2Gray(previousImage, previousImage, COLOR_CONV_CV);
+    utils::bgrOrBgra2Gray(currentImage, currentImage, COLOR_CONV_CV);
     profiler->stopTimer(TIMER_CONVERT);
     
     // calculate sub pixel locations if desired
@@ -165,20 +171,25 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
 
     // validate homography matrix
     profiler->startTimer(TIMER_VALIDATE);
-    isHomographyValid = SanityCheck::validate(homography, Size(currentImage.cols, currentImage.rows), _objectCorners, objectCornersTransformed, boundingRect, false);
+    isHomographyValid = SanityCheck::validate(homography, Size(currentImage.cols, currentImage.rows), _objectCorners, objectCornersTransformed, boundingRect, true);
     profiler->stopTimer(TIMER_VALIDATE);
 
     // set output params
-    currentImage.copyTo(params.sceneImagePrevious);
+    params.sceneImageCurrent.copyTo(params.sceneImagePrevious);
     params.isObjectPresent = isHomographyValid;
     params.homography = homography;
     params.points = pointsOut;
 
     // set debug info values
-    debugInfo.jitterAmount = utils::averageDistance(objectCornersTransformed, debugInfo.transformedObjectCorners);
-    debugInfo.transformedObjectCorners = objectCornersTransformed;
+    debugInfo.jitterAmount = utils::averageDistance(objectCornersTransformed, debugInfo.objectCornersTransformed);
+    debugInfo.objectCornersTransformed = objectCornersTransformed;
     debugInfo.badHomography = !isHomographyValid;
     debugInfo.homography = homography;
+    
+    if (isHomographyValid) {
+        params.searchRect = boundingRect;
+        debugInfo.searchRect = boundingRect;
+    }
     
     return isHomographyValid;
 }
@@ -254,8 +265,8 @@ void TrackingModule::filterPointsByMovingDistance(vector<Point2f>& pointsIn, vec
     for (int i = (int)pointsOut.size(); i >= 0; i--) {
         Point2f vec = pointsOut[i] - pointsIn[i];
         float distanceSquared = vec.x * vec.x + vec.y * vec.y; // moving distance (squared)
-        // remove points if their moving dinstance is more than distortionThreshold times larger than averageDistanceSquared
-        if (fabs(distanceSquared - averageDistanceSquared) / averageDistanceSquared > distortionThreshold) {
+        // remove points if their moving dinstance - average is greater than average times distortionThreshold
+        if (fabs(distanceSquared - averageDistanceSquared) > averageDistanceSquared * distortionThreshold) {
             initialPoints.erase(initialPoints.begin() + i);
             pointsOut.erase(pointsOut.begin() + i);
             pointsIn.erase(pointsIn.begin() + i);

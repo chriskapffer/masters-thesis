@@ -49,7 +49,7 @@ ValidationModule::~ValidationModule()
 
 }
 
-void ValidationModule::initWithObjectImage(const cv::Mat &objectImage) // TODO debug info
+void ValidationModule::initWithObjectImage(const cv::Mat &objectImage) // TODO: debug info
 {
     Profiler* profiler = Profiler::Instance();
 
@@ -77,108 +77,100 @@ void ValidationModule::initWithObjectImage(const cv::Mat &objectImage) // TODO d
 
 bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& debugInfo)
 {
-    Mat sceneImage;
+    // declaration
+    Profiler* profiler;
+    Mat homography;
+    Mat sceneImagePart;
+    Mat sceneImageFull;
     Mat sceneDescriptors;
     vector<KeyPoint> sceneKeyPoints;
     vector<Point2f> sceneCoordinates;
     vector<Point2f> objectCoordinates;
+    vector<Point2f> objectCornersTransformed;
     vector<unsigned char> mask;
     vector<DMatch> matches;
-    Mat homography;
+    bool isHomographyValid;
+    Rect searchRect;
     
-    Profiler* profiler = Profiler::Instance();
+    // initialization
+    profiler = Profiler::Instance();
+    searchRect = params.searchRect;
+    sceneImageFull = params.sceneImageCurrent;
+    sceneImagePart = sceneImageFull(searchRect);
     
     // clear module specific debug information
+    debugInfo.objectCornersTransformed.clear();
     debugInfo.namedMatches.clear();
+    debugInfo.badHomography = false;
     
-    // get region of interest and convert if desired
+    // get region of interest and convert to gray if desired
     if (_convertToGray) {
         profiler->startTimer(TIMER_CONVERT);
-        utils::bgrOrBgra2Gray(params.sceneImageCurrent(params.searchRect), sceneImage, COLOR_CONV_CV);
+        utils::bgrOrBgra2Gray(sceneImagePart, sceneImagePart, COLOR_CONV_CV);
         profiler->stopTimer(TIMER_CONVERT);
-    } else {
-        sceneImage = params.sceneImageCurrent(params.searchRect);
     }
 
     // detect keypoints and extract features
     profiler->startTimer(TIMER_DETECT);
-    _detector->detect(sceneImage, sceneKeyPoints);
+    _detector->detect(sceneImagePart, sceneKeyPoints);
     profiler->stopTimer(TIMER_DETECT);
     profiler->startTimer(TIMER_EXTRACT);
-    _extractor->compute(sceneImage, sceneKeyPoints, sceneDescriptors);
+    _extractor->compute(sceneImagePart, sceneKeyPoints, sceneDescriptors);
     profiler->stopTimer(TIMER_EXTRACT);
 
-    // set first bit of debug info values
-    debugInfo.objectKeyPoints = _objectKeyPoints;
+    // store available metrics in debug info
     debugInfo.objectImage = _objectImage;
+    debugInfo.objectKeyPoints = _objectKeyPoints;
+    debugInfo.sceneImagePart = sceneImagePart;
     debugInfo.sceneKeyPoints = sceneKeyPoints;
-    debugInfo.sceneImagePart = sceneImage;
     
-    // match and filter descriptors
+    // match and filter descriptors (uses internal profiling)
     MatcherFilter::getFilteredMatches(*_matcher, _objectDescriptors, sceneDescriptors, matches, _filterFlags, _sortMatches, _ratio, _nBestMatches, debugInfo.namedMatches);
+    
+    // check if there are enough matches left, stop validation if not
     if (matches.size() < MIN_MATCHES) {
         cout << "Not enough matches!" << endl;
-        // set rest of debug info values in case of failure
-        debugInfo.transformedObjectCorners.clear();
-        debugInfo.badHomography = false;
         return false;
     }
 
     // compute homography from matches
     profiler->startTimer(TIMER_ESTIMATE);
-    utils::get2DCoordinatesOfMatches(matches, _objectKeyPoints, sceneKeyPoints, objectCoordinates, sceneCoordinates);
+    utils::get2DCoordinatesOfMatches(matches, _objectKeyPoints, sceneKeyPoints, objectCoordinates, sceneCoordinates, Point2f(), searchRect.tl());
     homography = findHomography(objectCoordinates, sceneCoordinates, _estimationMethod, _ransacThreshold, mask);
     profiler->stopTimer(TIMER_ESTIMATE);
+    
+    // recalculate homography using only inliers from first calculation
     if (_refineHomography) {
         vector<DMatch> noOutliers;
-        // filter matches with mask and compute homography again
+        // filter matches with mask and compute homography again (uses internal profiling)
         MatcherFilter::filterMatchesWithMask(matches, mask, noOutliers, debugInfo.namedMatches);
         profiler->startTimer(TIMER_ESTIMATE);
-        utils::get2DCoordinatesOfMatches(noOutliers, _objectKeyPoints, sceneKeyPoints, objectCoordinates, sceneCoordinates);
+        utils::get2DCoordinatesOfMatches(noOutliers, _objectKeyPoints, sceneKeyPoints, objectCoordinates, sceneCoordinates, Point2f(), searchRect.tl());
         homography = findHomography(objectCoordinates, sceneCoordinates, 0); // default method, because there are no outliers
         profiler->stopTimer(TIMER_ESTIMATE);
     }
     
     // validate homography matrix
     profiler->startTimer(TIMER_VALIDATE);
-    vector<Point2f> objectCornersTransformed;
-    perspectiveTransform(_objectCorners, objectCornersTransformed, homography);
-    bool validHomography = true
-        //&& SanityCheck::checkBoundaries(objectCornersTransformed, sceneImage.cols, sceneImage.rows)
-        && SanityCheck::checkRectangle(objectCornersTransformed);
+    isHomographyValid = SanityCheck::validate(homography, Size(sceneImageFull.cols, sceneImageFull.rows), _objectCorners, objectCornersTransformed);
     profiler->stopTimer(TIMER_VALIDATE);
-
-    // set out params
-    //params.points = sceneCoordinates; // These are only matches, but using the whole keypoint set is ok
-                                      // since tracker calculates relative homographies and not absolute ones.
-    utils::get2DCoordinatesOfKeyPoints(sceneKeyPoints, params.points);
-    params.sceneImageCurrent.copyTo(params.sceneImagePrevious);
-    params.isObjectPresent = validHomography;
-    params.homography = homography;
-    if (validHomography) {
-        params.searchRect = boundingRect(objectCornersTransformed);
-        params.searchRect.x = MAX(MIN(params.searchRect.x, params.sceneImageCurrent.cols), 0);
-        params.searchRect.y = MAX(MIN(params.searchRect.y, params.sceneImageCurrent.rows), 0);
-        params.searchRect.width = MAX(MIN(params.searchRect.width, params.sceneImageCurrent.cols - params.searchRect.x), 0);
-        params.searchRect.height = MAX(MIN(params.searchRect.height, params.sceneImageCurrent.rows - params.searchRect.y), 0);
-    }
     
-    // set rest of debug info values
-    float jitterAmount = 0;
-    vector<Point2f> prevObjectCornersTrans = debugInfo.transformedObjectCorners;
-    if (objectCornersTransformed.size() == prevObjectCornersTrans.size()) {
-        for (int i = 0; i < prevObjectCornersTrans.size(); i++) {
-            Point2f vec = (objectCornersTransformed[i] - prevObjectCornersTrans[i]);
-            jitterAmount += sqrt(vec.x * vec.x + vec.y * vec.y);
-        }
-        jitterAmount /= prevObjectCornersTrans.size();
-    }
-    debugInfo.jitterAmount = jitterAmount;
-    debugInfo.transformedObjectCorners = objectCornersTransformed;
-    debugInfo.badHomography = !validHomography;
+    // get positions of all scene keypoints again (sceneCoordinates contained positions of matches only)
+    utils::get2DCoordinatesOfKeyPoints(sceneKeyPoints, sceneCoordinates, searchRect.tl());
+
+    // set output params
+    params.sceneImageCurrent.copyTo(params.sceneImagePrevious);
+    params.isObjectPresent = isHomographyValid;
+    params.homography = homography;
+    params.points = sceneCoordinates;
+
+    // set debug info values
+    debugInfo.jitterAmount = utils::averageDistance(objectCornersTransformed, debugInfo.objectCornersTransformed);
+    debugInfo.objectCornersTransformed = objectCornersTransformed;
+    debugInfo.badHomography = !isHomographyValid;
     debugInfo.homography = homography;
 
-    return validHomography;
+    return isHomographyValid;
 }
 
 } // end of namespace

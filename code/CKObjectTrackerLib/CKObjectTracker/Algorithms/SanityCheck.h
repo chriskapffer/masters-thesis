@@ -19,7 +19,8 @@ namespace ck {
         static bool checkRectangle(const std::vector<cv::Point2f>& cornersTransformed);
         static bool checkBoundaries(const std::vector<cv::Point2f>& cornersTransformed, int width, int height);
         static bool checkMaxMinAngles(const std::vector<cv::Point2f>& cornersTransformed, float maxAngleDeg, float minAngleDeg);
-        static bool validate(const cv::Mat& homography, const cv::Size& imageSize, const std::vector<cv::Point2f>& corners, std::vector<cv::Point2f>& cornersTransformed, cv::Rect& boundingRect, bool cropBoundingRectToImageSize);
+        static bool validate(const cv::Mat& homography, const cv::Size& imageSize, const std::vector<cv::Point2f>& corners, std::vector<cv::Point2f>& cornersTransformed);
+        static bool validate(const cv::Mat& homography, const cv::Size& imageSize, const std::vector<cv::Point2f>& corners, std::vector<cv::Point2f>& cornersTransformed, cv::Rect& boundingRect, bool cropBoundingRectToImageSize = false);
     };
     
 } // end of namepsace

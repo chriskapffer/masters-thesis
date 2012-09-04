@@ -240,8 +240,9 @@ static Mat drawValidationImage(TrackerDebugInfo info, bool drawTransformedRect, 
         }
 
         if (drawTransformedRect) {
+            Point2f pointOffset = Point2f(-info.searchRect.x, -info.searchRect.y) * scaleScn + offsetScn;
             Scalar color = info.badHomography ? Scalar(0, 0, 255) : Scalar(0, 255, 0);
-            drawTransformedRectToImage(result, info.transformedObjectCorners, offsetScn, scaleScn, color, 2);
+            drawTransformedRectToImage(result, info.objectCornersTransformed, pointOffset, scaleScn, color, 2);
         }
         
         // rotate image
@@ -250,9 +251,9 @@ static Mat drawValidationImage(TrackerDebugInfo info, bool drawTransformedRect, 
     } else {
         result = info.sceneImageFull;
         if (drawTransformedRect) {
-            Point2f offset = Point2f(info.searchRect.x, info.searchRect.y);
+            Point2f offset = Point2f(-info.searchRect.x, -info.searchRect.y);
             Scalar color = info.badHomography ? Scalar(0, 0, 255) : Scalar(0, 255, 0);
-            drawTransformedRectToImage(result, info.transformedObjectCorners, offset, 1, color, 2);
+            drawTransformedRectToImage(result, info.objectCornersTransformed, offset, 1, color, 2);
         }
     }
     return result;
@@ -261,7 +262,7 @@ static Mat drawValidationImage(TrackerDebugInfo info, bool drawTransformedRect, 
 static Mat drawTrackingImage(TrackerDebugInfo info, bool drawTransformedRect, bool drawfilteredPoints, bool drawAllPoints)
 {
     Mat result = info.sceneImageFull;
-    Point2f offset = info.searchRect.tl();
+    Point2f offset = Point(0,0);//info.searchRect.tl();
     float scale = 1.0f;
     if (!drawAllPoints && drawfilteredPoints && info.namedPointSets.size() > 0) {
         drawPoints(result, info.namedPointSets[info.namedPointSets.size() - 1].second, Scalar(0, 255, 255), offset, scale);
@@ -275,9 +276,11 @@ static Mat drawTrackingImage(TrackerDebugInfo info, bool drawTransformedRect, bo
         }
     }
     
+    rectangle(result, info.searchRect.tl(), info.searchRect.br(), Scalar(0,0,255), 3);
+    
     if (drawTransformedRect) {
         Scalar color = info.badHomography ? Scalar(0, 0, 255) : Scalar(0, 255, 0);
-        drawTransformedRectToImage(result, info.transformedObjectCorners, offset, 1, color, 2);
+        drawTransformedRectToImage(result, info.objectCornersTransformed, offset, 1, color, 2);
     }
     return result;
 }

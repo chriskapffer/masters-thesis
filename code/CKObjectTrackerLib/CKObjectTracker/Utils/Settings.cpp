@@ -20,6 +20,14 @@ namespace ck {
         std::vector<T> values;
         std::string name;
         T min; T max;
+        
+        Param() { getter = NULL; setter = NULL; }
+        ~Param() {
+            if(getter != NULL)
+                delete getter;
+            if(setter != NULL)
+                delete setter;
+        };
     };
     
     struct Settings::ParameterCollection {

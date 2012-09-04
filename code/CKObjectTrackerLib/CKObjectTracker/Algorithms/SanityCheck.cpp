@@ -66,6 +66,12 @@ bool SanityCheck::checkMaxMinAngles(const std::vector<cv::Point2f>& cornersTrans
     return true; // TODO: implementation
 }
 
+bool SanityCheck::validate(const cv::Mat& homography, const cv::Size& imageSize, const std::vector<cv::Point2f>& corners, std::vector<cv::Point2f>& cornersTransformed)
+{
+    Rect dummy;
+    return validate(homography, imageSize, corners, cornersTransformed, dummy, false);
+}
+    
 bool SanityCheck::validate(const cv::Mat& homography, const cv::Size& imageSize, const std::vector<cv::Point2f>& corners, std::vector<cv::Point2f>& cornersTransformed, cv::Rect& boundingRect, bool cropBoundingRectToImageSize)
 {
     perspectiveTransform(corners, cornersTransformed, homography);

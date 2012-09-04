@@ -41,16 +41,16 @@ struct TrackerDebugInfo {
     std::vector<std::pair<std::string, std::vector<cv::DMatch> > > namedMatches;
     std::vector<cv::KeyPoint> objectKeyPoints;
     std::vector<cv::KeyPoint> sceneKeyPoints;
-
+    
     cv::Mat objectImage;
     cv::Mat sceneImageFull;
     cv::Mat sceneImagePart;
     
     // validation and tracking
-    std::vector<cv::Point2f> transformedObjectCorners;
+    std::vector<cv::Point2f> objectCornersTransformed;
     cv::Mat homography;
     bool badHomography;
-
+    
     // tracking
     std::vector<std::pair<std::string, std::vector<cv::Point2f> > > namedPointSets;
     int initialPointCount;

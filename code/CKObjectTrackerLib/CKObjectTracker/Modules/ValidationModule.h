@@ -50,7 +50,7 @@ public:
     inline void setRatio(float value) { _ratio = value; }
     inline float getRatio() const { return _ratio; }
     
-    //TODO getter and setter for detector, extractor, matcher
+    // TODO: getter and setter for detector, extractor, matcher
     
 //    inline void setDetector(const std::string& value) { _detector = cv::FeatureDetector::create(value); initWithObjectImage(_objectImage); }
 //    inline std::string getDetector() const { return typeid(_detector).name(); }

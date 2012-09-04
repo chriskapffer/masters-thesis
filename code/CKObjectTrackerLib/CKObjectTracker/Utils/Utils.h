@@ -27,15 +27,16 @@ inline static bool compareKnnMatch(std::vector<cv::DMatch> i, std::vector<cv::DM
 }
     
 struct utils {
-    
+
+    static void movePoints(std::vector<cv::Point2f>& points, const cv::Point2f& offset);
     static float averageDistance(const std::vector<cv::Point2f>& points1, const std::vector<cv::Point2f>& points2);
     
     // source image can also be gray scale
     static void bgrOrBgra2Gray(const cv::Mat& imgIn, cv::Mat& imgOut, int method = COLOR_CONV_CV);
     
-    static void get2DCoordinatesOfKeyPoints(const std::vector<cv::KeyPoint>& keypoints, std::vector<cv::Point2f>& coordinates);
+    static void get2DCoordinatesOfKeyPoints(const std::vector<cv::KeyPoint>& keypoints, std::vector<cv::Point2f>& coordinates, const cv::Point2f& offset = cv::Point2f());
     
-    static void get2DCoordinatesOfMatches(const std::vector<cv::DMatch>& matches, const std::vector<cv::KeyPoint>& keypoints1, const std::vector<cv::KeyPoint>& keypoints2, std::vector<cv::Point2f>& coordinates1, std::vector<cv::Point2f>& coordinates2);
+    static void get2DCoordinatesOfMatches(const std::vector<cv::DMatch>& matches, const std::vector<cv::KeyPoint>& keypoints1, const std::vector<cv::KeyPoint>& keypoints2, std::vector<cv::Point2f>& coordinates1, std::vector<cv::Point2f>& coordinates2, const cv::Point2f& offset1 = cv::Point2f(), const cv::Point2f& offset2 = cv::Point2f());
     
     static void ratioTest(const std::vector<std::vector<cv::DMatch> >& matches, std::vector<cv::DMatch>& result, float ratio);
     

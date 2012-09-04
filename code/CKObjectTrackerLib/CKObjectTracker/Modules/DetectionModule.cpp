@@ -214,7 +214,7 @@ bool DetectionModule::matchHist(ModuleParams& params, TrackerDebugInfo& debugInf
     rectangle(backproj, boundingBox.tl(), boundingBox.br(), Scalar(0,0,255), 3);
 
     params.searchRect = boundingBox;
-    debugInfo.searchRect = params.searchRect;
+    debugInfo.searchRect = boundingBox;
     debugInfo.probabilityMap = backproj;
     return boundingBox.area() > 10 && boundingBox.area() < backproj.cols * backproj.rows * 0.8f;
 }
