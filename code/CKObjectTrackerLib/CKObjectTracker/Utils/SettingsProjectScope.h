@@ -14,15 +14,40 @@
 
 namespace ck {
 
-template<typename T>
+template<typename TParam>
 struct Param {
-    CallBackSingleArg<T>* setter;
-    CallBackReturn<T>* getter;
-    std::vector<T> values;
     std::string name;
-    T min; T max;
-    Param(const std::string& name, CallBackSingleArg<T>* setter, CallBackReturn<T>* getter)
-        : name(name), setter(setter), getter(getter) {}
+    CallBackSingleArg<TParam>* setter;
+    CallBackReturn<TParam>* getter;
+    std::vector<TParam> values;
+    TParam min; TParam max;
+    
+    Param() {
+        setter = NULL;
+        getter = NULL;
+        name = "";
+    }
+    
+    Param(const Param& other) {
+        setter = other.setter->clone();
+        getter = other.getter->clone();
+        values = other.values;
+        name = other.name;
+        min = other.min;
+        max = other.max;
+    }
+    
+    template <typename TClass>
+    Param(const std::string& name, TClass* owner, void (TClass::*setter)(const TParam&), TParam (TClass::*getter)() const) {
+        this->setter = new CallBackToMemberSingleArg<TParam, TClass>(owner, setter);
+        this->getter = new CallBackToMemberReturn<TParam, TClass>(owner, getter);
+        this->name = name;
+    }
+    
+    ~Param() {
+        if (setter != NULL) { delete setter; }
+        if (getter != NULL) { delete getter; }
+    }
 };
 
 struct Settings::ParameterCollection {
@@ -30,23 +55,28 @@ struct Settings::ParameterCollection {
     std::vector<Param<int> > intParams;
     std::vector<Param<float> > floatParams;
     std::vector<Param<std::string> > stringParams;
+    
+    ParameterCollection() { }
+    
+    ParameterCollection(const ParameterCollection& other) {
+        boolParams = other.boolParams;
+        intParams = other.intParams;
+        floatParams = other.floatParams;
+        stringParams = other.stringParams;
+    }
 };
     
 template<class TClass>
-inline void Settings::registerBool(const std::string& name, TClass owner, void (TClass::*setter)(bool), bool (TClass::*getter)() const)
+inline void Settings::registerBool(const std::string& name, TClass* owner, void (TClass::*setter)(const bool&), bool (TClass::*getter)() const)
 {
-    CallBackToMemberSingleArg<bool, TClass>* setterCallback = new CallBackToMemberSingleArg<bool, TClass>(owner, setter);
-    CallBackToMemberReturn<bool, TClass>* getterCallback = new CallBackToMemberReturn<bool, TClass>(owner, getter);
-    Param<bool> param = Param<bool>(name, setterCallback, getterCallback);
+    Param<bool> param = Param<bool>(name, owner, setter, getter);
     _parameters->boolParams.push_back(param);
 }
 
 template<class TClass>
-    inline void Settings::registerInt(const std::string& name, TClass owner, void (TClass::*setter)(int), int (TClass::*getter)() const, int minValue, int maxValue, std::vector<int> values)
+    inline void Settings::registerInt(const std::string& name, TClass* owner, void (TClass::*setter)(const int&), int (TClass::*getter)() const, int minValue, int maxValue, std::vector<int> values)
 {
-    CallBackToMemberSingleArg<int, TClass>* setterCallback = new CallBackToMemberSingleArg<int, TClass>(owner, setter);
-    CallBackToMemberReturn<int, TClass>* getterCallback = new CallBackToMemberReturn<int, TClass>(owner, getter);
-    Param<int> param = Param<int>(name, setterCallback, getterCallback);
+    Param<int> param = Param<int>(name, owner, setter, getter);
     param.min = minValue;
     param.max = maxValue;
     param.values = values;
@@ -54,22 +84,18 @@ template<class TClass>
 }
 
 template<class TClass>
-inline void Settings::registerFloat(const std::string& name, TClass owner, void (TClass::*setter)(float), float (TClass::*getter)() const, float minValue, float maxValue)
+inline void Settings::registerFloat(const std::string& name, TClass* owner, void (TClass::*setter)(const float&), float (TClass::*getter)() const, float minValue, float maxValue)
 {
-    CallBackToMemberSingleArg<float, TClass>* setterCallback = new CallBackToMemberSingleArg<float, TClass>(owner, setter);
-    CallBackToMemberReturn<float, TClass>* getterCallback = new CallBackToMemberReturn<float, TClass>(owner, getter);
-    Param<float> param = Param<float>(name, setterCallback, getterCallback);
+    Param<float> param = Param<float>(name, owner, setter, getter);
     param.min = minValue;
     param.max = maxValue;
     _parameters->floatParams.push_back(param);
 }
 
 template<class TClass>
-inline void Settings::registerString(const std::string& name, TClass owner, void (TClass::*setter)(const std::string&), std::string (TClass::*getter)() const, std::vector<std::string> values)
+inline void Settings::registerString(const std::string& name, TClass* owner, void (TClass::*setter)(const std::string&), std::string (TClass::*getter)() const, std::vector<std::string> values)
 {
-    CallBackToMemberSingleArg<std::string, TClass>* setterCallback = new CallBackToMemberSingleArg<std::string, TClass>(owner, setter);
-    CallBackToMemberReturn<std::string, TClass>* getterCallback = new CallBackToMemberReturn<std::string, TClass>(owner, getter);
-    Param<std::string> param = Param<std::string>(name, setterCallback, getterCallback);
+    Param<std::string> param = Param<std::string>(name, owner, setter, getter);
     param.values = values;
     _parameters->stringParams.push_back(param);
 }

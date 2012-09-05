@@ -18,17 +18,11 @@ namespace ck {
     struct ObjectTracker::Initializer {
         static void initTracker(ObjectTracker::Implementation& tracker)
         {
-            ValidationModule module = ValidationModule(std::vector<FilterFlag>(0));
+            ValidationModule* module = dynamic_cast<ValidationModule*>(tracker._allModules[MODULE_TYPE_VALIDATION]);
+            Settings validationSettings = Settings("Validation Settings");
+            validationSettings.registerFloat("Ratio", module, &ValidationModule::setRatio, &ValidationModule::getRatio, 0.0f, 1.0f);
             
-            Settings validationSettings("Validation Settings");
-            //validationSettings.set
-            
-            // TODO: make this work
-            //validationSettings.registerFloat("test", module, &ValidationModule::setRatio, &ValidationModule::getRatio, 0.0f, 1.0f);
-            
-            Settings* objectTrackerSettings = new Settings("Object Tracker Settings");
-            objectTrackerSettings->addCategory(validationSettings);
-            tracker._settings = objectTrackerSettings;
+            tracker._settings.addCategory(validationSettings);
         }
     };
     

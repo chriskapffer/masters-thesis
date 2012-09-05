@@ -15,7 +15,8 @@ namespace ck {
     class CallBackSingleArg
     {
     public:
-        virtual ~CallBackSingleArg() { std::cout << "base" << std::endl; }
+        virtual ~CallBackSingleArg() { }
+        virtual CallBackSingleArg* clone() = 0;
         virtual void call(const TParam& p) = 0;
     };
         
@@ -24,7 +25,9 @@ namespace ck {
     {
         void (*function)(const TParam&);
     public:
-        CallBackToStaticSingleArg(void(*function)(const TParam&)) : function(function) { };
+        CallBackToStaticSingleArg(void(*function)(const TParam&)) : function(function) { }
+        ~CallBackToStaticSingleArg() { /* DO NOT DELETE ANYTHING */ }
+        CallBackSingleArg<TParam>* clone() { return new CallBackToStaticSingleArg(function); }
         void call(const TParam& p) {
             (*function)(p);
         }
@@ -36,7 +39,9 @@ namespace ck {
         void (TClass::*function)(const TParam&);
         TClass* object;
     public:
-        CallBackToMemberSingleArg(TClass* object, void(TClass::*function)(const TParam&)) : object(object), function(function) { };
+        CallBackToMemberSingleArg(TClass* object, void(TClass::*function)(const TParam&)) : object(object), function(function) { }
+        ~CallBackToMemberSingleArg() { /* DO NOT DELETE ANYTHING */ }
+        CallBackSingleArg<TParam>* clone() { return new CallBackToMemberSingleArg(object, function); }
         void call(const TParam& p) {
             (*object.*function)(p);
         }
@@ -47,6 +52,7 @@ namespace ck {
     {
     public:
         virtual ~CallBackReturn() { }
+        virtual CallBackReturn* clone() = 0;
         virtual TParam call() = 0;
     };
     
@@ -55,7 +61,9 @@ namespace ck {
     {
         TParam (*function)();
     public:
-        CallBackToStaticReturn(TParam(*function)()) : function(function) { };
+        CallBackToStaticReturn(TParam(*function)()) : function(function) { }
+        ~CallBackToStaticReturn() { /* DO NOT DELETE ANYTHING */ }
+        CallBackReturn<TParam>* clone() { return new CallBackToStaticReturn(function); }
         TParam call() {
             return (*function)();
         }
@@ -64,26 +72,17 @@ namespace ck {
     template <typename TParam, typename TClass>
     class CallBackToMemberReturn : public CallBackReturn<TParam>
     {
-        TParam (TClass::*function)();
-        TClass* object;
-    public:
-        CallBackToMemberReturn(TClass* object, TParam(TClass::*function)()) : object(object), function(function) { };
-        TParam call() {
-            return (*object.*function)();
-        }
-    };
-    
-    template <typename TParam, typename TClass>
-    class CallBackToMemberConstReturn : public CallBackReturn<TParam>
-    {
         TParam (TClass::*function)() const;
         TClass* object;
     public:
-        CallBackToMemberConstReturn(TClass* object, TParam(TClass::*function)() const) : object(object), function(function) { };
+        CallBackToMemberReturn(TClass* object, TParam(TClass::*function)() const) : object(object), function(function) { }
+        ~CallBackToMemberReturn() { /* DO NOT DELETE ANYTHING */ }
+        CallBackReturn<TParam>* clone() { return new CallBackToMemberReturn(object, function); }
         TParam call() {
             return (*object.*function)();
         }
     };
+
 } // end of namespace
 
 #endif

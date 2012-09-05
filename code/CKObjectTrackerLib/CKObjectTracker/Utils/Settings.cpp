@@ -24,12 +24,17 @@ namespace ck {
     }
     
     template<typename T>
-    static bool getParamterWithName(const string& name, const vector<Param<T> >& params, Param<T>* parameter)
+    static bool getParamterWithName(const string& name, const vector<Param<T> >& params, Param<T>& parameter)
     {
         typename vector<Param<T> >::const_iterator iter;
         for (iter = params.begin(); iter != params.end(); iter++) {
             if ((*iter).name == name) {
-                *parameter = (*iter);
+                parameter.setter = (*iter).setter->clone();
+                parameter.getter = (*iter).getter->clone();
+                parameter.values = (*iter).values;
+                parameter.name = (*iter).name;
+                parameter.min = (*iter).min;
+                parameter.max = (*iter).max;
                 return true;
             }
         }
@@ -49,8 +54,15 @@ namespace ck {
     
     Settings::Settings(const string& name)
     {
-        _name = name;
         _parameters = new ParameterCollection();
+        _name = name;
+    }
+    
+    Settings::Settings(const Settings& other)
+    {
+        _name = other._name;
+        _subCategories = other._subCategories;
+        _parameters = new ParameterCollection(*other._parameters);
     }
     
     Settings::~Settings()
@@ -60,82 +72,138 @@ namespace ck {
     
 #pragma mark
 
-    bool Settings::setBoolValue(const std::string& name, bool value) const
+    bool Settings::setBoolValue(const std::string& name, const bool& value) const
     {
-        Param<bool>* param = NULL;
+        Param<bool> param;
         if (getParamterWithName(name, _parameters->boolParams, param)) {
-            param->setter->call(value);
+            param.setter->call(value);
             return true;
+        }
+        // search sub categories if not found
+        vector<Settings>::const_iterator iter;
+        for (iter = _subCategories.begin(); iter != _subCategories.end(); iter++) {
+            if ((*iter).setBoolValue(name, value)) {
+                return true;
+            }
         }
         return false;
     }
     
-    bool Settings::setIntValue(const std::string& name, int value) const
+    bool Settings::setIntValue(const std::string& name, const int& value) const
     {
-        Param<int>* param = NULL;
+        Param<int> param;
         if (getParamterWithName(name, _parameters->intParams, param)) {
-            param->setter->call(value);
+            param.setter->call(value);
             return true;
+        }
+        // search sub categories if not found
+        vector<Settings>::const_iterator iter;
+        for (iter = _subCategories.begin(); iter != _subCategories.end(); iter++) {
+            if ((*iter).setIntValue(name, value)) {
+                return true;
+            }
         }
         return false;
     }
     
-    bool Settings::setFloatValue(const std::string& name, float value) const
+    bool Settings::setFloatValue(const std::string& name, const float& value) const
     {
-        Param<float>* param = NULL;
+        Param<float> param;
         if (getParamterWithName(name, _parameters->floatParams, param)) {
-            param->setter->call(value);
+            param.setter->call(value);
             return true;
+        }
+        // search sub categories if not found
+        vector<Settings>::const_iterator iter;
+        for (iter = _subCategories.begin(); iter != _subCategories.end(); iter++) {
+            if ((*iter).setFloatValue(name, value)) {
+                return true;
+            }
         }
         return false;
     }
     
-    bool Settings::setStringValue(const std::string& name, std::string value) const
+    bool Settings::setStringValue(const std::string& name, const std::string& value) const
     {
-        Param<string>* param = NULL;
+        Param<string> param;
         if (getParamterWithName(name, _parameters->stringParams, param)) {
-            param->setter->call(value);
+            param.setter->call(value);
             return true;
+        }
+        // search sub categories if not found
+        vector<Settings>::const_iterator iter;
+        for (iter = _subCategories.begin(); iter != _subCategories.end(); iter++) {
+            if ((*iter).setStringValue(name, value)) {
+                return true;
+            }
         }
         return false;
     }
     
     bool Settings::getBoolValue(const std::string& name, bool& value) const
     {
-        Param<bool>* param = NULL;
+        Param<bool> param;
         if (getParamterWithName(name, _parameters->boolParams, param)) {
-            value = param->getter->call();
+            value = param.getter->call();
             return true;
+        }
+        // search sub categories if not found
+        vector<Settings>::const_iterator iter;
+        for (iter = _subCategories.begin(); iter != _subCategories.end(); iter++) {
+            if ((*iter).getBoolValue(name, value)) {
+                return true;
+            }
         }
         return false;
     }
     
     bool Settings::getIntValue(const std::string& name, int& value) const
     {
-        Param<int>* param = NULL;
+        Param<int> param;
         if (getParamterWithName(name, _parameters->intParams, param)) {
-            value = param->getter->call();
+            value = param.getter->call();
             return true;
+        }
+        // search sub categories if not found
+        vector<Settings>::const_iterator iter;
+        for (iter = _subCategories.begin(); iter != _subCategories.end(); iter++) {
+            if ((*iter).getIntValue(name, value)) {
+                return true;
+            }
         }
         return false;
     }
     
     bool Settings::getFloatValue(const std::string& name, float& value) const
     {
-        Param<float>* param = NULL;
+        Param<float> param;
         if (getParamterWithName(name, _parameters->floatParams, param)) {
-            value = param->getter->call();
+            value = param.getter->call();
             return true;
+        }
+        // search sub categories if not found
+        vector<Settings>::const_iterator iter;
+        for (iter = _subCategories.begin(); iter != _subCategories.end(); iter++) {
+            if ((*iter).getFloatValue(name, value)) {
+                return true;
+            }
         }
         return false;
     }
     
     bool Settings::getStringValue(const std::string& name, std::string& value) const
     {
-        Param<string>* param = NULL;
+        Param<string> param;
         if (getParamterWithName(name, _parameters->stringParams, param)) {
-            value = param->getter->call();
+            value = param.getter->call();
             return true;
+        }
+        // search sub categories if not found
+        vector<Settings>::const_iterator iter;
+        for (iter = _subCategories.begin(); iter != _subCategories.end(); iter++) {
+            if ((*iter).getStringValue(name, value)) {
+                return true;
+            }
         }
         return false;
     }
@@ -144,33 +212,54 @@ namespace ck {
     
     bool Settings::getIntInfo(const std::string& name, int& minValue, int& maxValue, vector<int>& values) const
     {
-        Param<int>* param = NULL;
+        Param<int> param;
         if (getParamterWithName(name, _parameters->intParams, param)) {
-            minValue = param->min;
-            maxValue = param->max;
-            values = param->values;
+            minValue = param.min;
+            maxValue = param.max;
+            values = param.values;
             return true;
+        }
+        // search sub categories if not found
+        vector<Settings>::const_iterator iter;
+        for (iter = _subCategories.begin(); iter != _subCategories.end(); iter++) {
+            if ((*iter).getIntInfo(name, minValue, maxValue, values)) {
+                return true;
+            }
         }
         return false;
     }
-    
+
     bool Settings::getFloatInfo(const std::string& name, float& minValue, float& maxValue) const
     {
-        Param<float>* param = NULL;
+        Param<float> param;
         if (getParamterWithName(name, _parameters->floatParams, param)) {
-            minValue = param->min;
-            maxValue = param->max;
+            minValue = param.min;
+            maxValue = param.max;
             return true;
+        }
+        // search sub categories if not found
+        vector<Settings>::const_iterator iter;
+        for (iter = _subCategories.begin(); iter != _subCategories.end(); iter++) {
+            if ((*iter).getFloatInfo(name, minValue, maxValue)) {
+                return true;
+            }
         }
         return false;
     }
     
     bool Settings::getStringInfo(const std::string& name, std::vector<std::string>& values) const
     {
-        Param<string>* param = NULL;
+        Param<string> param;
         if (getParamterWithName(name, _parameters->stringParams, param)) {
-            values = param->values;
+            values = param.values;
             return true;
+        }
+        // search sub categories if not found
+        vector<Settings>::const_iterator iter;
+        for (iter = _subCategories.begin(); iter != _subCategories.end(); iter++) {
+            if ((*iter).getStringInfo(name, values)) {
+                return true;
+            }
         }
         return false;
     }

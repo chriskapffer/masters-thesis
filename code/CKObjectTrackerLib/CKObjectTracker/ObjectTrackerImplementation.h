@@ -18,12 +18,11 @@ class ObjectTracker::Implementation {
 
 private:
     friend class Initializer;
-    
+
+    Settings _settings;
     ModuleParams _moduleParams;
     AbstractModule* _currentModule;
-
     std::map<ModuleType, AbstractModule*> _allModules;
-    Settings* _settings;
     
     void initModules(const cv::Mat& objectImage);
     void track(const cv::Mat& frame, TrackerOutput& output, TrackerDebugInfo& debugInfo, bool trackInSequence);
@@ -31,8 +30,8 @@ public:
     Implementation();
     ~Implementation();
     
-    const inline Settings getSettings() const {
-        return *_settings;
+    inline const Settings getSettings() const {
+        return _settings;
     }
     
     void setObject(const cv::Mat& objectImage);

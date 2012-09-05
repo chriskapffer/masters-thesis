@@ -29,10 +29,12 @@ using namespace cv;
 namespace ck {
 
 ObjectTracker::Implementation::Implementation()
+    : _settings("Object Tracker Settings")
 {
     _allModules = ModuleCollection::create();
     _moduleParams.successor = MODULE_TYPE_EMPTY;
     _currentModule = _allModules[MODULE_TYPE_EMPTY];
+    
     Initializer::initTracker(*this);
 }
 

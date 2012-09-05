@@ -18,41 +18,40 @@ namespace ck {
         TYPE_STRING,
     };
     
-    // WHATCH OUT!! You need to include settingsTemplates.cpp somewhere and declare instantiations
-    // for each consumer of the templates in order to avoid linker errors.
     class Settings {
     public:
         Settings(const std::string& name);
+        Settings(const Settings& other);
         ~Settings();
         
         template<class TClass>
-        void registerBool(const std::string& name, TClass owner,
-                          void (TClass::*setter)(bool),
+        void registerBool(const std::string& name, TClass* owner,
+                          void (TClass::*setter)(const bool&),
                           bool (TClass::*getter)() const);
         
         template<class TClass>
-        void registerInt(const std::string& name, TClass owner,
-                         void (TClass::*setter)(int),
+        void registerInt(const std::string& name, TClass* owner,
+                         void (TClass::*setter)(const int&),
                          int (TClass::*getter)() const,
                          int minValue, int maxValue,
                          std::vector<int> values);
         
         template<class TClass>
-        void registerFloat(const std::string& name, TClass owner,
-                           void (TClass::*setter)(float),
+        void registerFloat(const std::string& name, TClass* owner,
+                           void (TClass::*setter)(const float&),
                            float (TClass::*getter)() const,
                            float minValue, float maxValue);
         
         template<class TClass>
-        void registerString(const std::string& name, TClass owner,
+        void registerString(const std::string& name, TClass* owner,
                             void (TClass::*setter)(const std::string&),
                             std::string (TClass::*getter)() const,
                             std::vector<std::string> values);
         
-        bool setBoolValue(const std::string& name, bool value) const;
-        bool setIntValue(const std::string& name, int value) const;
-        bool setFloatValue(const std::string& name, float value) const;
-        bool setStringValue(const std::string& name, std::string value) const;
+        bool setBoolValue(const std::string& name, const bool& value) const;
+        bool setIntValue(const std::string& name, const int& value) const;
+        bool setFloatValue(const std::string& name, const float& value) const;
+        bool setStringValue(const std::string& name, const std::string& value) const;
         
         bool getBoolValue(const std::string& name, bool& value) const;
         bool getIntValue(const std::string& name, int& value) const;
