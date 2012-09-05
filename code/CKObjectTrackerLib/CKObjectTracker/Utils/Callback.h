@@ -37,7 +37,6 @@ namespace ck {
         TClass* object;
     public:
         CallBackToMemberSingleArg(TClass* object, void(TClass::*function)(const TParam&)) : object(object), function(function) { };
-        ~CallBackToMemberSingleArg() { std::cout << "sub" << std::endl; }
         void call(const TParam& p) {
             (*object.*function)(p);
         }
@@ -69,7 +68,6 @@ namespace ck {
         TClass* object;
     public:
         CallBackToMemberReturn(TClass* object, TParam(TClass::*function)()) : object(object), function(function) { };
-        ~CallBackToMemberReturn() { std::cout << "sub" << std::endl; }
         TParam call() {
             return (*object.*function)();
         }

@@ -23,7 +23,7 @@ private:
     AbstractModule* _currentModule;
 
     std::map<ModuleType, AbstractModule*> _allModules;
-    Settings _settings;
+    Settings* _settings;
     
     void initModules(const cv::Mat& objectImage);
     void track(const cv::Mat& frame, TrackerOutput& output, TrackerDebugInfo& debugInfo, bool trackInSequence);
@@ -32,7 +32,7 @@ public:
     ~Implementation();
     
     const inline Settings getSettings() const {
-        return _settings;
+        return *_settings;
     }
     
     void setObject(const cv::Mat& objectImage);

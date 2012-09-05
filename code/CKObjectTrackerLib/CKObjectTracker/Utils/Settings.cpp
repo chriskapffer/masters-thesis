@@ -7,30 +7,49 @@
 //
 
 #include "SettingsProjectScope.h"
-#include "Callback.h"
 
 using namespace std;
 
 namespace ck {
 
     template<typename T>
-    struct Param {
-        CallBackSingleArg<T>* setter;
-        CallBackReturn<T>* getter;
-        std::vector<T> values;
-        std::string name;
-        T min; T max;
-    };
-    
-    struct Settings::ParameterCollection {
-        vector<Param<bool> > boolParams;
-        vector<Param<int> > intParams;
-        vector<Param<float> > floatParams;
-        vector<Param<std::string> > stringParams;
-    };
-    
-    Settings::Settings()
+    static std::vector<std::string> getParameterNamesFromCollection(const vector<Param<T> >& params)
     {
+        vector<string> result;
+        typename vector<Param<T> >::const_iterator iter;
+        for (iter = params.begin(); iter != params.end(); iter++) {
+            result.push_back((*iter).name);
+        }
+        return result;
+    }
+    
+    template<typename T>
+    static bool getParamterWithName(const string& name, const vector<Param<T> >& params, Param<T>* parameter)
+    {
+        typename vector<Param<T> >::const_iterator iter;
+        for (iter = params.begin(); iter != params.end(); iter++) {
+            if ((*iter).name == name) {
+                *parameter = (*iter);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    template<typename T>
+    static bool containsParamterWithName(const string& name, const vector<Param<T> >& params)
+    {
+        typename vector<Param<T> >::const_iterator iter;
+        for (iter = params.begin(); iter != params.end(); iter++) {
+            if ((*iter).name == name)
+                return true;
+        }
+        return false;
+    }
+    
+    Settings::Settings(const string& name)
+    {
+        _name = name;
         _parameters = new ParameterCollection();
     }
     
@@ -41,88 +60,181 @@ namespace ck {
     
 #pragma mark
 
-    void Settings::setBoolValue(const std::string& name, bool value) const
+    bool Settings::setBoolValue(const std::string& name, bool value) const
     {
-        
-    }
-    
-    void Settings::setIntValue(const std::string& name, int value) const
-    {
-        
-    }
-    
-    void Settings::setFloatValue(const std::string& name, float value) const
-    {
-        
-    }
-    
-    void Settings::setStringValue(const std::string& name, std::string value) const
-    {
-        
-    }
-    
-    bool Settings::getBoolValue(const std::string& name) const
-    {
+        Param<bool>* param = NULL;
+        if (getParamterWithName(name, _parameters->boolParams, param)) {
+            param->setter->call(value);
+            return true;
+        }
         return false;
     }
     
-    int Settings::getIntValue(const std::string& name) const
+    bool Settings::setIntValue(const std::string& name, int value) const
     {
-        return 0;
+        Param<int>* param = NULL;
+        if (getParamterWithName(name, _parameters->intParams, param)) {
+            param->setter->call(value);
+            return true;
+        }
+        return false;
     }
     
-    float Settings::getFloatValue(const std::string& name) const
+    bool Settings::setFloatValue(const std::string& name, float value) const
     {
-        return 0;
+        Param<float>* param = NULL;
+        if (getParamterWithName(name, _parameters->floatParams, param)) {
+            param->setter->call(value);
+            return true;
+        }
+        return false;
     }
     
-    std::string Settings::getStringValue(const std::string& name) const
+    bool Settings::setStringValue(const std::string& name, std::string value) const
     {
-        return string();
+        Param<string>* param = NULL;
+        if (getParamterWithName(name, _parameters->stringParams, param)) {
+            param->setter->call(value);
+            return true;
+        }
+        return false;
+    }
+    
+    bool Settings::getBoolValue(const std::string& name, bool& value) const
+    {
+        Param<bool>* param = NULL;
+        if (getParamterWithName(name, _parameters->boolParams, param)) {
+            value = param->getter->call();
+            return true;
+        }
+        return false;
+    }
+    
+    bool Settings::getIntValue(const std::string& name, int& value) const
+    {
+        Param<int>* param = NULL;
+        if (getParamterWithName(name, _parameters->intParams, param)) {
+            value = param->getter->call();
+            return true;
+        }
+        return false;
+    }
+    
+    bool Settings::getFloatValue(const std::string& name, float& value) const
+    {
+        Param<float>* param = NULL;
+        if (getParamterWithName(name, _parameters->floatParams, param)) {
+            value = param->getter->call();
+            return true;
+        }
+        return false;
+    }
+    
+    bool Settings::getStringValue(const std::string& name, std::string& value) const
+    {
+        Param<string>* param = NULL;
+        if (getParamterWithName(name, _parameters->stringParams, param)) {
+            value = param->getter->call();
+            return true;
+        }
+        return false;
     }
     
 #pragma mark
     
-    void Settings::getIntInfo(const std::string& name, int& minValue, int& maxValue, vector<int>& values) const
+    bool Settings::getIntInfo(const std::string& name, int& minValue, int& maxValue, vector<int>& values) const
     {
-        
+        Param<int>* param = NULL;
+        if (getParamterWithName(name, _parameters->intParams, param)) {
+            minValue = param->min;
+            maxValue = param->max;
+            values = param->values;
+            return true;
+        }
+        return false;
     }
     
-    void Settings::getFloatInfo(const std::string& name, float& minValue, float& maxValue) const
+    bool Settings::getFloatInfo(const std::string& name, float& minValue, float& maxValue) const
     {
-        
+        Param<float>* param = NULL;
+        if (getParamterWithName(name, _parameters->floatParams, param)) {
+            minValue = param->min;
+            maxValue = param->max;
+            return true;
+        }
+        return false;
     }
     
-    void Settings::getIntInfo(const std::string& name, std::vector<std::string>& values) const
+    bool Settings::getStringInfo(const std::string& name, std::vector<std::string>& values) const
     {
-        
+        Param<string>* param = NULL;
+        if (getParamterWithName(name, _parameters->stringParams, param)) {
+            values = param->values;
+            return true;
+        }
+        return false;
     }
     
 #pragma mark
-    
-    Type Settings::getParameterType(const std::string& name) const
-    {
-        return TYPE_BOOL;
-    }
-    
-    const std::vector<std::string> Settings::getParameterNames() const
-    {
-        return vector<string>();
-    }
     
     void Settings::addCategory(const Settings& category)
     {
-        
-    }
-    
-    const Settings Settings::getSubCategory(std::string categoryName) const
-    {
-        return Settings();
+        _subCategories.push_back(category);
     }
     
     const std::vector<Settings> Settings::getSubCategories() const
     {
-        return vector<Settings>();
+        return _subCategories;
+    }
+        
+    const std::vector<std::string> Settings::getParameterNames() const
+    {
+        vector<string> tmp;
+        vector<string> result;
+        tmp = getParameterNamesFromCollection(_parameters->boolParams);
+        result.insert(result.begin(), tmp.begin(), tmp.end());
+        tmp = getParameterNamesFromCollection(_parameters->intParams);
+        result.insert(result.begin(), tmp.begin(), tmp.end());
+        tmp = getParameterNamesFromCollection(_parameters->floatParams);
+        result.insert(result.begin(), tmp.begin(), tmp.end());
+        tmp = getParameterNamesFromCollection(_parameters->stringParams);
+        result.insert(result.begin(), tmp.begin(), tmp.end());
+        return result;
+    }
+        
+    bool Settings::getParameterType(const std::string& parameterName, Type& type) const
+    {
+        if (containsParamterWithName(parameterName, _parameters->boolParams)) {
+            type = TYPE_BOOL;
+        } else if (containsParamterWithName(parameterName, _parameters->intParams)) {
+            type = TYPE_INT;
+        } else if (containsParamterWithName(parameterName, _parameters->floatParams)) {
+            type = TYPE_FLOAT;
+        } else if (containsParamterWithName(parameterName, _parameters->stringParams)) {
+            type = TYPE_STRING;
+        } else {
+            return false;
+        }
+        return true;
+    }
+    
+    bool Settings::getSubCategory(const std::string& categoryName, Settings& subCategory) const
+    {
+        // breadth first search
+        vector<Settings>::const_iterator iter;
+        for (iter = _subCategories.begin(); iter != _subCategories.end(); iter++) {
+            if ((*iter).getName() == categoryName) {
+                subCategory = (*iter);
+                return true;
+            }
+        }
+        // not found yet, look into sub categories
+        for (iter = _subCategories.begin(); iter != _subCategories.end(); iter++) {
+            if ((*iter).getSubCategory(categoryName, subCategory)) {
+                return true;
+            }
+        }
+        return false;
     }
     
 } // end of namespace

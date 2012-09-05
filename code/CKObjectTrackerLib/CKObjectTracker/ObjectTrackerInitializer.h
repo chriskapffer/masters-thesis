@@ -20,9 +20,15 @@ namespace ck {
         {
             ValidationModule module = ValidationModule(std::vector<FilterFlag>(0));
             
-            Settings* settings = &tracker._settings;
-            settings->registerFloat("test", module, &ValidationModule::setRatio, &ValidationModule::getRatio, 0.0f, 1.0f);
+            Settings validationSettings("Validation Settings");
+            //validationSettings.set
             
+            // TODO: make this work
+            //validationSettings.registerFloat("test", module, &ValidationModule::setRatio, &ValidationModule::getRatio, 0.0f, 1.0f);
+            
+            Settings* objectTrackerSettings = new Settings("Object Tracker Settings");
+            objectTrackerSettings->addCategory(validationSettings);
+            tracker._settings = objectTrackerSettings;
         }
     };
     

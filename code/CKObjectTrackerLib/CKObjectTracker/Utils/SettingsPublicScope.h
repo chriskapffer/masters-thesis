@@ -22,7 +22,7 @@ namespace ck {
     // for each consumer of the templates in order to avoid linker errors.
     class Settings {
     public:
-        Settings();
+        Settings(const std::string& name);
         ~Settings();
         
         template<class TClass>
@@ -49,26 +49,29 @@ namespace ck {
                             std::string (TClass::*getter)() const,
                             std::vector<std::string> values);
         
-        void setBoolValue(const std::string& name, bool value) const;
-        void setIntValue(const std::string& name, int value) const;
-        void setFloatValue(const std::string& name, float value) const;
-        void setStringValue(const std::string& name, std::string value) const;
+        bool setBoolValue(const std::string& name, bool value) const;
+        bool setIntValue(const std::string& name, int value) const;
+        bool setFloatValue(const std::string& name, float value) const;
+        bool setStringValue(const std::string& name, std::string value) const;
         
-        bool getBoolValue(const std::string& name) const;
-        int getIntValue(const std::string& name) const;
-        float getFloatValue(const std::string& name) const;
-        std::string getStringValue(const std::string& name) const;
+        bool getBoolValue(const std::string& name, bool& value) const;
+        bool getIntValue(const std::string& name, int& value) const;
+        bool getFloatValue(const std::string& name, float& value) const;
+        bool getStringValue(const std::string& name, std::string& value) const;
         
-        void getIntInfo(const std::string& name, int& minValue, int& maxValue, std::vector<int>& values) const;
-        void getFloatInfo(const std::string& name, float& minValue, float& maxValue) const;
-        void getIntInfo(const std::string& name, std::vector<std::string>& values) const;
-        
-        Type getParameterType(const std::string& name) const;
-        const std::vector<std::string> getParameterNames() const;
+        bool getIntInfo(const std::string& name, int& minValue, int& maxValue, std::vector<int>& values) const;
+        bool getFloatInfo(const std::string& name, float& minValue, float& maxValue) const;
+        bool getStringInfo(const std::string& name, std::vector<std::string>& values) const;
         
         void addCategory(const Settings& category);
-        const Settings getSubCategory(std::string categoryName) const;
+        
         const std::vector<Settings> getSubCategories() const;
+        const std::vector<std::string> getParameterNames() const;
+
+        bool getParameterType(const std::string& parameterName, Type& type) const;
+        bool getSubCategory(const std::string& categoryName, Settings& subCategory) const;
+
+        inline const std::string getName() const { return _name; }
         
     private:
         struct ParameterCollection;
