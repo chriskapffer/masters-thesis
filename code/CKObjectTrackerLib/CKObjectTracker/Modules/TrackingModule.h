@@ -24,58 +24,58 @@ public:
     
 #pragma mark
     
-    inline void setEnabled(bool value) { _enabled = value; }
+    inline void setEnabled(const bool& value) { _enabled = value; }
     inline bool isEnabled() const { return _enabled; }
     
-    inline void setMaxTransformationDelta(float value) { _maxTransformationDelta = value; }
+    inline void setMaxTransformationDelta(const float& value) { _maxTransformationDelta = value; }
     inline float getMaxTransformationDelta() const { return _maxTransformationDelta; }
     
-    inline void setMaxSuccessiveFrames(int value) { _maxSuccessiveFrames = value; }
+    inline void setMaxSuccessiveFrames(const int& value) { _maxSuccessiveFrames = value; }
     inline int getMaxSuccessiveFrames() const { return _maxSuccessiveFrames; }
     
-    inline void setMaxPointsAbsolute(int value) { _maxPointsAbsolute = value; }
+    inline void setMaxPointsAbsolute(const int& value) { _maxPointsAbsolute = value; }
     inline int getMaxPointsAbsolute() const { return _maxPointsAbsolute; }
     
-    inline void setMinPointsAbsolute(int value) { _minPointsAbsolute = value; }
+    inline void setMinPointsAbsolute(const int& value) { _minPointsAbsolute = value; }
     inline int getMinPointsAbsolute() const { return _minPointsAbsolute; }
     
-    inline void setMinPointsRelative(float value) { _minPointsRelative = value; }
+    inline void setMinPointsRelative(const float& value) { _minPointsRelative = value; }
     inline float getMinPointsRelative() const { return _minPointsRelative; }
     
-    inline void setUseSubPixels(bool value) { _useSubPixels = value; }
+    inline void setUseSubPixels(const bool& value) { _useSubPixels = value; }
     inline bool getUseSubPixels() const { return _useSubPixels; }
     
-    inline void setCalcHomRelToFrame(bool value) { _calcHomRelToFrame = value; }
+    inline void setCalcHomRelToFrame(const bool& value) { _calcHomRelToFrame = value; }
     inline bool getCalcHomRelToFrame() const { return _calcHomRelToFrame; }
     
-    inline void setFilterDistortions(bool value) { _filterDistortions = value; }
+    inline void setFilterDistortions(const bool& value) { _filterDistortions = value; }
     inline bool getFilterDistortions() const { return _filterDistortions; }
     
-    inline void setDistortionThreshold(float value) { _distortionThreshold = value; }
+    inline void setDistortionThreshold(const float& value) { _distortionThreshold = value; }
     inline float getDistortionThreshold() const { return _distortionThreshold; }
 
-    inline void setSPWinSize(int value) { _winSizeSubPix = cv::Size(value, value); }
+    inline void setSPWinSize(const int& value) { _winSizeSubPix = cv::Size(value, value); }
     inline int getSPWinSize() const { return MIN(_winSizeSubPix.width, _winSizeSubPix.height); }
     
-    inline void setLKTermIter(int value) { _terminationCriteria.maxCount = value; }
+    inline void setLKTermIter(const int& value) { _terminationCriteria.maxCount = value; }
     inline int getLKTermIter() const { return _terminationCriteria.maxCount; }
 
-    inline void setLKTermEpsilon(float value) { _terminationCriteria.epsilon = value; }
+    inline void setLKTermEpsilon(const float& value) { _terminationCriteria.epsilon = value; }
     inline float getLKTermEpsilon() const { return _terminationCriteria.epsilon; }
     
-    inline void setLKWinSize(int value) { _winSizeFlow = cv::Size(value, value); }
+    inline void setLKWinSize(const int& value) { _winSizeFlow = cv::Size(value, value); }
     inline int getLKWinSize() const { return MIN(_winSizeFlow.width, _winSizeFlow.height); }
     
-    inline void setLKZeroZone(int value) { _zeroZone = cv::Size(value, value); }
+    inline void setLKZeroZone(const int& value) { _zeroZone = cv::Size(value, value); }
     inline int getLKZeroZone() const { return MIN(_zeroZone.width, _zeroZone.height); }
     
-    inline void setLKMinEigenThreshold(float value) { _minEigenThreshold = value; }
+    inline void setLKMinEigenThreshold(const float& value) { _minEigenThreshold = value; }
     inline float getLKMinEigenThreshold() const { return _minEigenThreshold; }
     
-    inline void setLKMaxLevel(int value) { _maxLevel = value; }
+    inline void setLKMaxLevel(const int& value) { _maxLevel = value; }
     inline int setLKMaxLevel() const { return _maxLevel; }
     
-    inline void setLKFlags(int value) { _lkFlags = value; }
+    inline void setLKFlags(const int& value) { _lkFlags = value; }
     inline int getLKFlags() const { return _lkFlags; }
 
 private:

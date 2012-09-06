@@ -33,6 +33,12 @@ namespace ck {
         void registerInt(const std::string& name, TClass* owner,
                          void (TClass::*setter)(const int&),
                          int (TClass::*getter)() const,
+                         int minValue, int maxValue);
+        
+        template<class TClass>
+        void registerInt(const std::string& name, TClass* owner,
+                         void (TClass::*setter)(const int&),
+                         int (TClass::*getter)() const,
                          int minValue, int maxValue,
                          std::vector<int> values);
         

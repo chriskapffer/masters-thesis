@@ -57,13 +57,13 @@ void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
     bool firstRun = true;
     bool endCapture = false;
     
-    if (tracker.getSettings().setFloatValue("Ratio", 0.8))
-    {
-        float value, min, max;
-        tracker.getSettings().getFloatValue("Ratio", value);
-        tracker.getSettings().getFloatInfo("Ratio", min, max);
-        cout << value << ", " << min << ", " << max << endl;
-    }
+//    if (tracker.getSettings().setFloatValue("Ratio", 0.8))
+//    {
+//        float value, min, max;
+//        tracker.getSettings().getFloatValue("Ratio", value);
+//        tracker.getSettings().getFloatInfo("Ratio", min, max);
+//        cout << value << ", " << min << ", " << max << endl;
+//    }
     
     while (!endCapture) {
         if (!sceneVideo.read(frame)) {

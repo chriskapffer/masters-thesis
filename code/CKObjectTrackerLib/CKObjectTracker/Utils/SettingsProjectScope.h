@@ -74,6 +74,13 @@ inline void Settings::registerBool(const std::string& name, TClass* owner, void 
 }
 
 template<class TClass>
+inline void Settings::registerInt(const std::string& name, TClass* owner, void (TClass::*setter)(const int&), int (TClass::*getter)() const, int minValue, int maxValue)
+{
+    std::vector<int> dummy;
+    registerInt(name, owner, setter, getter, minValue, maxValue, dummy);
+}
+    
+template<class TClass>
     inline void Settings::registerInt(const std::string& name, TClass* owner, void (TClass::*setter)(const int&), int (TClass::*getter)() const, int minValue, int maxValue, std::vector<int> values)
 {
     Param<int> param = Param<int>(name, owner, setter, getter);
