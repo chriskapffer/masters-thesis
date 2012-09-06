@@ -12,13 +12,8 @@
 #include <opencv2/nonfree/nonfree.hpp>
 
 #include "AbstractModule.h"
+
 #include "DescriptorMatcherFilterer.h"
-
-#define MIN_MATCHES 4
-
-#define EST_METHOD_RANSAC "Ransac"
-#define EST_METHOD_LMEDS "Least Median"
-#define EST_METHOD_DEFAULT "All Points"
 
 namespace ck {
 

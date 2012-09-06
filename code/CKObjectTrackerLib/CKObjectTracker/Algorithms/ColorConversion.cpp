@@ -13,7 +13,7 @@ using namespace cv;
 
 namespace ck {
     
-    void ColorConvert::bgrOrBgra2Gray(const Mat& imgIn, Mat& imgOut, int method)
+    void ColorConvert::bgrOrBgra2Gray(const Mat& imgIn, Mat& imgOut, ColorConversionMethod method)
     {
         if (imgIn.type() == CV_8UC1) {
             // do simple copy, because src is already gray

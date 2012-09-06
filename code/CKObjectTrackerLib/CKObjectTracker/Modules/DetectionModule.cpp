@@ -9,11 +9,6 @@
 #include "DetectionModule.h"
 #include "Profiler.h"
 
-#define TIMER_PREPROC "preprocIng"
-#define TIMER_CONVERT "converting"
-#define TIMER_EXTRACT "extraction"
-#define TIMER_MATCH "matching"
-
 using namespace std;
 using namespace cv;
 

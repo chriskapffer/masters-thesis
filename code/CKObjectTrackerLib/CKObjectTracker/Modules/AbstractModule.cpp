@@ -7,10 +7,11 @@
 //
 
 #include "AbstractModule.h"
+
+#include "ObjectTrackerTypesProject.h"
+
 #include "ModuleManagement.h"
 #include "Profiler.h"
-
-#define TIMER_TOTAL "TotalProcessingTimeAbstract"
 
 using namespace std;
 

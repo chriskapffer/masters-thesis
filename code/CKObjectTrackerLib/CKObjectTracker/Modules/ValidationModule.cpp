@@ -8,17 +8,13 @@
 
 #include "ValidationModule.h"
 
+#include "ObjectTrackerTypesProject.h"
+
 #include "PointOperations.h"
 #include "ColorConversion.h"
 #include "SanityCheck.h"
 #include "Profiler.h"
 #include "Commons.h"
-
-#define TIMER_CONVERT "converting"
-#define TIMER_DETECT "detecting"
-#define TIMER_EXTRACT "extracting"
-#define TIMER_ESTIMATE "estimating"
-#define TIMER_VALIDATE "validating"
 
 using namespace std;
 using namespace cv;
@@ -326,7 +322,7 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     MatcherFilterer::getFilteredMatches(*_matcher, _objectDescriptors, sceneDescriptors, matches, _filterFlags, _sortMatches, _ratio, _nBestMatches, debugInfo.namedMatches);
     
     // check if there are enough matches left, stop validation if not
-    if (matches.size() < MIN_MATCHES) {
+    if (matches.size() < MIN_HOMOGRAPHY_INPUT) {
         cout << "Not enough matches!" << endl;
         return false;
     }

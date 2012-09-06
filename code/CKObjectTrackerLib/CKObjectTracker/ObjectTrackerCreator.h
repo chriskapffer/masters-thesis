@@ -10,14 +10,15 @@
 #define CKObjectTrackerLib_ObjectTrackerCreator_h
 
 #include "ObjectTrackerImpl.h"
+#include "ObjectTrackerTypesProject.h"
 #include "SettingsProjectScope.h"
-#include "Profiler.h"
 
 #include "AbstractModule.h"
 #include "DetectionModule.h"
 #include "ValidationModule.h"
 #include "TrackingModule.h"
 #include "EmptyModule.h"
+#include "Profiler.h"
 
 namespace ck {
     
@@ -100,7 +101,7 @@ namespace ck {
             std::vector<int> winSizeVals; winSizeVals.push_back(11); winSizeVals.push_back(21); winSizeVals.push_back(31); winSizeVals.push_back(41);
             
             Settings terminationSettings = Settings("Stop tracking after");
-            terminationSettings.registerInt("n Points remaining", module, &TrackingModule::setMinPointsAbsolute, &TrackingModule::getMinPointsAbsolute, 4, 1000);
+            terminationSettings.registerInt("n Points remaining", module, &TrackingModule::setMinPointsAbsolute, &TrackingModule::getMinPointsAbsolute, MIN_HOMOGRAPHY_INPUT, 1000);
             terminationSettings.registerInt("% Points remaining", module, &TrackingModule::setMinPointsRelative, &TrackingModule::getMinPointsRelative, 1, 99);
             terminationSettings.registerInt("max successive Frames (-1 -> oo)", module, &TrackingModule::setMaxSuccessiveFrames, &TrackingModule::getMaxSuccessiveFrames, -1, 120);
             terminationSettings.registerInt("max inter-frame Movement (in px)", module, &TrackingModule::setMaxTransformationDelta, &TrackingModule::getMaxTransformationDelta, 10, 200);

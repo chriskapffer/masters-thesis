@@ -9,10 +9,36 @@
 #ifndef CKObjectTrackerLib_ObjectTrackerTypesProject_h
 #define CKObjectTrackerLib_ObjectTrackerTypesProject_h
 
+#define TIMER_CONVERT "converting"
+#define TIMER_DETECT "detecting"
+#define TIMER_EXTRACT "extracting"
+#define TIMER_MATCH "matching"
+#define TIMER_OPTIMIZE "optimizing"
+#define TIMER_TRACK "tracking"
+#define TIMER_FILTER "filtering"
+#define TIMER_ESTIMATE "estimating"
+#define TIMER_VALIDATE "validating"
+#define TIMER_TOTAL "TotalProcessingTimeAbstract"
+
+#define MATCHES_TOTAL "total"
+#define MATCHES_MASKED "masked"
+#define MATCHES_CROPPED "cropped"
+#define MATCHES_AFTER_RATIO "ratio"
+#define MATCHES_AFTER_SYMMETRY "symmetry"
+
+#define POINTS_TOTAL "initializing"
+#define POINTS_TRACKED "tracking"
+#define POINTS_FILTERED "filtering"
+
+#define EST_METHOD_RANSAC "Ransac"
+#define EST_METHOD_LMEDS "Least Median"
+#define EST_METHOD_DEFAULT "All Points"
+
+#define MIN_HOMOGRAPHY_INPUT 4
+#define MAX_ANGLE_OFFSET_DEG 30.0f
+
 namespace ck {
 
-
-    
 } // end of namespace
 
 #endif

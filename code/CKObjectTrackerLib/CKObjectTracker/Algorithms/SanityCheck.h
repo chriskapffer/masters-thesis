@@ -9,8 +9,6 @@
 #ifndef CKObjectTrackerLib_SanityCheck_h
 #define CKObjectTrackerLib_SanityCheck_h
 
-#define MAX_ANGLE_OFFSET_DEG 30.0f
-
 namespace ck {
     
     struct SanityCheck {

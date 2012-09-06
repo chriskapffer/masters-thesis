@@ -8,21 +8,12 @@
 
 #include "TrackingModule.h"
 
+#include "ObjectTrackerTypesProject.h"
+
 #include "PointOperations.h"
 #include "ColorConversion.h"
 #include "SanityCheck.h"
 #include "Profiler.h"
-
-#define TIMER_CONVERT "converting"
-#define TIMER_OPTIMIZE "optimizing"
-#define TIMER_TRACK "tracking"
-#define TIMER_FILTER "filtering"
-#define TIMER_ESTIMATE "estimating"
-#define TIMER_VALIDATE "validating"
-
-#define POINTS_TOTAL "initializing"
-#define POINTS_TRACKED "tracking"
-#define POINTS_FILTERED "filtering"
 
 using namespace std;
 using namespace cv;
@@ -157,7 +148,7 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
 
     int currentCount = (int)pointsOut.size();
     // check if there are enough points left, stop tracking if not
-    if (currentCount < _minPointsAbsolute || currentCount < _initialPointCount * _minPointsRelative) {
+    if (currentCount < _minPointsAbsolute || currentCount < _initialPointCount * _minPointsRelative || currentCount < MIN_HOMOGRAPHY_INPUT) {
         cout << "Lost too many points." << endl;
         // stop tracking and prepare for a new initial call to this module in the future
         _isInitialCall = true;

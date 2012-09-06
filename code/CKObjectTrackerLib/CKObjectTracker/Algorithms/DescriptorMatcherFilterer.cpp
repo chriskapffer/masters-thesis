@@ -7,18 +7,12 @@
 //
 
 #include "DescriptorMatcherFilterer.h"
+
+#include "ObjectTrackerTypesProject.h"
+
 #include "FilterAlgorithm.h"
 #include "Profiler.h"
 #include "Commons.h"
-
-#define TIMER_MATCH "matching"
-#define TIMER_FILTER "filtering"
-
-#define MATCHES_TOTAL "total"
-#define MATCHES_MASKED "masked"
-#define MATCHES_CROPPED "cropped"
-#define MATCHES_AFTER_RATIO "ratio"
-#define MATCHES_AFTER_SYMMETRY "symmetry"
 
 using namespace std;
 using namespace cv;

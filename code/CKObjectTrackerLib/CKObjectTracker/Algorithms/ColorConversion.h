@@ -9,17 +9,17 @@
 #ifndef CKObjectTrackerLib_ColorConversion_h
 #define CKObjectTrackerLib_ColorConversion_h
 
-#define COLOR_CONV_CV       0
-#define COLOR_CONV_NEON     1
-#define COLOR_CONV_NEON_ASM 2
-
-#define COLOR_CONV_METHOD COLOR_CONV_CV
-
 namespace ck {
+    
+    enum ColorConversionMethod {
+        COLOR_CONV_CV,
+        COLOR_CONV_NEON,
+        COLOR_CONV_NEON_ASM,
+    };
     
     struct ColorConvert {
         // source image can also be gray scale
-        static void bgrOrBgra2Gray(const cv::Mat& imgIn, cv::Mat& imgOut, int method = COLOR_CONV_METHOD);
+        static void bgrOrBgra2Gray(const cv::Mat& imgIn, cv::Mat& imgOut, ColorConversionMethod method = COLOR_CONV_CV);
     };
 
 } // end of namespace
