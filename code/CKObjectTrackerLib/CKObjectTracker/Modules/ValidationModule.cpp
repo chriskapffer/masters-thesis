@@ -41,7 +41,7 @@ static string getAlgorithmName(const Algorithm& algorithm)
     
 void ValidationModule::setDetector(const string& value)
 {
-    _busy = true;
+    _busy = true; // TODO: change _extractor appropriately
     if (value == "FAST") {
         _detector = new FastFeatureDetector(_fastThreshold);
     } else if (value == "GFTT") {
@@ -70,7 +70,7 @@ void ValidationModule::setExtractor(const string &value)
     
 void ValidationModule::setExtractor(const string& value, bool updateMatcher)
 {
-    _busy = true;
+    _busy = true; // TODO: change _detector appropriately
     if (value == "SIFT") {
         _extractor = new SiftDescriptorExtractor(_maxFeatures);
         if (updateMatcher) { _matcher = new BFMatcher(NORM_L2); }

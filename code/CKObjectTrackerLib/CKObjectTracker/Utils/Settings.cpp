@@ -210,54 +210,74 @@ namespace ck {
     
 #pragma mark
     
-    bool Settings::getIntInfo(const std::string& name, int& minValue, int& maxValue, vector<int>& values) const
+    bool Settings::getBoolInfo(const std::string &name, bool &isCritical) const
     {
-        Param<int> param;
-        if (getParamterWithName(name, _parameters->intParams, param)) {
-            minValue = param.min;
-            maxValue = param.max;
-            values = param.values;
+        Param<string> param;
+        if (getParamterWithName(name, _parameters->stringParams, param)) {
+            isCritical = param.critical;
             return true;
         }
         // search sub categories if not found
         vector<Settings>::const_iterator iter;
         for (iter = _subCategories.begin(); iter != _subCategories.end(); iter++) {
-            if ((*iter).getIntInfo(name, minValue, maxValue, values)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    bool Settings::getFloatInfo(const std::string& name, float& minValue, float& maxValue) const
-    {
-        Param<float> param;
-        if (getParamterWithName(name, _parameters->floatParams, param)) {
-            minValue = param.min;
-            maxValue = param.max;
-            return true;
-        }
-        // search sub categories if not found
-        vector<Settings>::const_iterator iter;
-        for (iter = _subCategories.begin(); iter != _subCategories.end(); iter++) {
-            if ((*iter).getFloatInfo(name, minValue, maxValue)) {
+            if ((*iter).getBoolInfo(name, isCritical)) {
                 return true;
             }
         }
         return false;
     }
     
-    bool Settings::getStringInfo(const std::string& name, std::vector<std::string>& values) const
+    bool Settings::getIntInfo(const std::string& name, int& minValue, int& maxValue, vector<int>& values, bool& isCritical) const
     {
-        Param<string> param;
-        if (getParamterWithName(name, _parameters->stringParams, param)) {
+        Param<int> param;
+        if (getParamterWithName(name, _parameters->intParams, param)) {
+            isCritical = param.critical;
+            minValue = param.min;
+            maxValue = param.max;
             values = param.values;
             return true;
         }
         // search sub categories if not found
         vector<Settings>::const_iterator iter;
         for (iter = _subCategories.begin(); iter != _subCategories.end(); iter++) {
-            if ((*iter).getStringInfo(name, values)) {
+            if ((*iter).getIntInfo(name, minValue, maxValue, values, isCritical)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool Settings::getFloatInfo(const std::string& name, float& minValue, float& maxValue, bool& isCritical) const
+    {
+        Param<float> param;
+        if (getParamterWithName(name, _parameters->floatParams, param)) {
+            isCritical = param.critical;
+            minValue = param.min;
+            maxValue = param.max;
+            return true;
+        }
+        // search sub categories if not found
+        vector<Settings>::const_iterator iter;
+        for (iter = _subCategories.begin(); iter != _subCategories.end(); iter++) {
+            if ((*iter).getFloatInfo(name, minValue, maxValue, isCritical)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    bool Settings::getStringInfo(const std::string& name, std::vector<std::string>& values, bool& isCritical) const
+    {
+        Param<string> param;
+        if (getParamterWithName(name, _parameters->stringParams, param)) {
+            isCritical = param.critical;
+            values = param.values;
+            return true;
+        }
+        // search sub categories if not found
+        vector<Settings>::const_iterator iter;
+        for (iter = _subCategories.begin(); iter != _subCategories.end(); iter++) {
+            if ((*iter).getStringInfo(name, values, isCritical)) {
                 return true;
             }
         }

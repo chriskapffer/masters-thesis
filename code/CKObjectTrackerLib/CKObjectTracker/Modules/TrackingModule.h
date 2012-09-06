@@ -25,10 +25,10 @@ public:
 #pragma mark
     
     inline void setEnabled(const bool& value) { _enabled = value; }
-    inline bool isEnabled() const { return _enabled; }
+    inline bool getEnabled() const { return _enabled; }
     
-    inline void setMaxTransformationDelta(const float& value) { _maxTransformationDelta = value; }
-    inline float getMaxTransformationDelta() const { return _maxTransformationDelta; }
+    inline void setMaxTransformationDelta(const int& value) { _maxTransformationDelta = value; }
+    inline int getMaxTransformationDelta() const { return _maxTransformationDelta; }
     
     inline void setMaxSuccessiveFrames(const int& value) { _maxSuccessiveFrames = value; }
     inline int getMaxSuccessiveFrames() const { return _maxSuccessiveFrames; }
@@ -39,8 +39,8 @@ public:
     inline void setMinPointsAbsolute(const int& value) { _minPointsAbsolute = value; }
     inline int getMinPointsAbsolute() const { return _minPointsAbsolute; }
     
-    inline void setMinPointsRelative(const float& value) { _minPointsRelative = value; }
-    inline float getMinPointsRelative() const { return _minPointsRelative; }
+    inline void setMinPointsRelative(const int& value) { _minPointsRelative = value / 100.0f; }
+    inline int getMinPointsRelative() const { return _minPointsRelative * 100; }
     
     inline void setUseSubPixels(const bool& value) { _useSubPixels = value; }
     inline bool getUseSubPixels() const { return _useSubPixels; }
@@ -73,7 +73,7 @@ public:
     inline float getLKMinEigenThreshold() const { return _minEigenThreshold; }
     
     inline void setLKMaxLevel(const int& value) { _maxLevel = value; }
-    inline int setLKMaxLevel() const { return _maxLevel; }
+    inline int getLKMaxLevel() const { return _maxLevel; }
     
     inline void setLKFlags(const int& value) { _lkFlags = value; }
     inline int getLKFlags() const { return _lkFlags; }

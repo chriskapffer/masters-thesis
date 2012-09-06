@@ -80,6 +80,8 @@ public:
     inline void setRefineHomography(const bool& value) { _refineHomography = value; }
     inline bool getRefineHomography() const { return _refineHomography; }
     
+#pragma mark
+    
 private:
     void setExtractor(const std::string& value, bool updateMatcher);
     

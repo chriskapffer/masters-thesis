@@ -21,8 +21,10 @@ struct Param {
     CallBackReturn<TParam>* getter;
     std::vector<TParam> values;
     TParam min; TParam max;
+    bool critical;
     
     Param() {
+        critical = false;
         setter = NULL;
         getter = NULL;
         name = "";
@@ -31,6 +33,7 @@ struct Param {
     Param(const Param& other) {
         setter = other.setter->clone();
         getter = other.getter->clone();
+        critical = other.critical;
         values = other.values;
         name = other.name;
         min = other.min;
@@ -38,9 +41,10 @@ struct Param {
     }
     
     template <typename TClass>
-    Param(const std::string& name, TClass* owner, void (TClass::*setter)(const TParam&), TParam (TClass::*getter)() const) {
+    Param(const std::string& name, TClass* owner, void (TClass::*setter)(const TParam&), TParam (TClass::*getter)() const, bool critical = false) {
         this->setter = new CallBackToMemberSingleArg<TParam, TClass>(owner, setter);
         this->getter = new CallBackToMemberReturn<TParam, TClass>(owner, getter);
+        this->critical = critical;
         this->name = name;
     }
     
@@ -67,23 +71,23 @@ struct Settings::ParameterCollection {
 };
     
 template<class TClass>
-inline void Settings::registerBool(const std::string& name, TClass* owner, void (TClass::*setter)(const bool&), bool (TClass::*getter)() const)
+    inline void Settings::registerBool(const std::string& name, TClass* owner, void (TClass::*setter)(const bool&), bool (TClass::*getter)() const, bool critical)
 {
-    Param<bool> param = Param<bool>(name, owner, setter, getter);
+    Param<bool> param = Param<bool>(name, owner, setter, getter, critical);
     _parameters->boolParams.push_back(param);
 }
 
 template<class TClass>
-inline void Settings::registerInt(const std::string& name, TClass* owner, void (TClass::*setter)(const int&), int (TClass::*getter)() const, int minValue, int maxValue)
+inline void Settings::registerInt(const std::string& name, TClass* owner, void (TClass::*setter)(const int&), int (TClass::*getter)() const, int minValue, int maxValue, bool critical)
 {
     std::vector<int> dummy;
-    registerInt(name, owner, setter, getter, minValue, maxValue, dummy);
+    registerInt(name, owner, setter, getter, minValue, maxValue, dummy, critical);
 }
     
 template<class TClass>
-    inline void Settings::registerInt(const std::string& name, TClass* owner, void (TClass::*setter)(const int&), int (TClass::*getter)() const, int minValue, int maxValue, std::vector<int> values)
+    inline void Settings::registerInt(const std::string& name, TClass* owner, void (TClass::*setter)(const int&), int (TClass::*getter)() const, int minValue, int maxValue, std::vector<int> values, bool critical)
 {
-    Param<int> param = Param<int>(name, owner, setter, getter);
+    Param<int> param = Param<int>(name, owner, setter, getter, critical);
     param.min = minValue;
     param.max = maxValue;
     param.values = values;
@@ -91,18 +95,18 @@ template<class TClass>
 }
 
 template<class TClass>
-inline void Settings::registerFloat(const std::string& name, TClass* owner, void (TClass::*setter)(const float&), float (TClass::*getter)() const, float minValue, float maxValue)
+inline void Settings::registerFloat(const std::string& name, TClass* owner, void (TClass::*setter)(const float&), float (TClass::*getter)() const, float minValue, float maxValue, bool critical)
 {
-    Param<float> param = Param<float>(name, owner, setter, getter);
+    Param<float> param = Param<float>(name, owner, setter, getter, critical);
     param.min = minValue;
     param.max = maxValue;
     _parameters->floatParams.push_back(param);
 }
 
 template<class TClass>
-inline void Settings::registerString(const std::string& name, TClass* owner, void (TClass::*setter)(const std::string&), std::string (TClass::*getter)() const, std::vector<std::string> values)
+inline void Settings::registerString(const std::string& name, TClass* owner, void (TClass::*setter)(const std::string&), std::string (TClass::*getter)() const, std::vector<std::string> values, bool critical)
 {
-    Param<std::string> param = Param<std::string>(name, owner, setter, getter);
+    Param<std::string> param = Param<std::string>(name, owner, setter, getter, critical);
     param.values = values;
     _parameters->stringParams.push_back(param);
 }

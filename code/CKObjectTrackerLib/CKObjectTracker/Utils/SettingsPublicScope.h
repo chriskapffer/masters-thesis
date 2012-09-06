@@ -27,32 +27,37 @@ namespace ck {
         template<class TClass>
         void registerBool(const std::string& name, TClass* owner,
                           void (TClass::*setter)(const bool&),
-                          bool (TClass::*getter)() const);
-        
-        template<class TClass>
-        void registerInt(const std::string& name, TClass* owner,
-                         void (TClass::*setter)(const int&),
-                         int (TClass::*getter)() const,
-                         int minValue, int maxValue);
+                          bool (TClass::*getter)() const,
+                          bool critical = false);
         
         template<class TClass>
         void registerInt(const std::string& name, TClass* owner,
                          void (TClass::*setter)(const int&),
                          int (TClass::*getter)() const,
                          int minValue, int maxValue,
-                         std::vector<int> values);
+                         bool critical = false);
+        
+        template<class TClass>
+        void registerInt(const std::string& name, TClass* owner,
+                         void (TClass::*setter)(const int&),
+                         int (TClass::*getter)() const,
+                         int minValue, int maxValue,
+                         std::vector<int> values,
+                         bool critical = false);
         
         template<class TClass>
         void registerFloat(const std::string& name, TClass* owner,
                            void (TClass::*setter)(const float&),
                            float (TClass::*getter)() const,
-                           float minValue, float maxValue);
+                           float minValue, float maxValue,
+                           bool critical = false);
         
         template<class TClass>
         void registerString(const std::string& name, TClass* owner,
                             void (TClass::*setter)(const std::string&),
                             std::string (TClass::*getter)() const,
-                            std::vector<std::string> values);
+                            std::vector<std::string> values,
+                            bool critical = false);
         
         bool setBoolValue(const std::string& name, const bool& value) const;
         bool setIntValue(const std::string& name, const int& value) const;
@@ -64,9 +69,10 @@ namespace ck {
         bool getFloatValue(const std::string& name, float& value) const;
         bool getStringValue(const std::string& name, std::string& value) const;
         
-        bool getIntInfo(const std::string& name, int& minValue, int& maxValue, std::vector<int>& values) const;
-        bool getFloatInfo(const std::string& name, float& minValue, float& maxValue) const;
-        bool getStringInfo(const std::string& name, std::vector<std::string>& values) const;
+        bool getBoolInfo(const std::string& name, bool& isCritical) const;
+        bool getIntInfo(const std::string& name, int& minValue, int& maxValue, std::vector<int>& values, bool& isCritical) const;
+        bool getFloatInfo(const std::string& name, float& minValue, float& maxValue, bool& isCritical) const;
+        bool getStringInfo(const std::string& name, std::vector<std::string>& values, bool& isCritical) const;
         
         void addCategory(const Settings& category);
         
