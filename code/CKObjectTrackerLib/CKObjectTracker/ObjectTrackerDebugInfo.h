@@ -20,6 +20,7 @@ struct TrackerDebugInfo {
     // detection
     cv::Mat probabilityMap;
     cv::Rect searchRect;
+    bool searchRectValid;
     
     // validation
     std::vector<std::pair<std::string, std::vector<cv::DMatch> > > namedMatches;
@@ -29,6 +30,7 @@ struct TrackerDebugInfo {
     cv::Mat objectImage;
     cv::Mat sceneImageFull;
     cv::Mat sceneImagePart;
+    cv::Point2f imageOffset;
         
     // tracking
     std::vector<std::pair<std::string, std::vector<cv::Point2f> > > namedPointSets;

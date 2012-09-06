@@ -314,7 +314,7 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     debugInfo.objectKeyPoints = _objectKeyPoints;
     debugInfo.sceneImagePart = sceneImagePart;
     debugInfo.sceneKeyPoints = sceneKeyPoints;
-    
+    debugInfo.imageOffset = searchRect.tl();
     // wait if matcher is being changed
     while (_busy) { }
     

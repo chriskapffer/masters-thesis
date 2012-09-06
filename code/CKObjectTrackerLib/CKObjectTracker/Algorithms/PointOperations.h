@@ -19,6 +19,8 @@ namespace ck {
         static void coordinatesOfKeyPoints(const std::vector<cv::KeyPoint>& keypoints, std::vector<cv::Point2f>& coordinates, const cv::Point2f& offset = cv::Point2f());
         
         static void coordinatesOfMatches(const std::vector<cv::DMatch>& matches, const std::vector<cv::KeyPoint>& keypoints1, const std::vector<cv::KeyPoint>& keypoints2, std::vector<cv::Point2f>& coordinates1, std::vector<cv::Point2f>& coordinates2, const cv::Point2f& offset1 = cv::Point2f(), const cv::Point2f& offset2 = cv::Point2f());
+        
+        static void cropRect(cv::Rect& rectToCrop, const cv::Rect& rectUsedforCroping);
     };
 
 } // end of namespace

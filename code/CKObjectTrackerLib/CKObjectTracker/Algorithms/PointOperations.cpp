@@ -59,4 +59,12 @@ namespace ck {
         }
     }
     
+    void PointOps::cropRect(Rect& rectToCrop, const Rect& rectUsedforCroping)
+    {
+        rectToCrop.x = MAX(rectToCrop.x, rectUsedforCroping.x);
+        rectToCrop.y = MAX(rectToCrop.y, rectUsedforCroping.y);
+        rectToCrop.width = MIN(rectToCrop.width, rectUsedforCroping.width - rectToCrop.x);
+        rectToCrop.height = MIN(rectToCrop.height, rectUsedforCroping.height - rectToCrop.y);
+    }
+    
 } // end of namespace

@@ -81,15 +81,16 @@ std::string ObjectTrackerDebugger::getValidationModuleDebugString(const TrackerD
     assert(info.currentModuleType == ModuleType2String::convert(MODULE_TYPE_VALIDATION));
     int length = 1028;
     char buffer[length];
+    
     snprintf(buffer, length, ""); // init with empty string
-    snprintf(buffer, length, "%sdelta transform (px): %.3f\n", buffer, info.transformationDelta);
     snprintf(buffer, length, "%sobjectKeyPoints: %d\n", buffer, info.objectKeyPointCount);
     snprintf(buffer, length, "%ssceneKeyPoints: %d\n", buffer, info.sceneKeyPointCount);
     for (int i = 0; i < info.namedMatchCounts.size(); i++) {
         snprintf(buffer, length, "%smatches %s: %d\n", buffer,
                  info.namedMatchCounts[i].first.c_str(), info.namedMatchCounts[i].second);
     }
-
+    
+    snprintf(buffer, length, "%sdelta transform (px): %.3f\n", buffer, info.transformationDelta);
     return string(buffer);
 }
 
@@ -98,10 +99,8 @@ std::string ObjectTrackerDebugger::getTrackingModuleDebugString(const TrackerDeb
     assert(info.currentModuleType == ModuleType2String::convert(MODULE_TYPE_TRACKING));
     int length = 1028;
     char buffer[length];
+    
     snprintf(buffer, length, ""); // init with empty string
-    snprintf(buffer, length, "%sdelta transform (px): %.3f\n", buffer, info.transformationDelta);
-    snprintf(buffer, length, "%sdistance range (px): %.3f\n", buffer, info.distortion);
-    snprintf(buffer, length, "%saverage error: %.3f\n", buffer, info.avgError);
     snprintf(buffer, length, "%sinitial point set: %d\n", buffer, info.initialPointCount);
     for (int i = 0; i < info.namedPointCounts.size(); i++) {
         if (i == 0) {
@@ -111,7 +110,10 @@ std::string ObjectTrackerDebugger::getTrackingModuleDebugString(const TrackerDeb
                      info.namedPointCounts[i - 1].second - info.namedPointCounts[i].second);
         }
     }
-
+    
+    snprintf(buffer, length, "%sdelta transform (px): %.3f\n", buffer, info.transformationDelta);
+    snprintf(buffer, length, "%sdistance range (px): %.3f\n", buffer, info.distortion);
+    snprintf(buffer, length, "%saverage error: %.3f\n", buffer, info.avgError);
     return string(buffer);
 }
 
@@ -235,8 +237,9 @@ bool ObjectTrackerDebugger::getDetectionModuleDebugImage(cv::Mat& image, const T
     
     info.probabilityMap.copyTo(image);
     if (drawSearchRect) {
-        Scalar color = Scalar(0, 0, 255);
-        rectangle(image, info.searchRect.tl(), info.searchRect.br(), color);
+        cvtColor(image, image, CV_GRAY2BGR);
+        Scalar color = info.searchRectValid ? Scalar(255, 0, 255) : Scalar(0, 0, 255);
+        rectangle(image, info.searchRect.tl(), info.searchRect.br(), color, 2);
     }
     return true;
 }
@@ -259,7 +262,7 @@ bool ObjectTrackerDebugger::getValidationModuleDebugImage(cv::Mat& image, const 
     if (drawObjectKeyPoints) { drawKeyPoints(objectImage, info.objectKeyPoints, keyPointColor); }
     if (drawSceneKeyPoints) { drawKeyPoints(sceneImage, info.sceneKeyPoints, keyPointColor); }
     if (drawObjectRect) {
-        Point2f offset = Point2f();
+        Point2f offset = -info.imageOffset;
         Scalar color = info.badHomography ? rectColorNegative : rectColorPositive;
         drawRect(sceneImage, info.objectCornersTransformed, color, offset);
     }
@@ -312,10 +315,10 @@ bool ObjectTrackerDebugger::getTrackingModuleDebugImage(cv::Mat& image, const Tr
 {
     if (info.currentModuleType != ModuleType2String::convert(MODULE_TYPE_TRACKING)) { return false; }
     
-    Scalar pointsColor       = Scalar(0, 255, 255);
-    Scalar searchRectColor   = Scalar(0,   0, 255);
-    Scalar rectColorPositive = Scalar(0, 255,   0);
-    Scalar rectColorNegative = Scalar(0,   0, 255);
+    Scalar pointsColor       = Scalar(  0, 255, 255);
+    Scalar searchRectColor   = Scalar(255,   0, 255);
+    Scalar rectColorPositive = Scalar(  0, 255,   0);
+    Scalar rectColorNegative = Scalar(  0,   0, 255);
 
     info.sceneImageFull.copyTo(image);
 

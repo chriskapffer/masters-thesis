@@ -7,6 +7,10 @@
 //
 
 #include "DetectionModule.h"
+
+#include "ObjectTrackerTypesProject.h"
+
+#include "PointOperations.h"
 #include "Profiler.h"
 
 using namespace std;
@@ -16,9 +20,10 @@ namespace ck {
     
 DetectionModule::DetectionModule() : AbstractModule(MODULE_TYPE_DETECTION)
 {
-    _detectionThreshold = 0.7f;
-    _preProcess = true;
-    _byPass = true;
+    _enabled = true;
+    _terminationCriteria = TermCriteria(CV_TERMCRIT_EPS | CV_TERMCRIT_ITER, 20, 0.1f);
+    _minSearchRectSizeRelative = 0.1f;
+    _maxSearchRectSizeRelative = 0.8f;
 }
 
 DetectionModule::~DetectionModule()
@@ -64,57 +69,81 @@ void DetectionModule::initWithObjectImage(const cv::Mat &objectImage)
     //imshow("histimg", histimg);
 }
  
+    
+
+    
 bool DetectionModule::internalProcess(ModuleParams& params, TrackerDebugInfo& debugInfo)
 {
-    if (_byPass) {
+    if (!_enabled) {
         // search in whole image
         params.searchRect = Rect(0, 0, params.sceneImageCurrent.cols, params.sceneImageCurrent.rows);
-        debugInfo.searchRect = params.searchRect;
+        debugInfo.searchRect = Rect(0, 0, params.sceneImageCurrent.cols, params.sceneImageCurrent.rows);
         debugInfo.probabilityMap = Mat(params.sceneImageCurrent.rows, params.sceneImageCurrent.cols, CV_8UC1, Scalar(0));
         return true;
     }
     
-    Profiler* profiler = Profiler::Instance();
-    
+    // declaration & initialization
     float hranges[] = {0,180};
     const float* phranges = hranges;
     int vmin = 5, vmax = 256, smin = 60;
-    Mat image, hsv, hue, mask, backproj;
-    
+    Mat image, hsv, hue, colorMask, backproj;
     params.sceneImageCurrent.copyTo(image);
+    Profiler* profiler = Profiler::Instance();
+    Rect searchRect = params.searchRect;
     
+    // validate search rect (do this here for initialization)
+    profiler->startTimer(TIMER_VALIDATE);
+    if (!isRectValid(searchRect, image.cols, image.rows)) {
+        Point2f center = Point2f(image.cols * 0.5f, image.rows * 0.5f);
+        int width = MIN(image.cols * _minSearchRectSizeRelative * 1.5f, image.cols * _maxSearchRectSizeRelative);
+        int height = MIN(image.rows * _minSearchRectSizeRelative * 1.5f, image.rows * _maxSearchRectSizeRelative);
+        searchRect = Rect(center.x, center.y, width, height);
+    }
+    profiler->stopTimer(TIMER_VALIDATE);
+    
+    // convert to hue saturation value
+    profiler->startTimer(TIMER_CONVERT);
     cvtColor(image, hsv, CV_BGR2HSV);
-    inRange(hsv, Scalar(0, smin, MIN(vmin,vmax)), Scalar(180, 256, MAX(vmin, vmax)), mask);
-    
+
+    inRange(hsv, Scalar(0, smin, MIN(vmin,vmax)), Scalar(180, 256, MAX(vmin, vmax)), colorMask);
     int ch[] = {0, 0};
     hue.create(hsv.size(), hsv.depth());
     mixChannels(&hsv, 1, &hue, 1, ch, 1);
     
-    Rect trackWindow = params.searchRect;
-    if( trackWindow.area() <= 1 )
-    {
-        int cols = image.cols, rows = image.rows, r = (MIN(cols, rows) + 5)/6;
-        trackWindow = Rect((cols-r) / 2, (rows-r) / 2, r, r);
-    }
-    
+    profiler->stopTimer(TIMER_CONVERT);
+
+    // calc back projection and apply cam shift algorithm
+    profiler->startTimer(TIMER_TRACK);
     calcBackProject(&hue, 1, 0, _objectHist, backproj, &phranges);
-    backproj &= mask;
+    backproj &= colorMask;
+    searchRect = CamShift(backproj, searchRect, _terminationCriteria).boundingRect();
+    profiler->stopTimer(TIMER_TRACK);
     
-    RotatedRect trackBox = CamShift(backproj, trackWindow, TermCriteria( CV_TERMCRIT_EPS | CV_TERMCRIT_ITER, 20, 0.1f ));
-    Rect boundingBox = trackBox.boundingRect();
-    boundingBox.x = MAX(boundingBox.x, 0);
-    boundingBox.y = MAX(boundingBox.y, 0);
-    boundingBox.width = MIN(boundingBox.width, backproj.cols - boundingBox.x);
-    boundingBox.height = MIN(boundingBox.height, backproj.rows - boundingBox.y);
-    cvtColor(backproj, backproj, CV_GRAY2BGR);
-    rectangle(backproj, boundingBox.tl(), boundingBox.br(), Scalar(0,0,255), 3);
+    // validate new search rect 
+    profiler->startTimer(TIMER_VALIDATE);
+    PointOps::cropRect(searchRect, Rect(0, 0, image.cols, image.rows));
+    bool rectIsValid = isRectValid(searchRect, image.cols, image.rows);
+    profiler->stopTimer(TIMER_VALIDATE);
     
-    params.searchRect = boundingBox;
-    debugInfo.searchRect = boundingBox;
+    // set output params
+    params.searchRect = searchRect;
+    
+    // set debug info values
+    debugInfo.searchRect = searchRect;
+    debugInfo.searchRectValid = rectIsValid;
     debugInfo.probabilityMap = backproj;
-    return boundingBox.area() > 10 && boundingBox.area() < backproj.cols * backproj.rows * 0.8f;
+    
+    return rectIsValid;
 }
 
+bool DetectionModule::isRectValid(const Rect& rect, int imageWidth, int imageHeight) {
+    return true
+    && rect.width >= imageWidth * _minSearchRectSizeRelative
+    && rect.width <= imageWidth * _maxSearchRectSizeRelative
+    && rect.height >= imageHeight * _minSearchRectSizeRelative
+    && rect.height <= imageHeight * _maxSearchRectSizeRelative;
+}
+    
 } // end of namespaces
     
 // preprocess, erode, delate, blur, reduce colors
