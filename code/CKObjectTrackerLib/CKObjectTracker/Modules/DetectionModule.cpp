@@ -8,7 +8,6 @@
 
 #include "DetectionModule.h"
 #include "Profiler.h"
-#include "Utils.h"
 
 #define TIMER_PREPROC "preprocIng"
 #define TIMER_CONVERT "converting"

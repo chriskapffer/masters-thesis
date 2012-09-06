@@ -1,13 +1,13 @@
 //
-//  MatchAndFilterDescriptors.h
+//  DescriptorMatcherFilterer.h
 //  CKObjectTrackerLib
 //
 //  Created by Christoph Kapffer on 27.08.12.
 //  Copyright (c) 2012 HTW Berlin. All rights reserved.
 //
 
-#ifndef CKObjectTrackerLib_MatchAndFilterDescriptors_h
-#define CKObjectTrackerLib_MatchAndFilterDescriptors_h
+#ifndef CKObjectTrackerLib_DescriptorMatcherFilterer_h
+#define CKObjectTrackerLib_DescriptorMatcherFilterer_h
 
 enum FilterFlag {
     FILTER_FLAG_CROP,
@@ -17,7 +17,7 @@ enum FilterFlag {
 
 namespace ck {
     
-    struct MatcherFilter {
+    struct MatcherFilterer {
         static void getFilteredMatches(const cv::DescriptorMatcher& matcher, const cv::Mat& descriptors1, const cv::Mat& descriptors2, std::vector<cv::DMatch>& result, const std::vector<FilterFlag>& flags, bool sortMatches, float ratio, int nBestMatches, std::vector<std::pair<std::string, std::vector<cv::DMatch> > >& debugger);
         
         static void matchAndApplyFiltersAll(const cv::DescriptorMatcher& matcher, const cv::Mat& descriptors1, const cv::Mat& descriptors2, std::vector<cv::DMatch>& result, const std::vector<FilterFlag>& flags, bool sortMatches, float ratio, int nBestMatches, std::vector<std::pair<std::string, std::vector<cv::DMatch> > >& debugger);

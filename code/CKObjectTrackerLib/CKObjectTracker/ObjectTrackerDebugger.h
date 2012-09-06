@@ -9,7 +9,7 @@
 #ifndef CKObjectTrackerLib_ObjectTrackerDebugger_h
 #define CKObjectTrackerLib_ObjectTrackerDebugger_h
 
-#include "ObjectTrackerTypeDefinitions.h"
+#include "ObjectTrackerDebugInfo.h"
 
 namespace ck {
 

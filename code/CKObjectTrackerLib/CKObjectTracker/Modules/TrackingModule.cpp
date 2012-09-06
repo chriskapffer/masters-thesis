@@ -7,9 +7,11 @@
 //
 
 #include "TrackingModule.h"
+
+#include "PointOperations.h"
+#include "ColorConversion.h"
 #include "SanityCheck.h"
 #include "Profiler.h"
-#include "Utils.h"
 
 #define TIMER_CONVERT "converting"
 #define TIMER_OPTIMIZE "optimizing"
@@ -122,8 +124,8 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
     
     // convert to gray
     profiler->startTimer(TIMER_CONVERT);
-    utils::bgrOrBgra2Gray(previousImage, previousImage, COLOR_CONV_CV);
-    utils::bgrOrBgra2Gray(currentImage, currentImage, COLOR_CONV_CV);
+    ColorConvert::bgrOrBgra2Gray(previousImage, previousImage);
+    ColorConvert::bgrOrBgra2Gray(currentImage, currentImage);
     profiler->stopTimer(TIMER_CONVERT);
     
     // calculate sub pixel locations if desired
@@ -141,7 +143,7 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
     
     // store remaining points and other metrics in debug info
     debugInfo.namedPointSets.push_back(make_pair(POINTS_TRACKED, pointsOut));
-    debugInfo.movementVariation = maxDistance - minDistance;
+    debugInfo.distortion = maxDistance - minDistance;
     debugInfo.avgError = avgError;
     
     // filter new points 
@@ -176,7 +178,7 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
     // validate homography matrix
     profiler->startTimer(TIMER_VALIDATE);
     isHomographyValid = SanityCheck::validate(homography, Size(currentImage.cols, currentImage.rows), _objectCorners, objectCornersTransformed, boundingRect, true);
-    transformationDelta = utils::averageDistance(objectCornersTransformed, objectCornersTransformedPreviousFrame);
+    transformationDelta = PointOps::averageDistance(objectCornersTransformed, objectCornersTransformedPreviousFrame);
     isHomographyValid &= transformationDelta <= _maxTransformationDelta;
     profiler->stopTimer(TIMER_VALIDATE);
 
@@ -188,7 +190,7 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
     params.points = pointsOut;
 
     // set debug info values
-    debugInfo.jitterAmount = transformationDelta;
+    debugInfo.transformationDelta = transformationDelta;
     debugInfo.objectCornersTransformed = objectCornersTransformed;
     debugInfo.badHomography = !isHomographyValid;
     debugInfo.homography = homography;

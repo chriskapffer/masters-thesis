@@ -11,33 +11,12 @@
 
 namespace ck {
     
-enum ModuleType {
-    MODULE_TYPE_DETECTION,
-    MODULE_TYPE_VALIDATION,
-    MODULE_TYPE_TRACKING,
-    MODULE_TYPE_EMPTY,
-};
-    
-class ModuleType2String {
-    
-private:
-    struct TableProvider {
-        inline static std::map<ModuleType, const char*> table() {
-            std::map<ModuleType, const char*> t;
-            t[MODULE_TYPE_DETECTION] = "DetectionModule";
-            t[MODULE_TYPE_VALIDATION] = "ValidationModule";
-            t[MODULE_TYPE_TRACKING] = "TrackingModule";
-            t[MODULE_TYPE_EMPTY] = "EmptyModule";
-            return t;
-        }
+    enum ModuleType {
+        MODULE_TYPE_DETECTION,
+        MODULE_TYPE_VALIDATION,
+        MODULE_TYPE_TRACKING,
+        MODULE_TYPE_EMPTY,
     };
-
-public:
-    inline static std::string convert(ModuleType type) {
-        static std::map<ModuleType, const char*> stringTable = TableProvider::table();
-        return (*stringTable.find(type)).second;
-    }
-};
     
 } // end of namespace
 

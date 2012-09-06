@@ -1,26 +1,63 @@
 //
-//  ObjectTrackerInitializer.h
+//  ObjectTrackerCreator.h
 //  CKObjectTrackerLib
 //
 //  Created by Christoph Kapffer on 03.09.12.
 //  Copyright (c) 2012 HTW Berlin. All rights reserved.
 //
 
-#ifndef CKObjectTrackerLib_ObjectTrackerInitializer_h
-#define CKObjectTrackerLib_ObjectTrackerInitializer_h
+#ifndef CKObjectTrackerLib_ObjectTrackerCreator_h
+#define CKObjectTrackerLib_ObjectTrackerCreator_h
 
-#include "ObjectTrackerImplementation.h"
+#include "ObjectTrackerImpl.h"
 #include "SettingsProjectScope.h"
+#include "Profiler.h"
 
+#include "AbstractModule.h"
 #include "DetectionModule.h"
 #include "ValidationModule.h"
 #include "TrackingModule.h"
+#include "EmptyModule.h"
 
 namespace ck {
     
-    class ObjectTracker::Initializer {
+    class ObjectTracker::Creator {
+    public:
+        static void initializeTracker(ObjectTracker::Implementation& tracker)
+        {
+            tracker._allModules = createModuleCollection();
+            tracker._currentModule = tracker._allModules[MODULE_TYPE_EMPTY];
+            tracker._moduleParams.successor = MODULE_TYPE_EMPTY;
+            
+            initDetectionSettings(dynamic_cast<DetectionModule*>(tracker._allModules[MODULE_TYPE_DETECTION]), tracker._settings);
+            initValidationSettings(dynamic_cast<ValidationModule*>(tracker._allModules[MODULE_TYPE_VALIDATION]), tracker._settings);
+            initTrackingSettings(dynamic_cast<TrackingModule*>(tracker._allModules[MODULE_TYPE_TRACKING]), tracker._settings);
+        }
+        
+        static void finalizeTracker(ObjectTracker::Implementation& tracker)
+        {
+            std::map<ModuleType, AbstractModule*>::iterator it;
+            for (it = tracker._allModules.begin(); it != tracker._allModules.end(); it++) {
+                delete (*it).second;
+            }
+            tracker._allModules.clear();
+            
+            Profiler::Finish();
+        }
         
     private:
+        static std::map<ModuleType, AbstractModule*> createModuleCollection() {
+            std::vector<FilterFlag> flags;
+            flags.push_back(FILTER_FLAG_RATIO);
+            
+            std::map<ModuleType, AbstractModule*> modules;
+            modules[MODULE_TYPE_DETECTION] = new DetectionModule();
+            modules[MODULE_TYPE_VALIDATION] = new ValidationModule(flags);
+            modules[MODULE_TYPE_TRACKING] = new TrackingModule(500);
+            modules[MODULE_TYPE_EMPTY] = new EmptyModule();
+            return modules;
+        }
+
         static void initDetectionSettings(DetectionModule* module, Settings& settings) {
             Settings detectionSettings = Settings("Detection Settings");
             settings.addCategory(detectionSettings);
@@ -86,14 +123,6 @@ namespace ck {
             trackingSettings.addCategory(flowSettings);
             
             settings.addCategory(trackingSettings);
-        }
-        
-    public:
-        static void initTracker(ObjectTracker::Implementation& tracker)
-        {
-            initDetectionSettings(dynamic_cast<DetectionModule*>(tracker._allModules[MODULE_TYPE_DETECTION]), tracker._settings);
-            initValidationSettings(dynamic_cast<ValidationModule*>(tracker._allModules[MODULE_TYPE_VALIDATION]), tracker._settings);
-            initTrackingSettings(dynamic_cast<TrackingModule*>(tracker._allModules[MODULE_TYPE_TRACKING]), tracker._settings);
         }
     };
     

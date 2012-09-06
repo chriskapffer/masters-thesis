@@ -7,9 +7,12 @@
 //
 
 #include "ValidationModule.h"
+
+#include "PointOperations.h"
+#include "ColorConversion.h"
 #include "SanityCheck.h"
 #include "Profiler.h"
-#include "Utils.h"
+#include "Commons.h"
 
 #define TIMER_CONVERT "converting"
 #define TIMER_DETECT "detecting"
@@ -21,13 +24,7 @@ using namespace std;
 using namespace cv;
 
 namespace ck {
-    
-template<typename T>
-static bool vectorContains(const vector<T>& vector, const T& object)
-{
-    return find(vector.begin(), vector.end(), object) != vector.end();
-}
-    
+
 static string getAlgorithmName(const Algorithm& algorithm)
 {
     string name = algorithm.name();
@@ -247,7 +244,7 @@ void ValidationModule::initWithObjectImage(const cv::Mat &objectImage) // TODO: 
 
     if (_convertToGray) {
         profiler->startTimer(TIMER_CONVERT);
-        utils::bgrOrBgra2Gray(objectImage, _objectImage, COLOR_CONV_CV);
+        ColorConvert::bgrOrBgra2Gray(objectImage, _objectImage);
         profiler->stopTimer(TIMER_CONVERT);
     } else {
         objectImage.copyTo(_objectImage);
@@ -301,7 +298,7 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     // get region of interest and convert to gray if desired
     if (_convertToGray) {
         profiler->startTimer(TIMER_CONVERT);
-        utils::bgrOrBgra2Gray(sceneImagePart, sceneImagePart, COLOR_CONV_CV);
+        ColorConvert::bgrOrBgra2Gray(sceneImagePart, sceneImagePart);
         profiler->stopTimer(TIMER_CONVERT);
     }
 
@@ -326,7 +323,7 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     while (_busy) { }
     
     // match and filter descriptors (uses internal profiling) (partial scene image space)
-    MatcherFilter::getFilteredMatches(*_matcher, _objectDescriptors, sceneDescriptors, matches, _filterFlags, _sortMatches, _ratio, _nBestMatches, debugInfo.namedMatches);
+    MatcherFilterer::getFilteredMatches(*_matcher, _objectDescriptors, sceneDescriptors, matches, _filterFlags, _sortMatches, _ratio, _nBestMatches, debugInfo.namedMatches);
     
     // check if there are enough matches left, stop validation if not
     if (matches.size() < MIN_MATCHES) {
@@ -336,7 +333,7 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
 
     // compute homography from matches (full scene image space)
     profiler->startTimer(TIMER_ESTIMATE);
-    utils::get2DCoordinatesOfMatches(matches, _objectKeyPoints, sceneKeyPoints, objectCoordinates, sceneCoordinates, Point2f(), searchRect.tl());
+    PointOps::coordinatesOfMatches(matches, _objectKeyPoints, sceneKeyPoints, objectCoordinates, sceneCoordinates, Point2f(), searchRect.tl());
     homography = findHomography(objectCoordinates, sceneCoordinates, _estimationMethod, _ransacThreshold, mask);
     profiler->stopTimer(TIMER_ESTIMATE);
     
@@ -344,9 +341,9 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     if (_refineHomography) {
         vector<DMatch> noOutliers;
         // filter matches with mask and compute homography again (uses internal profiling)
-        MatcherFilter::filterMatchesWithMask(matches, mask, noOutliers, debugInfo.namedMatches);
+        MatcherFilterer::filterMatchesWithMask(matches, mask, noOutliers, debugInfo.namedMatches);
         profiler->startTimer(TIMER_ESTIMATE);
-        utils::get2DCoordinatesOfMatches(noOutliers, _objectKeyPoints, sceneKeyPoints, objectCoordinates, sceneCoordinates, Point2f(), searchRect.tl());
+        PointOps::coordinatesOfMatches(noOutliers, _objectKeyPoints, sceneKeyPoints, objectCoordinates, sceneCoordinates, Point2f(), searchRect.tl());
         homography = findHomography(objectCoordinates, sceneCoordinates, 0); // default method, because there are no outliers
         profiler->stopTimer(TIMER_ESTIMATE);
     }
@@ -357,7 +354,7 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     profiler->stopTimer(TIMER_VALIDATE);
     
     // get positions of all scene keypoints again (sceneCoordinates contained positions of matches only) (full scene image space)
-    utils::get2DCoordinatesOfKeyPoints(sceneKeyPoints, sceneCoordinates, searchRect.tl());
+    PointOps::coordinatesOfKeyPoints(sceneKeyPoints, sceneCoordinates, searchRect.tl());
 
     // set output params
     params.sceneImageCurrent.copyTo(params.sceneImagePrevious);
@@ -366,7 +363,7 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     params.points = sceneCoordinates;
 
     // set debug info values
-    debugInfo.jitterAmount = utils::averageDistance(objectCornersTransformed, debugInfo.objectCornersTransformed);
+    debugInfo.transformationDelta = PointOps::averageDistance(objectCornersTransformed, debugInfo.objectCornersTransformed);
     debugInfo.objectCornersTransformed = objectCornersTransformed;
     debugInfo.badHomography = !isHomographyValid;
     debugInfo.homography = homography;

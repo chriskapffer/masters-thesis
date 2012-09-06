@@ -9,10 +9,9 @@
 #ifndef CKObjectTracker_ObjectTracker_h
 #define CKObjectTracker_ObjectTracker_h
 
-// http://opencv-users.1802565.n2.nabble.com/BRISK-td7452653.html <-- TODO read
+// http://opencv-users.1802565.n2.nabble.com/BRISK-td7452653.html <-- TODO: read
 
-#include "ObjectTrackerTypeDefinitions.h"
-#include "SettingsPublicScope.h"
+#include "ObjectTrackerTypesPublic.h"
 
 namespace ck {
 
@@ -29,7 +28,7 @@ public:
     void trackObjectInStillImage(const cv::Mat& image, std::vector<TrackerOutput>& output, std::vector<TrackerDebugInfo>& debugInfo);
     
 private:
-    class Initializer;
+    class Creator;
     class Implementation;
     Implementation* mImpl;
 };

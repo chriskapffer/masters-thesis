@@ -1,14 +1,15 @@
 //
-//  MatchAndFilterDescriptors.cpp
+//  DescriptorMatcherFilterer.cpp
 //  CKObjectTrackerLib
 //
 //  Created by Christoph Kapffer on 27.08.12.
 //  Copyright (c) 2012 HTW Berlin. All rights reserved.
 //
 
-#include "MatchAndFilterDescriptors.h"
+#include "DescriptorMatcherFilterer.h"
+#include "FilterAlgorithm.h"
 #include "Profiler.h"
-#include "Utils.h"
+#include "Commons.h"
 
 #define TIMER_MATCH "matching"
 #define TIMER_FILTER "filtering"
@@ -23,19 +24,19 @@ using namespace std;
 using namespace cv;
 using namespace ck;
 
-void MatcherFilter::getFilteredMatches(const DescriptorMatcher& matcher, const Mat& descriptors1, const Mat& descriptors2, vector<DMatch>& result, const vector<FilterFlag>& flags, bool sortMatches, float ratio, int nBestMatches, vector<pair<string, vector<DMatch> > >& debugger)
+void MatcherFilterer::getFilteredMatches(const DescriptorMatcher& matcher, const Mat& descriptors1, const Mat& descriptors2, vector<DMatch>& result, const vector<FilterFlag>& flags, bool sortMatches, float ratio, int nBestMatches, vector<pair<string, vector<DMatch> > >& debugger)
 {
     if (descriptors1.empty() || descriptors2.empty())
         return;
     
-    if(contains(flags, FILTER_FLAG_RATIO)) {
-        if (contains(flags, FILTER_FLAG_SYMMETRY)) {
+    if(vectorContains(flags, FILTER_FLAG_RATIO)) {
+        if (vectorContains(flags, FILTER_FLAG_SYMMETRY)) {
             matchAndApplyFiltersAll(matcher, descriptors1, descriptors2, result, flags, sortMatches, ratio, nBestMatches, debugger);
         } else {
             matchAndApplyFiltersNoSymmetry(matcher, descriptors1, descriptors2, result, flags, sortMatches, ratio, nBestMatches, debugger);
         }
     } else {
-        if (contains(flags, FILTER_FLAG_SYMMETRY)) {
+        if (vectorContains(flags, FILTER_FLAG_SYMMETRY)) {
             matchAndApplyFiltersNoRatio(matcher, descriptors1, descriptors2, result, flags, sortMatches, nBestMatches, debugger);
         } else {
             matchAndApplyFiltersOnlyCrop(matcher, descriptors1, descriptors2, result, flags, sortMatches, nBestMatches, debugger);
@@ -43,7 +44,7 @@ void MatcherFilter::getFilteredMatches(const DescriptorMatcher& matcher, const M
     }
 }
 
-void MatcherFilter::matchAndApplyFiltersAll(const DescriptorMatcher& matcher, const Mat& descriptors1, const Mat& descriptors2, vector<DMatch>& result, const vector<FilterFlag>& flags, bool sortMatches, float ratio, int nBestMatches, vector<pair<string, vector<DMatch> > >& debugger)
+void MatcherFilterer::matchAndApplyFiltersAll(const DescriptorMatcher& matcher, const Mat& descriptors1, const Mat& descriptors2, vector<DMatch>& result, const vector<FilterFlag>& flags, bool sortMatches, float ratio, int nBestMatches, vector<pair<string, vector<DMatch> > >& debugger)
 {
     vector<vector<DMatch> > matches12;
     vector<vector<DMatch> > matches21;
@@ -51,7 +52,7 @@ void MatcherFilter::matchAndApplyFiltersAll(const DescriptorMatcher& matcher, co
     profiler->startTimer(TIMER_MATCH);
     matcher.knnMatch(descriptors1, descriptors2, matches12, 2);
     matcher.knnMatch(descriptors2, descriptors1, matches21, 2);
-    debugger.push_back(make_pair(MATCHES_TOTAL, utils::stripNeighbors(matches12)));
+    debugger.push_back(make_pair(MATCHES_TOTAL, FilterAlgorithm::stripNeighbors(matches12)));
     profiler->stopTimer(TIMER_MATCH);
     profiler->startTimer(TIMER_FILTER);
     if (sortMatches) {
@@ -64,36 +65,36 @@ void MatcherFilter::matchAndApplyFiltersAll(const DescriptorMatcher& matcher, co
     for (int i = 0; i < flags.size(); i++) {
         switch (flags[i]) {
             case FILTER_FLAG_CROP:
-                utils::nBestMatches(matches12, tmp, nBestMatches, sortMatches);
-                debugger.push_back(make_pair(MATCHES_CROPPED, utils::stripNeighbors(tmp)));
+                FilterAlgorithm::nBestMatches(matches12, tmp, nBestMatches, sortMatches);
+                debugger.push_back(make_pair(MATCHES_CROPPED, FilterAlgorithm::stripNeighbors(tmp)));
                 matches12 = tmp;
                 if (!didSymmetryMatch) {
-                    utils::nBestMatches(matches21, tmp, nBestMatches, sortMatches);
+                    FilterAlgorithm::nBestMatches(matches21, tmp, nBestMatches, sortMatches);
                     matches21 = tmp;
                 }
                 break;
             case FILTER_FLAG_RATIO:
-                utils::ratioTest(matches12, tmp, ratio);
-                debugger.push_back(make_pair(MATCHES_AFTER_RATIO, utils::stripNeighbors(tmp)));
+                FilterAlgorithm::ratioTest(matches12, tmp, ratio);
+                debugger.push_back(make_pair(MATCHES_AFTER_RATIO, FilterAlgorithm::stripNeighbors(tmp)));
                 matches12 = tmp;
                 if (!didSymmetryMatch) {
-                    utils::ratioTest(matches21, tmp, ratio);
+                    FilterAlgorithm::ratioTest(matches21, tmp, ratio);
                     matches21 = tmp;
                 }
                 break;
             case FILTER_FLAG_SYMMETRY:
-                utils::symmetryTest(matches12, matches21, tmp);
-                debugger.push_back(make_pair(MATCHES_AFTER_SYMMETRY, utils::stripNeighbors(tmp)));
+                FilterAlgorithm::symmetryTest(matches12, matches21, tmp);
+                debugger.push_back(make_pair(MATCHES_AFTER_SYMMETRY, FilterAlgorithm::stripNeighbors(tmp)));
                 matches12 = tmp;
                 didSymmetryMatch = true;
                 break;
         }
     }
-    result = utils::stripNeighbors(matches12);
+    result = FilterAlgorithm::stripNeighbors(matches12);
     profiler->stopTimer(TIMER_FILTER);
 }
 
-void MatcherFilter::matchAndApplyFiltersNoRatio(const DescriptorMatcher& matcher, const Mat& descriptors1, const Mat& descriptors2, vector<DMatch>& result, const vector<FilterFlag>& flags, bool sortMatches, int nBestMatches, vector<pair<string, vector<DMatch> > >& debugger)
+void MatcherFilterer::matchAndApplyFiltersNoRatio(const DescriptorMatcher& matcher, const Mat& descriptors1, const Mat& descriptors2, vector<DMatch>& result, const vector<FilterFlag>& flags, bool sortMatches, int nBestMatches, vector<pair<string, vector<DMatch> > >& debugger)
 {
     vector<DMatch> matches12;
     vector<DMatch> matches21;
@@ -114,16 +115,16 @@ void MatcherFilter::matchAndApplyFiltersNoRatio(const DescriptorMatcher& matcher
     for (int i = 0; i < flags.size(); i++) {
         switch (flags[i]) {
             case FILTER_FLAG_CROP:
-                utils::nBestMatches(matches12, tmp, nBestMatches, sortMatches);
+                FilterAlgorithm::nBestMatches(matches12, tmp, nBestMatches, sortMatches);
                 debugger.push_back(make_pair(MATCHES_CROPPED, tmp));
                 matches12 = tmp;
                 if (!didSymmetryMatch) {
-                    utils::nBestMatches(matches21, tmp, nBestMatches, sortMatches);
+                    FilterAlgorithm::nBestMatches(matches21, tmp, nBestMatches, sortMatches);
                     matches21 = tmp;
                 }
                 break;
             case FILTER_FLAG_SYMMETRY:
-                utils::symmetryTest(matches12, matches21, tmp);
+                FilterAlgorithm::symmetryTest(matches12, matches21, tmp);
                 debugger.push_back(make_pair(MATCHES_AFTER_SYMMETRY, tmp));
                 matches12 = tmp;
                 didSymmetryMatch = true;
@@ -136,13 +137,13 @@ void MatcherFilter::matchAndApplyFiltersNoRatio(const DescriptorMatcher& matcher
     profiler->stopTimer(TIMER_FILTER);
 }
 
-void MatcherFilter::matchAndApplyFiltersNoSymmetry(const DescriptorMatcher& matcher, const Mat& descriptors1, const Mat& descriptors2, vector<DMatch>& result, const vector<FilterFlag>& flags, bool sortMatches, float ratio, int nBestMatches, vector<pair<string, vector<DMatch> > >& debugger)
+void MatcherFilterer::matchAndApplyFiltersNoSymmetry(const DescriptorMatcher& matcher, const Mat& descriptors1, const Mat& descriptors2, vector<DMatch>& result, const vector<FilterFlag>& flags, bool sortMatches, float ratio, int nBestMatches, vector<pair<string, vector<DMatch> > >& debugger)
 {
     vector<vector<DMatch> > matches;
     Profiler* profiler = Profiler::Instance();
     profiler->startTimer(TIMER_MATCH);
     matcher.knnMatch(descriptors1, descriptors2, matches, 2);
-    debugger.push_back(make_pair(MATCHES_TOTAL, utils::stripNeighbors(matches)));
+    debugger.push_back(make_pair(MATCHES_TOTAL, FilterAlgorithm::stripNeighbors(matches)));
     profiler->stopTimer(TIMER_MATCH);
     profiler->startTimer(TIMER_FILTER);
     if (sortMatches) { sort(matches.begin(), matches.end(), compareKnnMatch); }
@@ -151,24 +152,24 @@ void MatcherFilter::matchAndApplyFiltersNoSymmetry(const DescriptorMatcher& matc
     for (int i = 0; i < flags.size(); i++) {
         switch (flags[i]) {
             case FILTER_FLAG_CROP:
-                utils::nBestMatches(matches, tmp, nBestMatches, sortMatches);
-                debugger.push_back(make_pair(MATCHES_CROPPED, utils::stripNeighbors(tmp)));
+                FilterAlgorithm::nBestMatches(matches, tmp, nBestMatches, sortMatches);
+                debugger.push_back(make_pair(MATCHES_CROPPED, FilterAlgorithm::stripNeighbors(tmp)));
                 matches = tmp;
                 break;
             case FILTER_FLAG_RATIO:
-                utils::ratioTest(matches, tmp, ratio);
-                debugger.push_back(make_pair(MATCHES_AFTER_RATIO, utils::stripNeighbors(tmp)));
+                FilterAlgorithm::ratioTest(matches, tmp, ratio);
+                debugger.push_back(make_pair(MATCHES_AFTER_RATIO, FilterAlgorithm::stripNeighbors(tmp)));
                 matches = tmp;
                 break;
             default:
                 break;
         }
     }
-    result = utils::stripNeighbors(matches);
+    result = FilterAlgorithm::stripNeighbors(matches);
     profiler->stopTimer(TIMER_FILTER);
 }
 
-void MatcherFilter::matchAndApplyFiltersOnlyCrop(const DescriptorMatcher& matcher, const Mat& descriptors1, const Mat& descriptors2, vector<DMatch>& result, const vector<FilterFlag>& flags, bool sortMatches, int nBestMatches, vector<pair<string, vector<DMatch> > >& debugger)
+void MatcherFilterer::matchAndApplyFiltersOnlyCrop(const DescriptorMatcher& matcher, const Mat& descriptors1, const Mat& descriptors2, vector<DMatch>& result, const vector<FilterFlag>& flags, bool sortMatches, int nBestMatches, vector<pair<string, vector<DMatch> > >& debugger)
 {
     vector<DMatch> matches;
     Profiler* profiler = Profiler::Instance();
@@ -181,7 +182,7 @@ void MatcherFilter::matchAndApplyFiltersOnlyCrop(const DescriptorMatcher& matche
     
     vector<DMatch> tmp;
     if (!flags.empty()) { // can not be anything else than crop
-        utils::nBestMatches(matches, tmp, nBestMatches, sortMatches);
+        FilterAlgorithm::nBestMatches(matches, tmp, nBestMatches, sortMatches);
         debugger.push_back(make_pair(MATCHES_CROPPED, tmp));
         matches = tmp;
     }
@@ -189,7 +190,7 @@ void MatcherFilter::matchAndApplyFiltersOnlyCrop(const DescriptorMatcher& matche
     profiler->stopTimer(TIMER_FILTER);
 }
 
-void MatcherFilter::filterMatchesWithMask(const vector<DMatch>& matches, const vector<unsigned char>& mask, vector<DMatch>& result, vector<pair<string, vector<DMatch> > >& debugger)
+void MatcherFilterer::filterMatchesWithMask(const vector<DMatch>& matches, const vector<unsigned char>& mask, vector<DMatch>& result, vector<pair<string, vector<DMatch> > >& debugger)
 {
     assert(matches.size() == mask.size());
     Profiler* profiler = Profiler::Instance();

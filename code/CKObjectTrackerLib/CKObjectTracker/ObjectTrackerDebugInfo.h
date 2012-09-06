@@ -6,9 +6,76 @@
 //  Copyright (c) 2012 HTW Berlin. All rights reserved.
 //
 
-#ifndef __CKObjectTrackerLib__ObjectTrackerDebugInfo__
-#define __CKObjectTrackerLib__ObjectTrackerDebugInfo__
+#ifndef CKObjectTrackerLib_ObjectTrackerDebugInfo_h
+#define CKObjectTrackerLib_ObjectTrackerDebugInfo_h
 
-#include <iostream>
+namespace ck {
 
-#endif /* defined(__CKObjectTrackerLib__ObjectTrackerDebugInfo__) */
+struct TrackerDebugInfo {
+    // general
+    double totalProcessingTime;
+    std::vector<std::pair<std::string, double> > subTaskProcessingTimes;
+    std::string currentModuleType;
+    
+    // detection
+    cv::Mat probabilityMap;
+    cv::Rect searchRect;
+    
+    // validation
+    std::vector<std::pair<std::string, std::vector<cv::DMatch> > > namedMatches;
+    std::vector<cv::KeyPoint> objectKeyPoints;
+    std::vector<cv::KeyPoint> sceneKeyPoints;
+    
+    cv::Mat objectImage;
+    cv::Mat sceneImageFull;
+    cv::Mat sceneImagePart;
+        
+    // tracking
+    std::vector<std::pair<std::string, std::vector<cv::Point2f> > > namedPointSets;
+    int initialPointCount;
+    float transformationDelta;
+    float distortion;
+    float avgError;
+    
+    // validation and tracking
+    std::vector<cv::Point2f> objectCornersTransformed;
+    cv::Mat homography;
+    bool badHomography;
+    
+    TrackerDebugInfo() : totalProcessingTime(0), initialPointCount(0), transformationDelta(0), distortion(0), avgError(0), badHomography(false) {}
+};
+
+struct TrackerDebugInfoStripped
+{
+    // general
+    double totalProcessingTime;
+    std::vector<std::pair<std::string, double> > subTaskProcessingTimes;
+    std::string currentModuleType;
+    
+    // validation
+    std::vector<std::pair<std::string, int> > namedMatchCounts;
+    int objectKeyPointCount;
+    int sceneKeyPointCount;
+
+    // tracking
+    std::vector<std::pair<std::string, int> > namedPointCounts;
+    int initialPointCount;
+    float transformationDelta;
+    float distortion;
+    float avgError;
+
+    // validation and tracking
+    bool badHomography;
+
+    // constructors
+    TrackerDebugInfoStripped();
+    TrackerDebugInfoStripped(const TrackerDebugInfo& infoFull);
+    
+    // operators
+    TrackerDebugInfoStripped& operator+=(const TrackerDebugInfoStripped& other);
+    TrackerDebugInfoStripped operator/(float factor) const;
+};
+    
+} // end of namespace
+
+#endif

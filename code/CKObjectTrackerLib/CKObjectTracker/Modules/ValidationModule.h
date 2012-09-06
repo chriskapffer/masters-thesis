@@ -12,7 +12,7 @@
 #include <opencv2/nonfree/nonfree.hpp>
 
 #include "AbstractModule.h"
-#include "MatchAndFilterDescriptors.h"
+#include "DescriptorMatcherFilterer.h"
 
 #define MIN_MATCHES 4
 

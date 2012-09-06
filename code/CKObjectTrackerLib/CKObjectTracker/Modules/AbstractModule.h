@@ -9,9 +9,8 @@
 #ifndef CKObjectTrackerLib_AbstractModule_h
 #define CKObjectTrackerLib_AbstractModule_h
 
-#include "ModuleTypes.h"
 #include "ModuleParams.h"
-#include "ObjectTrackerTypeDefinitions.h"
+#include "ObjectTrackerDebugInfo.h"
 
 namespace ck {
     

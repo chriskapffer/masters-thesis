@@ -7,7 +7,7 @@
 //
 
 #include "ObjectTrackerDebugger.h"
-#include "ModuleTypes.h"
+#include "ModuleManagement.h"
 
 using namespace std;
 using namespace cv;
@@ -47,7 +47,7 @@ string ObjectTrackerDebugger::debugString(TrackerDebugInfoStripped info)
         for (int i = 0; i < info.namedMatchCounts.size(); i++) {
             snprintf(buffer, length, "%smatches %s: %d\n", buffer, info.namedMatchCounts[i].first.c_str(), info.namedMatchCounts[i].second);
         }
-        snprintf(buffer, length, "%sjitterAmount: %.3f\n", buffer, info.jitterAmount);
+        snprintf(buffer, length, "%sjitterAmount: %.3f\n", buffer, info.transformationDelta);
 
     } else if (info.currentModuleType == ModuleType2String::convert(MODULE_TYPE_TRACKING)) {
         snprintf(buffer, length, "%sinitial point set: %d\n", buffer, info.initialPointCount);
@@ -58,9 +58,9 @@ string ObjectTrackerDebugger::debugString(TrackerDebugInfoStripped info)
                 snprintf(buffer, length, "%slost after %s: %d\n", buffer, info.namedPointCounts[i].first.c_str(), info.namedPointCounts[i - 1].second - info.namedPointCounts[i].second);
             }
         }
-        snprintf(buffer, length, "%sdistance range: %.3f\n", buffer, info.movementVariation);
+        snprintf(buffer, length, "%sdistance range: %.3f\n", buffer, info.distortion);
         snprintf(buffer, length, "%saverage error: %.3f\n", buffer, info.avgError);
-        snprintf(buffer, length, "%sjitterAmount: %.3f\n", buffer, info.jitterAmount);
+        snprintf(buffer, length, "%sjitterAmount: %.3f\n", buffer, info.transformationDelta);
     }
 
     
@@ -143,25 +143,7 @@ static void drawMatches(Mat& result, const vector<DMatch>& matches, const vector
         line(result, p1, p2, color);
     }
 }
-    
-static void drawContourImages(Mat& img1, Mat& img2, const vector<CMatch>& matches, const vector<vector<Point> >& contours1, const vector<vector<Point> >& contours2)
-{
-    for (vector<CMatch>::const_iterator iter = matches.begin(); iter != matches.end(); iter++) {
-        Scalar color = Scalar(rand()&255, rand()&255, rand()&255);
-        drawContours(img1, contours1, (*iter).queryIdx, color, 1);
-        drawContours(img2, contours2, (*iter).trainIdx, color, 1);
-    }
-//    for (int i = 0; i < contours1.size(); i++) {
-//        Scalar color = Scalar(rand()&255, rand()&255, rand()&255);
-//        drawContours(img1, contours1, i, color, 1);
-//    }
-//    for (int i = 0; i < contours2.size(); i++) {
-//        Scalar color = Scalar(rand()&255, rand()&255, rand()&255);
-//        drawContours(img2, contours2, i, color, 1);
-//    }
 
-}
-    
 static void drawTransformedRectToImage(Mat& image, const vector<Point2f>& corners, Point2f offset, float scale, Scalar color, int lineWidth)
 {
     if (corners.size() != 4)

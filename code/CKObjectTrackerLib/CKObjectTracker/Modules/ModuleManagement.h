@@ -18,22 +18,31 @@
 
 namespace ck {
 
-struct ModuleCollection {
-    inline static std::map<ModuleType, AbstractModule*> create() {
-        std::vector<FilterFlag> flags;
-        flags.push_back(FILTER_FLAG_RATIO);
-        
-        std::map<ModuleType, AbstractModule*> modules;
-        modules[MODULE_TYPE_DETECTION] = new DetectionModule();
-        modules[MODULE_TYPE_VALIDATION] = new ValidationModule(flags);
-        modules[MODULE_TYPE_TRACKING] = new TrackingModule(500);
-        modules[MODULE_TYPE_EMPTY] = new EmptyModule();
-        return modules;
+class ModuleType2String {
+public:
+    inline static std::string convert(ModuleType type) {
+        static std::map<ModuleType, const char*> stringTable = TableProvider::table();
+        return (*stringTable.find(type)).second;
     }
+private:
+    struct TableProvider {
+        inline static std::map<ModuleType, const char*> table() {
+            std::map<ModuleType, const char*> t;
+            t[MODULE_TYPE_DETECTION] = "DetectionModule";
+            t[MODULE_TYPE_VALIDATION] = "ValidationModule";
+            t[MODULE_TYPE_TRACKING] = "TrackingModule";
+            t[MODULE_TYPE_EMPTY] = "EmptyModule";
+            return t;
+        }
+    };
 };
-
-class ModuleTransition {
     
+class ModuleTransition {
+public:
+    inline static ModuleType getSuccessor(ModuleType moduleType, bool didSucceed) {
+        static std::map<ModuleType, std::pair<ModuleType, ModuleType> > transitionTable = TableProvider::table();
+        return didSucceed ? transitionTable[moduleType].first : transitionTable[moduleType].second;
+    }
 private:
     struct TableProvider {
         inline static std::map<ModuleType, std::pair<ModuleType, ModuleType> > table() {
@@ -45,12 +54,6 @@ private:
             return t;
         }
     };
-    
-public:
-    inline static ModuleType getSuccessor(ModuleType moduleType, bool didSucceed) {
-        static std::map<ModuleType, std::pair<ModuleType, ModuleType> > transitionTable = TableProvider::table();
-        return didSucceed ? transitionTable[moduleType].first : transitionTable[moduleType].second;
-    }
 };
     
 } // end of namespace
