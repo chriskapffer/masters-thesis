@@ -60,8 +60,8 @@ void DetectionModule::initWithObjectImage(const cv::Mat &objectImage)
                   Point((i+1)*binW,histimg.rows - val),
                   Scalar(buf.at<Vec3b>(i)), -1, 8 );
     }
-    namedWindow("histimg");
-    imshow("histimg", histimg);
+    //namedWindow("histimg");
+    //imshow("histimg", histimg);
 }
  
 bool DetectionModule::internalProcess(ModuleParams& params, TrackerDebugInfo& debugInfo)

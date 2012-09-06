@@ -52,19 +52,16 @@ void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
     
     TrackerOutput output;
     TrackerDebugInfo debugInfo;
-    vector<TrackerDebugInfoStripped> completeInfo;
+    vector<TrackerDebugInfoStripped> infoCollection;
     Mat frame;
-    bool firstRun = true;
     bool endCapture = false;
     
-//    if (tracker.getSettings().setFloatValue("Ratio", 0.8))
-//    {
-//        float value, min, max;
-//        tracker.getSettings().getFloatValue("Ratio", value);
-//        tracker.getSettings().getFloatInfo("Ratio", min, max);
-//        cout << value << ", " << min << ", " << max << endl;
-//    }
+    //tracker.getSettings().setBoolValue("Tracking", false);
     
+    Mat detectionImage, validationImage, trackingImage;
+    namedWindow("Detection");
+    namedWindow("Validation");
+    namedWindow("Tracking");
     while (!endCapture) {
         if (!sceneVideo.read(frame)) {
             cout << "Capture error." << endl;
@@ -72,17 +69,21 @@ void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
         }
 
         tracker.trackObjectInVideo(frame, output, debugInfo);
-        vector<pair<string, Mat> > debugImages = ObjectTrackerDebugger::debugImages(debugInfo, true, false, true, true, true);
-        for (int i = 0; i < debugImages.size(); i++) {
-            pair<string, Mat> item = debugImages[i];
-            if (firstRun) { namedWindow(item.first); }
-            imshow(item.first, item.second);
+        
+        if (ObjectTrackerDebugger::getDetectionModuleDebugImage(detectionImage, debugInfo)) {
+            imshow("Detection", detectionImage);
         }
-        firstRun = false;
+        //drawObjectRect, drawObjectKeyPoints, drawSceneKeyPoints, drawFilteredMatches, drawAllMatches
+        if (ObjectTrackerDebugger::getValidationModuleDebugImage(validationImage, debugInfo)) {
+            imshow("Validation", validationImage);
+        }
+        if (ObjectTrackerDebugger::getTrackingModuleDebugImage(trackingImage, debugInfo)) {
+            imshow("Tracking", trackingImage);
+        }
         
         TrackerDebugInfoStripped stripped = TrackerDebugInfoStripped(debugInfo);
-        cout << ObjectTrackerDebugger::debugString(stripped) << endl;
-        completeInfo.push_back(stripped);
+        cout << ObjectTrackerDebugger::getDebugString(stripped) << endl;
+        infoCollection.push_back(stripped);
         
         if (waitKey(1000 / sceneVideo.get(CV_CAP_PROP_FPS)) >= 0) {
             cout << "User stopped playback." << endl;
@@ -95,7 +96,7 @@ void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
             endCapture = true;
         }
     }
-    cout << "\n" << ObjectTrackerDebugger::debugString(completeInfo) << endl;
+    cout << "\n" << ObjectTrackerDebugger::getDebugString(infoCollection) << endl;
 }
 
 void trackObjectInStillImage(const Mat& objectImage, const Mat& sceneImage)
