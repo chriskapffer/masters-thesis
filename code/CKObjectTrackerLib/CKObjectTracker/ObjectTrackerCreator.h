@@ -10,6 +10,7 @@
 #define CKObjectTrackerLib_ObjectTrackerCreator_h
 
 #include "ObjectTrackerImpl.h"
+#include "ObjectTrackerTypesPublic.h"
 #include "ObjectTrackerTypesProject.h"
 #include "SettingsProjectScope.h"
 
@@ -71,25 +72,25 @@ namespace ck {
             std::vector<int> fastThresVals; fastThresVals.push_back(5); fastThresVals.push_back(10); fastThresVals.push_back(20); fastThresVals.push_back(40); fastThresVals.push_back(80);
             
             Settings filterSettings = Settings("Filter Parameters");
-            filterSettings.registerBool("Sort Matches", module, &ValidationModule::setSortMatches, &ValidationModule::getSortMatches);
-            filterSettings.registerBool("Crop Matches", module, &ValidationModule::setCropMatches, &ValidationModule::getCropMatches);
-            filterSettings.registerInt("n Best Matches", module, &ValidationModule::setNBestMatches, &ValidationModule::getNBestMatches, 10, 300);
-            filterSettings.registerBool("Symmetry Test", module, &ValidationModule::setSymmetryTestEnabled, &ValidationModule::getSymmetryTestEnabled);
-            filterSettings.registerBool("Ratio Test", module, &ValidationModule::setRatioTestEnabled, &ValidationModule::getRatioTestEnabled);
-            filterSettings.registerFloat("Ratio", module, &ValidationModule::setRatio, &ValidationModule::getRatio, 0.0f, 1.0f);
+            filterSettings.registerBool(OT_SETTING_VALID_MATCHES_SORT, module, &ValidationModule::setSortMatches, &ValidationModule::getSortMatches);
+            filterSettings.registerBool(OT_SETTING_VALID_MATCHES_CROP, module, &ValidationModule::setCropMatches, &ValidationModule::getCropMatches);
+            filterSettings.registerInt(OT_SETTING_VALID_N_BEST_MATCHES, module, &ValidationModule::setNBestMatches, &ValidationModule::getNBestMatches, 10, 300);
+            filterSettings.registerBool(OT_SETTING_VALID_FILTER_SYMM, module, &ValidationModule::setSymmetryTestEnabled, &ValidationModule::getSymmetryTestEnabled);
+            filterSettings.registerBool(OT_SETTING_VALID_FILTER_RATIO, module, &ValidationModule::setRatioTestEnabled, &ValidationModule::getRatioTestEnabled);
+            filterSettings.registerFloat(OT_SETTING_VALID_RATIO_THRESHLD, module, &ValidationModule::setRatio, &ValidationModule::getRatio, 0.0f, 1.0f);
 
             Settings estimationSettings = Settings("Estimation Parameters");
-            estimationSettings.registerString("Estimation Method", module, &ValidationModule::setEstimationMethod, &ValidationModule::getEstimationMethod, estMethVals);
-            estimationSettings.registerInt("Ransac Threshold", module, &ValidationModule::setRansacThreshold, &ValidationModule::setRansacThreshold, 1, 9);
-            estimationSettings.registerBool("Refine Homography", module, &ValidationModule::setRefineHomography, &ValidationModule::getRefineHomography);
+            estimationSettings.registerString(OT_SETTING_VALID_EST_METHOD, module, &ValidationModule::setEstimationMethod, &ValidationModule::getEstimationMethod, estMethVals);
+            estimationSettings.registerInt(OT_SETTING_VALID_RANSAC_THRESHLD, module, &ValidationModule::setRansacThreshold, &ValidationModule::setRansacThreshold, 1, 9);
+            estimationSettings.registerBool(OT_SETTING_VALID_REFINE_HOMOGRAPHY, module, &ValidationModule::setRefineHomography, &ValidationModule::getRefineHomography);
 
             Settings validationSettings = Settings("Validation Settings");
-            validationSettings.registerBool("Convert to Gray", module, &ValidationModule::setConvertToGray, &ValidationModule::getConvertToGray, true);
-            validationSettings.registerString("Feature Detector", module, &ValidationModule::setDetector, &ValidationModule::getDetector, detectorVals, true);
-            validationSettings.registerString("Descriptor Extractor", module, &ValidationModule::setExtractor, &ValidationModule::getExtractor, extractorVals, true);
-            validationSettings.registerInt("Number of Features", module, &ValidationModule::setMaxFeatures, &ValidationModule::getMaxFeatures, 20, 1000);
-            validationSettings.registerFloat("Hessian Threshold (SURF)", module, &ValidationModule::setHessianThreshold, &ValidationModule::getHessianThreshold, 300, 500);
-            validationSettings.registerInt("Fast Threshold (FAST)", module, &ValidationModule::setFastThreshold, &ValidationModule::getFastThreshold, -1, -1, fastThresVals);
+            validationSettings.registerBool(OT_SETTING_VALID_CVT_TO_GRAY, module, &ValidationModule::setConvertToGray, &ValidationModule::getConvertToGray, true);
+            validationSettings.registerString(OT_SETTING_VALID_DETECTOR, module, &ValidationModule::setDetector, &ValidationModule::getDetector, detectorVals, true);
+            validationSettings.registerString(OT_SETTING_VALID_EXTRACTOR, module, &ValidationModule::setExtractor, &ValidationModule::getExtractor, extractorVals, true);
+            validationSettings.registerInt(OT_SETTING_VALID_N_FEATURES, module, &ValidationModule::setMaxFeatures, &ValidationModule::getMaxFeatures, 20, 1000);
+            validationSettings.registerFloat(OT_SETTING_VALID_HESS_THRESHLD, module, &ValidationModule::setHessianThreshold, &ValidationModule::getHessianThreshold, 300, 500);
+            validationSettings.registerInt(OT_SETTING_VALID_FAST_THRESHLD, module, &ValidationModule::setFastThreshold, &ValidationModule::getFastThreshold, -1, -1, fastThresVals);
             
             validationSettings.addCategory(filterSettings);
             validationSettings.addCategory(estimationSettings);
@@ -101,24 +102,25 @@ namespace ck {
             std::vector<int> winSizeVals; winSizeVals.push_back(11); winSizeVals.push_back(21); winSizeVals.push_back(31); winSizeVals.push_back(41);
             
             Settings terminationSettings = Settings("Stop tracking after");
-            terminationSettings.registerInt("n Points remaining", module, &TrackingModule::setMinPointsAbsolute, &TrackingModule::getMinPointsAbsolute, MIN_HOMOGRAPHY_INPUT, 1000);
-            terminationSettings.registerInt("% Points remaining", module, &TrackingModule::setMinPointsRelative, &TrackingModule::getMinPointsRelative, 1, 99);
-            terminationSettings.registerInt("max successive Frames (-1 -> oo)", module, &TrackingModule::setMaxSuccessiveFrames, &TrackingModule::getMaxSuccessiveFrames, -1, 120);
-            terminationSettings.registerInt("max inter-frame Movement (in px)", module, &TrackingModule::setMaxTransformationDelta, &TrackingModule::getMaxTransformationDelta, 10, 200);
+            terminationSettings.registerInt(OT_SETTING_TRACK_MIN_PTS_ABS, module, &TrackingModule::setMinPointsAbsolute, &TrackingModule::getMinPointsAbsolute, MIN_HOMOGRAPHY_INPUT, 1000);
+            terminationSettings.registerInt(OT_SETTING_TRACK_MIN_PTS_REL, module, &TrackingModule::setMinPointsRelative, &TrackingModule::getMinPointsRelative, 1, 99);
+            terminationSettings.registerInt(OT_SETTING_TRACK_MAX_SUCC_FRAMES, module, &TrackingModule::setMaxSuccessiveFrames, &TrackingModule::getMaxSuccessiveFrames, -1, 120);
+            terminationSettings.registerInt(OT_SETTING_TRACK_MAX_DELTA_TRANS, module, &TrackingModule::setMaxTransformationDelta, &TrackingModule::getMaxTransformationDelta, 10, 200);
             
             Settings flowSettings = Settings("Optical Flow Parameters");
-            flowSettings.registerInt("max Iterations (until termination)", module, &TrackingModule::setLKTermIter, &TrackingModule::getLKTermIter, 10, 50);
-            flowSettings.registerFloat("min Epsilon (until termination)", module, &TrackingModule::setLKTermEpsilon, &TrackingModule::getLKTermEpsilon, 0.001f, 0.1f);
-            flowSettings.registerInt("Search Window Size", module, &TrackingModule::setLKWinSize, &TrackingModule::getLKWinSize, -1, -1, winSizeVals);
-            flowSettings.registerInt("max Pyramid Levels", module, &TrackingModule::setLKMaxLevel, &TrackingModule::getLKMaxLevel, 0, 5);
-            flowSettings.registerFloat("min Eigenvalue Threshold", module, &TrackingModule::setLKMinEigenThreshold, &TrackingModule::getLKMinEigenThreshold, 0.0001f, 0.01f);
+            flowSettings.registerInt(OT_SETTING_TRACK_TERM_MAX_ITER, module, &TrackingModule::setLKTermIter, &TrackingModule::getLKTermIter, 10, 50);
+            flowSettings.registerFloat(OT_SETTING_TRACK_TERM_MIN_EPS, module, &TrackingModule::setLKTermEpsilon, &TrackingModule::getLKTermEpsilon, 0.001f, 0.1f);
+            flowSettings.registerInt(OT_SETTING_TRACK_LK_SEARCH_WIN, module, &TrackingModule::setLKWinSize, &TrackingModule::getLKWinSize, -1, -1, winSizeVals);
+            flowSettings.registerInt(OT_SETTING_TRACK_LK_MAX_PYR_LVS, module, &TrackingModule::setLKMaxLevel, &TrackingModule::getLKMaxLevel, 0, 5);
+            flowSettings.registerFloat(OT_SETTING_TRACK_LK_MIN_EIG_THRESHLD, module, &TrackingModule::setLKMinEigenThreshold, &TrackingModule::getLKMinEigenThreshold, 0.0001f, 0.01f);
             
             Settings trackingSettings = Settings("Tracking Settings");
-            trackingSettings.registerBool("Tracking", module, &TrackingModule::setEnabled, &TrackingModule::getEnabled);
-            trackingSettings.registerBool("Use Sub-Pixel Accuracy", module, &TrackingModule::setUseSubPixels, &TrackingModule::getUseSubPixels);
-            trackingSettings.registerBool("calc Homography from frame to frame", module, &TrackingModule::setCalcHomRelToFrame, &TrackingModule::getCalcHomRelToFrame);
-            trackingSettings.registerBool("Divergence Filter", module, &TrackingModule::setFilterDistortions, &TrackingModule::getFilterDistortions);
-            trackingSettings.registerFloat("Divergence Threshold", module, &TrackingModule::setDistortionThreshold, &TrackingModule::getDistortionThreshold, 0.1f, 2.0f);
+            trackingSettings.registerBool(OT_SETTING_TRACK_ENABLED, module, &TrackingModule::setEnabled, &TrackingModule::getEnabled);
+            trackingSettings.registerInt(OT_SETTING_TRACK_MAX_PTS, module, &TrackingModule::setMaxPointsAbsolute, &TrackingModule::getMaxPointsAbsolute, 20, 1000);
+            trackingSettings.registerBool(OT_SETTING_TRACK_USE_SUB_PX, module, &TrackingModule::setUseSubPixels, &TrackingModule::getUseSubPixels);
+            trackingSettings.registerBool(OT_SETTING_TRACK_INTERFRAME_HOMOGRAPHY, module, &TrackingModule::setCalcHomRelToFrame, &TrackingModule::getCalcHomRelToFrame);
+            trackingSettings.registerBool(OT_SETTING_TRACK_FILTER_DIVERGE, module, &TrackingModule::setFilterDistortions, &TrackingModule::getFilterDistortions);
+            trackingSettings.registerFloat(OT_SETTING_TRACK_DIVERGE_THRESHLD, module, &TrackingModule::setDistortionThreshold, &TrackingModule::getDistortionThreshold, 0.1f, 2.0f);
             
             trackingSettings.addCategory(terminationSettings);
             trackingSettings.addCategory(flowSettings);

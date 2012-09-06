@@ -56,7 +56,7 @@ void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
     Mat frame;
     bool endCapture = false;
     
-    //tracker.getSettings().setBoolValue("Tracking", false);
+    //tracker.getSettings().setBoolValue(OT_SETTING_TRACK_ENABLED, false);
     
     Mat detectionImage, validationImage, trackingImage;
     namedWindow("Detection");
