@@ -11,11 +11,11 @@
 
 namespace ck {
     
-    enum ColorConversionMethod {
+    typedef enum {
         COLOR_CONV_CV,
         COLOR_CONV_NEON,
         COLOR_CONV_NEON_ASM,
-    };
+    } ColorConversionMethod;
     
     struct ColorConvert {
         // source image can also be gray scale

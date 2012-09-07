@@ -49,19 +49,17 @@ void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
 {
     ObjectTracker tracker = ObjectTracker();
     tracker.setObject(objectImage);
+    //tracker.getSettings().setBoolValue(OT_SETTING_TRACK_ENABLED, false);
     
     TrackerOutput output;
     TrackerDebugInfo debugInfo;
     vector<TrackerDebugInfoStripped> infoCollection;
-    Mat frame;
-    bool endCapture = false;
-    
-    //tracker.getSettings().setBoolValue(OT_SETTING_TRACK_ENABLED, false);
-    
-    Mat detectionImage, validationImage, trackingImage;
+    Mat frame, detectionImage, validationImage, trackingImage;
     namedWindow("Detection");
     namedWindow("Validation");
     namedWindow("Tracking");
+
+    bool endCapture = false;
     while (!endCapture) {
         if (!sceneVideo.read(frame)) {
             cout << "Capture error." << endl;

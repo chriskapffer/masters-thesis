@@ -26,15 +26,34 @@ using namespace cv;
 
 namespace ck {
 
+#ifdef __NECESSARY_APPLE_FEATURES_AVAILABLE__
+    static dispatch_queue_t queue;
+    
+    static void createQueue()
+    {
+        queue = dispatch_queue_create("ck.object.tracker.set.object", DISPATCH_QUEUE_SERIAL);
+    }
+    
+    static void releaseQueue()
+    {
+        dispatch_release(queue);
+    }
+#else
+    static void createQueue() { }
+    static void releaseQueue() { }
+#endif
+    
 ObjectTracker::Implementation::Implementation()
     : _settings("Object Tracker Settings")
-{    
+{
+    createQueue();
     Creator::initializeTracker(*this);
 }
 
 ObjectTracker::Implementation::~Implementation()
 {
     Creator::finalizeTracker(*this);
+    releaseQueue();
 }
 
 void ObjectTracker::Implementation::initModules(const cv::Mat& objectImage)
@@ -60,21 +79,19 @@ void ObjectTracker::Implementation::setObject(const Mat& objectImage)
     auto function = [] (CKObjectTracker::Impl& tracker, const cv::Mat &objectImage) {
         tracker.initModules(objectImage);
     };
+    // not tested yet, as openCV ver. 2.4.2 doesn't support C++11
     async(launch::async, function, ref(*this), objectImage);
 #elif defined(__NECESSARY_APPLE_FEATURES_AVAILABLE__)
     // use apple features for concurrency
-    static dispatch_queue_t queue;
-    // if queue is still running wait until it completes
-    if (queue) { dispatch_sync(queue, ^{}); }
-    // create a new queue
-    queue = dispatch_queue_create("com.ckobjecttracker.setobject", DISPATCH_QUEUE_SERIAL);
-    if (!queue) return;
-    
+    static int counter = 0;
+    counter++;
     dispatch_async(queue, ^{
+        if (counter > 1) {
+            counter--;
+            return;
+        }
         this->initModules(objectImage);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            dispatch_release(queue);
-        });
+        counter--;
     });
 #else
     // no concurrency, no nothing

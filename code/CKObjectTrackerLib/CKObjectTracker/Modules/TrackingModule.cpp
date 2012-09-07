@@ -70,6 +70,8 @@ void TrackingModule::initWithObjectImage(const cv::Mat &objectImage)
     _objectCorners[1] = cvPoint(objectImage.cols,                0); // top right
     _objectCorners[2] = cvPoint(objectImage.cols, objectImage.rows); // bottom right
     _objectCorners[3] = cvPoint(               0, objectImage.rows); // bottom left
+    // if re-initialization was requested, set initial flag to true
+    _isInitialCall = true;
 }
 
 bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& debugInfo)
@@ -148,7 +150,7 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
 
     int currentCount = (int)pointsOut.size();
     // check if there are enough points left, stop tracking if not
-    if (currentCount < _minPointsAbsolute || currentCount < _initialPointCount * _minPointsRelative || currentCount < MIN_HOMOGRAPHY_INPUT) {
+    if ((currentCount < _minPointsAbsolute || currentCount < _initialPointCount * _minPointsRelative || currentCount < MIN_HOMOGRAPHY_INPUT)) {
         cout << "Lost too many points." << endl;
         // stop tracking and prepare for a new initial call to this module in the future
         _isInitialCall = true;

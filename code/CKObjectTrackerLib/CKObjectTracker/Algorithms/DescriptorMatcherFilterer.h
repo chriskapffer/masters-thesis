@@ -9,11 +9,11 @@
 #ifndef CKObjectTrackerLib_DescriptorMatcherFilterer_h
 #define CKObjectTrackerLib_DescriptorMatcherFilterer_h
 
-enum FilterFlag {
+typedef enum {
     FILTER_FLAG_CROP,
     FILTER_FLAG_RATIO,
     FILTER_FLAG_SYMMETRY,
-};
+} FilterFlag;
 
 namespace ck {
     

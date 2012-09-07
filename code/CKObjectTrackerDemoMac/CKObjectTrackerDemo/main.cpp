@@ -36,13 +36,17 @@ int main(int argc, const char * argv[])
     }
     
     ObjectTracker tracker = ObjectTracker();
-
+    //tracker.getSettings().setBoolValue(OT_SETTING_TRACK_ENABLED, false);
+    
     TrackerOutput output;
     TrackerDebugInfo debugInfo;
-    vector<TrackerDebugInfoStripped> completeInfo;
+    vector<TrackerDebugInfoStripped> infoCollection;
+    Mat frame, detectionImage, validationImage, trackingImage;
+    namedWindow("RawVideo");
+    namedWindow("Detection");
+    namedWindow("Validation");
+    namedWindow("Tracking");
     
-    Mat frame;
-    bool firstRun = true;
     bool endCapture = false;    
     while (!endCapture) {
         if (!capture.read(frame)) {
@@ -50,18 +54,24 @@ int main(int argc, const char * argv[])
             endCapture = true;
         }
         
+        imshow("RawVideo", frame);
+        
         tracker.trackObjectInVideo(frame, output, debugInfo);
-        vector<pair<string, Mat> > debugImages = ObjectTrackerDebugger::debugImages(debugInfo, true, false, true, true, true);
-        for (int i = 0; i < debugImages.size(); i++) {
-            pair<string, Mat> item = debugImages[i];
-            if (firstRun) { namedWindow(item.first); }
-            imshow(item.first, item.second);
+
+        if (ObjectTrackerDebugger::getDetectionModuleDebugImage(detectionImage, debugInfo)) {
+            imshow("Detection", detectionImage);
         }
-        firstRun = false;
+        //drawObjectRect, drawObjectKeyPoints, drawSceneKeyPoints, drawFilteredMatches, drawAllMatches
+        if (ObjectTrackerDebugger::getValidationModuleDebugImage(validationImage, debugInfo)) {
+            imshow("Validation", validationImage);
+        }
+        if (ObjectTrackerDebugger::getTrackingModuleDebugImage(trackingImage, debugInfo)) {
+            imshow("Tracking", trackingImage);
+        }
         
         TrackerDebugInfoStripped stripped = TrackerDebugInfoStripped(debugInfo);
-        cout << ObjectTrackerDebugger::debugString(stripped) << endl;
-        completeInfo.push_back(stripped);
+        cout << ObjectTrackerDebugger::getDebugString(stripped) << endl;
+        infoCollection.push_back(stripped);
         
         char key = (char)waitKey(30);
         switch(key)
@@ -79,20 +89,7 @@ int main(int argc, const char * argv[])
         }
     }
     
-    cout << "\n" << ObjectTrackerDebugger::debugString(completeInfo) << endl;
-    
-//    Mat edges;
-//    namedWindow("edges",1);
-//    for(;;)
-//    {
-//        Mat frame;
-//        capture >> frame; // get a new frame from camera
-//        cvtColor(frame, edges, CV_BGR2GRAY);
-//        GaussianBlur(edges, edges, Size(7,7), 1.5, 1.5);
-//        Canny(edges, edges, 0, 30, 3);
-//        imshow("edges", edges);
-//        if(waitKey(30) >= 0) break;
-//    }
+    cout << "\n" << ObjectTrackerDebugger::getDebugString(infoCollection) << endl;
     
     return 0;
 }

@@ -11,12 +11,12 @@
 
 namespace ck {
     
-    enum Type {
-        TYPE_BOOL,
-        TYPE_INT,
-        TYPE_FLOAT,
-        TYPE_STRING,
-    };
+    typedef enum {
+        CK_TYPE_BOOL,
+        CK_TYPE_INT,
+        CK_TYPE_FLOAT,
+        CK_TYPE_STRING,
+    } Type; // need CK prefix here to avoid naming conflics
     
     class Settings {
     public:

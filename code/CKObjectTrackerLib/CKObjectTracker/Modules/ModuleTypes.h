@@ -11,12 +11,12 @@
 
 namespace ck {
     
-    enum ModuleType {
+    typedef enum {
         MODULE_TYPE_DETECTION,
         MODULE_TYPE_VALIDATION,
         MODULE_TYPE_TRACKING,
         MODULE_TYPE_EMPTY,
-    };
+    } ModuleType;
     
 } // end of namespace
 

@@ -314,13 +314,13 @@ namespace ck {
     bool Settings::getParameterType(const std::string& parameterName, Type& type) const
     {
         if (containsParamterWithName(parameterName, _parameters->boolParams)) {
-            type = TYPE_BOOL;
+            type = CK_TYPE_BOOL;
         } else if (containsParamterWithName(parameterName, _parameters->intParams)) {
-            type = TYPE_INT;
+            type = CK_TYPE_INT;
         } else if (containsParamterWithName(parameterName, _parameters->floatParams)) {
-            type = TYPE_FLOAT;
+            type = CK_TYPE_FLOAT;
         } else if (containsParamterWithName(parameterName, _parameters->stringParams)) {
-            type = TYPE_STRING;
+            type = CK_TYPE_STRING;
         } else {
             return false;
         }
