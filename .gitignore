@@ -17,4 +17,4 @@ profile
 DerivedData
 
 # Resources, etc
-resources/*
+testdata/*
