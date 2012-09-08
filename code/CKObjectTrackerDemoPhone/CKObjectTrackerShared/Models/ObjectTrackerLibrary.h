@@ -10,18 +10,16 @@
 
 #define MAX_RECORDED_FRAMES 10000
 
-struct Homography
-{
+typedef struct {
     CGFloat m11, m12, m13;
     CGFloat m21, m22, m23;
     CGFloat m31, m32, m33;
-};
+} Homography;
 
 @protocol ObjectTrackerLibraryDelegate <NSObject>
-// TODO: call these method from library
-@required
-- (void)trackedObjectWithHomography:(Homography)homography;
+
 @optional
+- (void)trackedObjectWithHomography:(Homography)homography;
 - (void)reachedDebugInfoRecordingLimit:(NSString*)debugInfo;
 - (void)failedToTrackObjectInImage;
 - (void)didProcessFrame;
@@ -50,8 +48,8 @@ struct Homography
 - (NSString*)videoDebugInfoString;
 - (void)clearVideoDebugInfo;
 
-- (UIImage*)detectionDebugImageWithSearchWindow:(BOOL)searchWindow;
-- (UIImage*)validationDebugImageWithObjectRect:(BOOL)objectRect ObjectKeyPoints:(BOOL)objectKeyPoints SceneKeyPoints:(BOOL)sceneKeyPoints FilteredMatches:(BOOL)filteredMatches AllMatches:(BOOL)allmatches;
-- (UIImage*)trackingDebugImageWithObjectRect:(BOOL)objectRect FilteredPoints:(BOOL)filteredPoints AllPoints:(BOOL)allPoints SearchWindow:(BOOL)searchWindow;
+- (BOOL)detectionDebugImage:(UIImage**)image WithSearchWindow:(BOOL)searchWindow;
+- (BOOL)validationDebugImage:(UIImage**)image WithObjectRect:(BOOL)objectRect ObjectKeyPoints:(BOOL)objectKeyPoints SceneKeyPoints:(BOOL)sceneKeyPoints FilteredMatches:(BOOL)filteredMatches AllMatches:(BOOL)allmatches;
+- (BOOL)trackingDebugImage:(UIImage**)image WithObjectRect:(BOOL)objectRect FilteredPoints:(BOOL)filteredPoints AllPoints:(BOOL)allPoints SearchWindow:(BOOL)searchWindow;
 
 @end

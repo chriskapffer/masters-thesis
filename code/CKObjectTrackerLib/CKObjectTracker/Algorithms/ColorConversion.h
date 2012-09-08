@@ -20,6 +20,8 @@ namespace ck {
     struct ColorConvert {
         // source image can also be gray scale
         static void bgrOrBgra2Gray(const cv::Mat& imgIn, cv::Mat& imgOut, ColorConversionMethod method = COLOR_CONV_CV);
+        
+        static void bgrOrBgra2Hsv(const cv::Mat& imgIn, cv::Mat& imgOut, ColorConversionMethod method = COLOR_CONV_CV);
     };
 
 } // end of namespace

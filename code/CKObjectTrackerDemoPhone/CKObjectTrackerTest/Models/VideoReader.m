@@ -42,24 +42,25 @@
 - (id)init
 {
     self = [super init];
-    if(self)
-    {
-        self.readerQueue = dispatch_queue_create("ck.objectTracker.videoreader.processframes", DISPATCH_QUEUE_SERIAL);
-        self.fpsCalculator = [[FPSCalcApple alloc] init];
-        self.stopRequested = NO;
+    if(self) {
+        _readerQueue = dispatch_queue_create("ck.objecttracker.videoreader.processframes", DISPATCH_QUEUE_SERIAL);
+        _fpsCalculator = [[FPSCalcApple alloc] init];
+        _stopRequested = NO;
     }
     return self;
 }
 
 - (void)dealloc
 {
-    dispatch_release(self.readerQueue);
+    dispatch_release(_readerQueue);
 }
 
 #pragma mark - video reading
 
 - (void)readVideoWithURL:(NSURL*)videoURL Completion:(void (^)(void))completion
 {
+    [self stopReading];
+    
     NSString *tracksKey = @"tracks";
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
     [asset loadValuesAsynchronouslyForKeys:[NSArray arrayWithObject:tracksKey] completionHandler:
@@ -97,7 +98,6 @@
          
          [self.assetReader addOutput:trackOutput];
          [self.assetReader startReading];
-         [self setStopRequested:NO];
          [self startProcessingWithCompletion:completion];
      }];
 }
@@ -105,16 +105,16 @@
 - (void)stopReading
 {
     self.stopRequested = YES;
-    dispatch_sync(self.readerQueue, ^{ });
+    dispatch_sync(self.readerQueue, ^{ NSLog(@"stop"); });
+    self.stopRequested = NO;
 }
 
 - (void)startProcessingWithCompletion:(void (^)(void))completion
 {
-    [self stopReading];
-
     dispatch_async(self.readerQueue, ^{
         while (!self.stopRequested && [self readNextFrame]) { }
-        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            NSLog(@"finish");
             completion();
         });
     });
@@ -131,12 +131,11 @@
         return NO;
     
     [self.fpsCalculator calculateFramerateAtTimestamp:CMSampleBufferGetPresentationTimeStamp(sampleBuffer)];
-    CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-    CVPixelBufferLockBaseAddress(pixelBuffer, 0);
-    
+    __block CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+
     OSType format = CVPixelBufferGetPixelFormatType(pixelBuffer);
     if (format == kCVPixelFormatType_32BGRA || format == kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange || format == kCVPixelFormatType_422YpCbCr8) {
-        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_sync(dispatch_get_main_queue(), ^{
             if ([self.delegate respondsToSelector:@selector(didReadFrameWithPixelBuffer:)])
                 [self.delegate didReadFrameWithPixelBuffer:pixelBuffer];
         });
@@ -144,9 +143,7 @@
         NSLog(@"Unsupported pixel format.");
     }
     
-    CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
     CFRelease(sampleBuffer);
-    
     return YES;
 }
 

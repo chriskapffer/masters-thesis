@@ -14,6 +14,7 @@
 
 @property (nonatomic, strong) IBOutlet UITableView* tableView;
 @property (nonatomic, assign) id<ResourceViewControllerDelegate> delegate;
+@property (nonatomic, strong) NSString* resourceFolderPath;
 
 - (IBAction)cancelButtonClicked:(id)sender;
 - (IBAction)commitButtonClicked:(id)sender;

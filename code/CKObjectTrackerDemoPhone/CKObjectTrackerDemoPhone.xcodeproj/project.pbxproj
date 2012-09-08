@@ -26,6 +26,7 @@
 		4C4E0DE915DE4221002BE9A4 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0DE815DE4221002BE9A4 /* opencv2.framework */; };
 		4C4E0DEA15DE423B002BE9A4 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0DE815DE4221002BE9A4 /* opencv2.framework */; };
 		4C962F0115F96A3500C804E5 /* testdata in Resources */ = {isa = PBXBuildFile; fileRef = 4C962F0015F96A3500C804E5 /* testdata */; };
+		4CD86B8015FAA88400B1767C /* ResourceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CD86B7E15FAA88400B1767C /* ResourceViewController.xib */; };
 		4CE1863015F9E071004C3372 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1862A15F9E071004C3372 /* MainViewController.m */; };
 		4CE1863115F9E071004C3372 /* ResourceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1862C15F9E071004C3372 /* ResourceViewController.m */; };
 		4CE1863215F9E071004C3372 /* VideoReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1862F15F9E071004C3372 /* VideoReader.m */; };
@@ -76,6 +77,7 @@
 		4C4E0DE415DE4034002BE9A4 /* libCKObjectTrackerPhone.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCKObjectTrackerPhone.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C4E0DE815DE4221002BE9A4 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = ../opencv2.framework; sourceTree = "<group>"; };
 		4C962F0015F96A3500C804E5 /* testdata */ = {isa = PBXFileReference; lastKnownFileType = folder; name = testdata; path = ../../../testdata; sourceTree = "<group>"; };
+		4CD86B7F15FAA88400B1767C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = CKObjectTrackerTest/en.lproj/ResourceViewController.xib; sourceTree = SOURCE_ROOT; };
 		4CE1862915F9E071004C3372 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		4CE1862A15F9E071004C3372 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		4CE1862B15F9E071004C3372 /* ResourceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResourceViewController.h; sourceTree = "<group>"; };
@@ -276,6 +278,7 @@
 				4C4E0D4315DE344C002BE9A4 /* MainViewController.xib */,
 				4CE1862B15F9E071004C3372 /* ResourceViewController.h */,
 				4CE1862C15F9E071004C3372 /* ResourceViewController.m */,
+				4CD86B7E15FAA88400B1767C /* ResourceViewController.xib */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -405,6 +408,7 @@
 				4C4E0D3915DE344C002BE9A4 /* InfoPlist.strings in Resources */,
 				4C4E0D4515DE344C002BE9A4 /* MainViewController.xib in Resources */,
 				4C962F0115F96A3500C804E5 /* testdata in Resources */,
+				4CD86B8015FAA88400B1767C /* ResourceViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -481,6 +485,14 @@
 			);
 			name = MainViewController.xib;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		4CD86B7E15FAA88400B1767C /* ResourceViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4CD86B7F15FAA88400B1767C /* en */,
+			);
+			name = ResourceViewController.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

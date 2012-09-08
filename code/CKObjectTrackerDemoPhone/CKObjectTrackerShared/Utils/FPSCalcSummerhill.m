@@ -69,7 +69,7 @@ const int kFrameTimeBufferSize = 5;
         
         if (fabsf(fps - _captureQueueFps) > 0.1f) {
             _captureQueueFps = fps;
-            dispatch_async(dispatch_get_main_queue(), ^{
+            dispatch_sync(dispatch_get_main_queue(), ^{
                 [self setFramesPerSecond:fps];
             });    
         }

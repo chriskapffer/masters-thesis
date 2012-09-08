@@ -12,10 +12,15 @@
 #import "ObjectTrackerLibrary.h"
 #import "VideoReader.h"
 
-@interface MainViewController () <ResourceViewControllerDelegate, VideoReaderDelegate>
+#define RESOURCE_FOLDER_NAME @"testdata"
+
+@interface MainViewController () <ResourceViewControllerDelegate, VideoReaderDelegate, ObjectTrackerLibraryDelegate>
 
 @property (nonatomic, strong) ResourceViewController* resourceController;
 @property (nonatomic, strong) VideoReader* videoReader;
+
+- (void)startNewVideoSession:(NSString*)videoName;
+- (void)setNewObjectImage:(NSString*)imageName;
 
 @end
 
@@ -25,6 +30,7 @@
 
 @synthesize resourceController = _resourceController;
 @synthesize videoReader = _videoReader;
+@synthesize imageView = _imageView;
 
 #pragma mark - view lifecycle
 
@@ -35,12 +41,15 @@
     self.resourceController = nil;
     self.videoReader = [[VideoReader alloc] init];
     self.videoReader.delegate = self;
+    
+    [[ObjectTrackerLibrary instance] setDelegate:self];
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-
+    self.imageView = nil;
+    
     if (self.resourceController != nil)
         self.resourceController = nil;
 }
@@ -57,6 +66,7 @@
     if (self.resourceController == nil) {
         self.resourceController = [[ResourceViewController alloc] init];
         self.resourceController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        self.resourceController.resourceFolderPath = RESOURCE_FOLDER_NAME;
         self.resourceController.delegate = self;
     }
     
@@ -75,7 +85,7 @@
     [self dismissViewControllerAnimated:YES completion:nil];
     [self.videoReader stopReading];
     
-    [self setNewReferenceImage:imageName];
+    [self setNewObjectImage:imageName];
     [self startNewVideoSession:videoName];
 }
 
@@ -83,16 +93,32 @@
 
 - (void)didReadFrameWithPixelBuffer:(CVPixelBufferRef)pixelBuffer
 {
+    NSLog(@"did read");
     [[ObjectTrackerLibrary instance] trackObjectInVideoWithBuffer:pixelBuffer];
+}
+
+#pragma mark - object tracker library delegate
+
+- (void)didProcessFrame
+{
+    NSLog(@"did proc");
+    UIImage* debugImage;
+    //NSLog(@"\n%@", [[ObjectTrackerLibrary instance] frameDebugInfoString]);
+//    if ([[ObjectTrackerLibrary instance] trackingDebugImage:&debugImage WithObjectRect:YES FilteredPoints:YES AllPoints:NO SearchWindow:NO]) {
+//        [self.imageView setImage:debugImage];
+//    }
 }
 
 #pragma mark - helper methods
 
 - (void)startNewVideoSession:(NSString*)videoName
 {
-    [[ObjectTrackerLibrary instance] clearVideoDebugInfo];
-    NSURL *url = [[NSBundle mainBundle] URLForResource:videoName withExtension:@"mov"];
+    //videoName = [videoName stringByDeletingPathExtension];
+    //NSString* fullVideoName = [NSString stringWithFormat:@"%@/%@", RESOURCE_FOLDER_NAME, videoName];
+    NSString* fullVideoName = @"testdata/vid_480x360_light_book1";
+    NSURL *url = [[NSBundle mainBundle] URLForResource:fullVideoName withExtension:@"mov"];
 
+    [[ObjectTrackerLibrary instance] clearVideoDebugInfo];
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     [self.videoReader readVideoWithURL:url Completion:^{
         NSLog(@"\nDONE\n\n%@", [[ObjectTrackerLibrary instance] videoDebugInfoString]);
@@ -100,11 +126,11 @@
     }];
 }
 
-- (void)setNewReferenceImage:(NSString*)imageName
+- (void)setNewObjectImage:(NSString*)imageName
 {
-    NSString* fullImageName = [imageName stringByAppendingString:@".jpg"];
+    //NSString* fullImageName = [NSString stringWithFormat:@"%@/%@", RESOURCE_FOLDER_NAME, imageName];
+    NSString* fullImageName = @"testdata/img_408x306_book1.jpg";
     UIImage* image = [UIImage imageWithCGImage:[UIImage imageNamed:fullImageName].CGImage scale:1.0 orientation:UIImageOrientationLeft];
-    
     [[ObjectTrackerLibrary instance] setObjectImageWithImage:image];
 }
 

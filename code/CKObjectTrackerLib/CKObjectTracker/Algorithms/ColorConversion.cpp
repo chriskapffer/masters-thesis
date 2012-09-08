@@ -41,4 +41,25 @@ namespace ck {
 #endif
     }
     
+    void ColorConvert::bgrOrBgra2Hsv(const cv::Mat& imgIn, cv::Mat& imgOut, ColorConversionMethod method)
+    {
+//#if !defined(__ARM_NEON_IS_AVAILABLE__)
+//        method = COLOR_CONV_CV; // change method to default, if neon is not available
+//#endif
+        method = COLOR_CONV_CV; // as long as neon conversion is not implemented, always fall back to default
+        if (method == COLOR_CONV_CV) {
+            if (imgIn.type() == CV_8UC4) {
+                cvtColor(imgIn, imgOut, CV_BGRA2BGR);
+                cvtColor(imgOut, imgOut, CV_BGR2HSV);
+            } else {
+                cvtColor(imgIn, imgOut, CV_BGR2HSV);
+            }
+            return;
+        }
+        
+#if defined(__ARM_NEON_IS_AVAILABLE__)
+        // TODO: add neon implementation
+#endif
+    }
+    
 } // end of namespace

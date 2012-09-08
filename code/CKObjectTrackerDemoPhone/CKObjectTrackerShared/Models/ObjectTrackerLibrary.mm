@@ -25,6 +25,10 @@ using namespace cv;
     vector<TrackerDebugInfoStripped> _videoDebugInfo;
 }
 
+@property (nonatomic, assign) dispatch_queue_t trackerQueue;
+
+- (void)handleTrackingInVideoResult;
+- (void)handleTrackingInImageResult;
 - (Homography)homographyWithMatrix:(Mat&)matrix;
 - (void)showError:(NSError*)error;
 
@@ -35,6 +39,7 @@ using namespace cv;
 #pragma mark - properties
 
 @synthesize delegate = _delegate;
+@synthesize trackerQueue = _trackerQueue;
 @synthesize recordDebugInfo = _recordDebugInfo;
 
 #pragma mark - initialization
@@ -56,6 +61,7 @@ using namespace cv;
         _objectImage = Mat();
         _tracker = new ObjectTracker();
         _videoDebugInfo = vector<TrackerDebugInfoStripped>();
+        _trackerQueue = dispatch_queue_create("ck.objecttracker.trackerlibrary.trackobject", DISPATCH_QUEUE_SERIAL);
         _recordDebugInfo = YES;
     }
     return self;
@@ -65,6 +71,8 @@ using namespace cv;
 {
     delete _tracker;
     _tracker = 0;
+    
+    dispatch_release(_trackerQueue);
 }
 
 #pragma mark - tracking methods
@@ -95,9 +103,11 @@ using namespace cv;
 - (void)setObjectImageWithImage:(UIImage *)objectImage
 {
     NSError* error = NULL;
-    [CVImageConverter CVMat:_objectImage FromUIImage:objectImage error:&error];
+    UIImage* test = objectImage;
+    Mat test2;
+    [CVImageConverter CVMat:test2 FromUIImage:test error:&error];
     if (error == NULL) {
-        _tracker->setObject(_objectImage);
+        _tracker->setObject(test2);
     } else {
         [self showError:error];
     }
@@ -125,49 +135,67 @@ using namespace cv;
 
 - (void)trackObjectInImageWithImage:(UIImage*)image
 {
-    Mat frame;
-    NSError* error = NULL;
-    [CVImageConverter CVMat:frame FromUIImage:image error:&error];
-    if (error == NULL) {
-        vector<TrackerOutput> output;
-        vector<TrackerDebugInfo> debugInfo;
-        _tracker->trackObjectInStillImage(frame, output, debugInfo);
-        _frameDebugInfo = *(debugInfo.end() - 1);
-        _output = *(output.end() - 1);
-    } else {
-        [self showError:error];
-    }
+    __block UIImage* retainedImage = [image copy];
+    dispatch_async(self.trackerQueue, ^{
+        Mat frame;
+        NSError* error = NULL;
+        [CVImageConverter CVMat:frame FromUIImage:retainedImage error:&error];
+        if (error == NULL) {
+            vector<TrackerOutput> output;
+            vector<TrackerDebugInfo> debugInfo;
+            _tracker->trackObjectInStillImage(frame, output, debugInfo);
+            _frameDebugInfo = *(debugInfo.end() - 1);
+            _output = *(output.end() - 1);
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                [self handleTrackingInImageResult];
+            });
+        } else {
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                [self showError:error];
+            });
+        }
+    });
 }
 
 - (void)trackObjectInVideoWithImage:(UIImage*)image
 {
-    Mat frame;
-    NSError* error = NULL;
-    [CVImageConverter CVMat:frame FromUIImage:image error:&error];
-    if (error == NULL) {
-        _tracker->trackObjectInVideo(frame, _output, _frameDebugInfo);
-        if (self.recordDebugInfo) {
-            _videoDebugInfo.push_back(TrackerDebugInfoStripped(_frameDebugInfo));
+    __block UIImage* retainedImage = [image copy];
+    dispatch_async(self.trackerQueue, ^{
+        Mat frame;
+        NSError* error = NULL;
+        [CVImageConverter CVMat:frame FromUIImage:retainedImage error:&error];
+        if (error == NULL) {
+            _tracker->trackObjectInVideo(frame, _output, _frameDebugInfo);
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                [self handleTrackingInVideoResult];
+            });
+        } else {
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                [self showError:error];
+            });
         }
-    } else {
-        [self showError:error];
-    }
+    });
 }
 
 - (void)trackObjectInVideoWithBuffer:(CVPixelBufferRef)buffer
 {
-    Mat frame;
-    NSError* error = NULL;
-    [CVImageConverter CVMat:frame FromCVPixelBuffer:buffer error:&error];
-    if (error == NULL) {
-        _tracker->trackObjectInVideo(frame, _output, _frameDebugInfo);
-        if (self.recordDebugInfo) {
-            _videoDebugInfo.push_back(TrackerDebugInfoStripped(_frameDebugInfo));
-            // TODO: if size > MAX_REC_FRAMES 
+    __block CVPixelBufferRef retainedBuffer = CVBufferRetain(buffer);
+    dispatch_async(self.trackerQueue, ^{
+        Mat frame;
+        NSError* error = NULL;
+        [CVImageConverter CVMat:frame FromCVPixelBuffer:retainedBuffer error:&error];
+        CVPixelBufferRelease(retainedBuffer);
+        if (error == NULL) {
+            _tracker->trackObjectInVideo(frame, _output, _frameDebugInfo);
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                [self handleTrackingInVideoResult];
+            });
+        } else {
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                [self showError:error];
+            });
         }
-    } else {
-        [self showError:error];
-    }
+    });
 }
 
 #pragma mark - debug methods
@@ -188,47 +216,86 @@ using namespace cv;
     _videoDebugInfo.clear();
 }
 
-- (UIImage*)detectionDebugImageWithSearchWindow:(BOOL)searchWindow
+- (BOOL)detectionDebugImage:(UIImage**)image WithSearchWindow:(BOOL)searchWindow
 {
     Mat matrix;
-    UIImage* image;
-    NSError* error = NULL;
-    ObjectTrackerDebugger::getDetectionModuleDebugImage(matrix, _frameDebugInfo, searchWindow);
-    image = [CVImageConverter UIImageFromCVMat:matrix error:&error];
-    if (error != NULL) {
+    if (ObjectTrackerDebugger::getDetectionModuleDebugImage(matrix, _frameDebugInfo, searchWindow)) {
+        NSError* error = NULL;
+        *image = [CVImageConverter UIImageFromCVMat:matrix error:&error];
+        if (error == NULL) {
+            return YES;
+        }
         [self showError:error];
     }
-    return image;
+    return NO;
 }
 
-- (UIImage*)validationDebugImageWithObjectRect:(BOOL)objectRect ObjectKeyPoints:(BOOL)objectKeyPoints SceneKeyPoints:(BOOL)sceneKeyPoints FilteredMatches:(BOOL)filteredMatches AllMatches:(BOOL)allmatches
+- (BOOL)validationDebugImage:(UIImage**)image WithObjectRect:(BOOL)objectRect ObjectKeyPoints:(BOOL)objectKeyPoints SceneKeyPoints:(BOOL)sceneKeyPoints FilteredMatches:(BOOL)filteredMatches AllMatches:(BOOL)allmatches
 {
     Mat matrix;
-    UIImage* image;
-    NSError* error = NULL;
-    ObjectTrackerDebugger::getValidationModuleDebugImage(matrix, _frameDebugInfo, objectRect, objectKeyPoints, sceneKeyPoints, filteredMatches, allmatches);
-    image = [CVImageConverter UIImageFromCVMat:matrix error:&error];
-    if (error != NULL) {
+    if (ObjectTrackerDebugger::getValidationModuleDebugImage(matrix, _frameDebugInfo, objectRect, objectKeyPoints, sceneKeyPoints, filteredMatches, allmatches)) {
+        NSError* error = NULL;
+        *image = [CVImageConverter UIImageFromCVMat:matrix error:&error];
+        if (error == NULL) {
+            return YES;
+        }
         [self showError:error];
     }
-    return image;
+    return NO;
 }
 
-- (UIImage*)trackingDebugImageWithObjectRect:(BOOL)objectRect FilteredPoints:(BOOL)filteredPoints AllPoints:(BOOL)allPoints SearchWindow:(BOOL)searchWindow
+- (BOOL)trackingDebugImage:(UIImage**)image WithObjectRect:(BOOL)objectRect FilteredPoints:(BOOL)filteredPoints AllPoints:(BOOL)allPoints SearchWindow:(BOOL)searchWindow
 {
     Mat matrix;
-    UIImage* image;
-    NSError* error = NULL;
-    ObjectTrackerDebugger::getTrackingModuleDebugImage(matrix, _frameDebugInfo, objectRect, filteredPoints, allPoints, searchWindow);
-    image = [CVImageConverter UIImageFromCVMat:matrix error:&error];
-    if (error != NULL) {
+    if (ObjectTrackerDebugger::getTrackingModuleDebugImage(matrix, _frameDebugInfo, objectRect, filteredPoints, allPoints, searchWindow)) {
+        NSError* error = NULL;
+        *image = [CVImageConverter UIImageFromCVMat:matrix error:&error];
+        if (error == NULL) {
+            return YES;
+        }
         [self showError:error];
     }
-    return image;
+    return NO;
 }
 
 #pragma mark - helper methods
      
+- (void)handleTrackingInVideoResult
+{
+    if (self.recordDebugInfo) {
+        _videoDebugInfo.push_back(TrackerDebugInfoStripped(_frameDebugInfo));
+        if (_videoDebugInfo.size() >= MAX_RECORDED_FRAMES) {
+            if ([self.delegate respondsToSelector:@selector(reachedDebugInfoRecordingLimit:)])
+                [self.delegate reachedDebugInfoRecordingLimit:[self videoDebugInfoString]];
+            _videoDebugInfo.clear();
+        }
+    }
+    if (_output.isObjectPresent) {
+        if ([self.delegate respondsToSelector:@selector(trackedObjectWithHomography:)]) {
+            [self.delegate trackedObjectWithHomography:[self homography]];
+        }
+    }
+    if ([self.delegate respondsToSelector:@selector(didProcessFrame)]) {
+        [self.delegate didProcessFrame];
+    }
+}
+
+- (void)handleTrackingInImageResult
+{
+    if (_output.isObjectPresent) {
+        if ([self.delegate respondsToSelector:@selector(trackedObjectWithHomography:)]) {
+            [self.delegate trackedObjectWithHomography:[self homography]];
+        }
+    } else {
+        if ([self.delegate respondsToSelector:@selector(failedToTrackObjectInImage)]) {
+            [self.delegate failedToTrackObjectInImage];
+        }
+    }
+    if ([self.delegate respondsToSelector:@selector(didProcessFrame)]) {
+        [self.delegate didProcessFrame];
+    }
+}
+
 - (Homography)homographyWithMatrix:(Mat&)matrix
 {
     Homography result;

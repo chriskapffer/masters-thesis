@@ -10,6 +10,7 @@
 
 #include "ObjectTrackerTypesProject.h"
 
+#include "ColorConversion.h"
 #include "PointOperations.h"
 #include "Profiler.h"
 
@@ -20,10 +21,10 @@ namespace ck {
     
 DetectionModule::DetectionModule() : AbstractModule(MODULE_TYPE_DETECTION)
 {
-    _enabled = true;
+    _enabled = false;
     _terminationCriteria = TermCriteria(CV_TERMCRIT_EPS | CV_TERMCRIT_ITER, 20, 0.1f);
     _minSearchRectSizeRelative = 0.1f;
-    _maxSearchRectSizeRelative = 0.8f;
+    _maxSearchRectSizeRelative = 0.9f;
 }
 
 DetectionModule::~DetectionModule()
@@ -39,7 +40,7 @@ void DetectionModule::initWithObjectImage(const cv::Mat &objectImage)
     float hranges[] = {0,180};
     const float* phranges = hranges;
     
-    cvtColor(objectImage, hsv, CV_BGR2HSV);
+    ColorConvert::bgrOrBgra2Hsv(objectImage, hsv);
     inRange(hsv, Scalar(0, smin, MIN(vmin,vmax)), Scalar(180, 256, MAX(vmin, vmax)), mask);
     
     int ch[] = {0, 0};
@@ -103,8 +104,7 @@ bool DetectionModule::internalProcess(ModuleParams& params, TrackerDebugInfo& de
     
     // convert to hue saturation value
     profiler->startTimer(TIMER_CONVERT);
-    cvtColor(image, hsv, CV_BGR2HSV);
-
+    ColorConvert::bgrOrBgra2Hsv(image, hsv);
     inRange(hsv, Scalar(0, smin, MIN(vmin,vmax)), Scalar(180, 256, MAX(vmin, vmax)), colorMask);
     int ch[] = {0, 0};
     hue.create(hsv.size(), hsv.depth());

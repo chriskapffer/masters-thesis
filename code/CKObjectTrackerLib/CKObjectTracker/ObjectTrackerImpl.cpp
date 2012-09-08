@@ -85,12 +85,13 @@ void ObjectTracker::Implementation::setObject(const Mat& objectImage)
     // use apple features for concurrency
     static int counter = 0;
     counter++;
+    __block Mat retainedImage = objectImage;
     dispatch_async(queue, ^{
         if (counter > 1) {
             counter--;
             return;
         }
-        this->initModules(objectImage);
+        this->initModules(retainedImage);
         counter--;
     });
 #else
