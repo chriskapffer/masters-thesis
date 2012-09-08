@@ -27,8 +27,10 @@
 #pragma mark - properties
 
 @synthesize delegate = _delegate;
-@synthesize assetReader = _assetReader;
 @synthesize fpsCalculator = _fpsCalculator;
+@synthesize paused = _paused;
+
+@synthesize assetReader = _assetReader;
 @synthesize readerQueue = _readerQueue;
 @synthesize stopRequested = _stopRequested;
 
@@ -46,12 +48,14 @@
         _readerQueue = dispatch_queue_create("ck.objecttracker.videoreader.processframes", DISPATCH_QUEUE_SERIAL);
         _fpsCalculator = [[FPSCalcApple alloc] init];
         _stopRequested = NO;
+        _paused = NO;
     }
     return self;
 }
 
 - (void)dealloc
 {
+    [self stopReading];
     dispatch_release(_readerQueue);
 }
 
@@ -104,8 +108,9 @@
 
 - (void)stopReading
 {
+    self.paused = NO;
     self.stopRequested = YES;
-    dispatch_sync(self.readerQueue, ^{ NSLog(@"stop"); });
+    dispatch_sync(self.readerQueue, ^{ });
     self.stopRequested = NO;
 }
 
@@ -113,8 +118,7 @@
 {
     dispatch_async(self.readerQueue, ^{
         while (!self.stopRequested && [self readNextFrame]) { }
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            NSLog(@"finish");
+        dispatch_async(dispatch_get_main_queue(), ^{
             completion();
         });
     });
@@ -122,6 +126,10 @@
 
 - (BOOL)readNextFrame
 {
+    while (self.paused) {
+        usleep((unsigned long)(200 * 1000.0));
+    }
+    
     if (self.assetReader.status != AVAssetReaderStatusReading)
         return NO;
     
@@ -136,13 +144,14 @@
     OSType format = CVPixelBufferGetPixelFormatType(pixelBuffer);
     if (format == kCVPixelFormatType_32BGRA || format == kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange || format == kCVPixelFormatType_422YpCbCr8) {
         if ([self.delegate respondsToSelector:@selector(didReadFrameWithPixelBuffer:)]) {
-                [self.delegate didReadFrameWithPixelBuffer:pixelBuffer];
+            [self.delegate didReadFrameWithPixelBuffer:pixelBuffer];
         }
     } else {
         NSLog(@"Unsupported pixel format.");
     }
     
     CFRelease(sampleBuffer);
+        
     return YES;
 }
 

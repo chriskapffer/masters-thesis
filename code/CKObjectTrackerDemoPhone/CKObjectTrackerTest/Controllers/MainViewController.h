@@ -12,4 +12,6 @@
 
 @property (nonatomic, strong) IBOutlet UIImageView* imageView;
 
+- (IBAction)resourcePickerButtonClicked:(id)sender;
+
 @end

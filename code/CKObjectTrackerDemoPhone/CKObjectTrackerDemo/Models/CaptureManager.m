@@ -18,6 +18,7 @@
 @property (nonatomic, strong) AVCaptureDeviceInput* videoInput;
 @property (nonatomic, strong) AVCaptureVideoDataOutput* videoOutput;
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer* previewLayer;
+@property (nonatomic, assign) dispatch_queue_t videoCaptureQueue;
 
 @property (nonatomic, strong) FPSCalculator* fpsCalculator;
 
@@ -31,6 +32,8 @@
 @synthesize videoInput = _videoInput;
 @synthesize videoOutput = _videoOutput;
 @synthesize previewLayer = _previewLayer;
+@synthesize videoCaptureQueue = _videoCaptureQueue;
+
 @synthesize fpsCalculator = _fpsCalculator;
 @synthesize delegate = _delegate;
 
@@ -276,14 +279,12 @@
         [NSNumber numberWithUnsignedInt:kCVPixelFormatType_32BGRA], (id)kCVPixelBufferPixelFormatTypeKey,
         nil];
 
-    dispatch_queue_t videoCaptureQueue = dispatch_queue_create("Video Capture Queue", DISPATCH_QUEUE_SERIAL);
+    self.videoCaptureQueue = dispatch_queue_create("ck.video.capturemanager.capture", DISPATCH_QUEUE_SERIAL);
 
     AVCaptureVideoDataOutput *newVideoOutput = [[AVCaptureVideoDataOutput alloc] init];    
-	[newVideoOutput setSampleBufferDelegate:self queue:videoCaptureQueue];
+	[newVideoOutput setSampleBufferDelegate:self queue:self.videoCaptureQueue];
 	[newVideoOutput setAlwaysDiscardsLateVideoFrames:YES];
     [newVideoOutput setVideoSettings:videoOutputSettings];
-
-	dispatch_release(videoCaptureQueue);
     
     // Add inputs and output to the capture session
     if ([newCaptureSession canAddInput:newVideoInput]) {
@@ -322,7 +323,11 @@
 
 - (void)stopAndShutDownCaptureSession
 {
+    // TODO: remove preview layer
     [self.captureSession stopRunning];
+    
+    dispatch_sync(self.videoCaptureQueue, ^{ });
+    dispatch_release(self.videoCaptureQueue);
     
     [self removeObserver:self forKeyPath:@"videoInput.device.adjustingFocus"];
     [self removeObserver:self forKeyPath:@"videoInput.device.adjustingExposure"];
@@ -521,18 +526,16 @@
     [self.fpsCalculator calculateFramerateAtTimestamp:CMSampleBufferGetPresentationTimeStamp(sampleBuffer)];
     
     CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-    CVPixelBufferLockBaseAddress(pixelBuffer, 0);
-    
+
     OSType format = CVPixelBufferGetPixelFormatType(pixelBuffer);
     if (format == kCVPixelFormatType_32BGRA || format == kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange || format == kCVPixelFormatType_422YpCbCr8) {
-        if ([self.delegate respondsToSelector:@selector(didCaptureFrameWithPixelBuffer:)])
+        if ([self.delegate respondsToSelector:@selector(didCaptureFrameWithPixelBuffer:)]) {
             [self.delegate didCaptureFrameWithPixelBuffer:pixelBuffer];
+        }
     }
     else {
         NSLog(@"Unsupported pixel format.");
     }
-    
-    CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
 }
 
 #pragma mark - Key value observer

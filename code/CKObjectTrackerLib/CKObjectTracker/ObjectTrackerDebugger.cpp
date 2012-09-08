@@ -215,11 +215,10 @@ void ObjectTrackerDebugger::scaleImageToSize(cv::Mat& image, cv::Size targetSize
     offset.x = 0; offset.y = 0;
     scale = MIN(targetSize.width / (float)image.cols, targetSize.height / (float)image.rows);
     resize(image, image, Size(image.cols * scale, image.rows * scale));
-    if (centerImage) {
-        Mat blackBg = Mat(targetSize.height, targetSize.width, CV_8UC3, Scalar(0, 0, 0));
+    if (scale != 1 && centerImage) {
+        Mat blackBg = Mat(targetSize.height, targetSize.width, image.type(), Scalar(0));
         offset = Point2f((targetSize.width - image.cols) * 0.5f, (targetSize.height - image.rows) * 0.5f);
-        Rect roi = Rect(offset.x, offset.y, image.cols, image.rows);
-        image.copyTo(blackBg(roi));
+        image.copyTo(blackBg(Rect(offset.x, offset.y, image.cols, image.rows)));
         swap(image, blackBg);
     }
 }
@@ -248,7 +247,7 @@ bool ObjectTrackerDebugger::getValidationModuleDebugImage(cv::Mat& image, const 
 {
     if (info.currentModuleType != ModuleType2String::convert(MODULE_TYPE_VALIDATION)
         || (info.objectImage.empty() || info.sceneImagePart.empty())) { return false; }
-    
+
     Size imageSize = Size(info.sceneImageFull.cols, info.sceneImageFull.rows);
     Scalar matchColor        = Scalar(  0, 255, 255);
     Scalar keyPointColor     = Scalar(255,   0,   0);
@@ -267,21 +266,29 @@ bool ObjectTrackerDebugger::getValidationModuleDebugImage(cv::Mat& image, const 
         drawRect(sceneImage, info.objectCornersTransformed, color, offset);
     }
     
-    if (drawObjectKeyPoints && !drawFilteredMatches && !drawAllMatches) {
+    if (drawObjectKeyPoints && !drawSceneKeyPoints && !drawFilteredMatches && !drawAllMatches) {
         Point2f offset; float scale;
         scaleImageToSize(objectImage, imageSize, scale, offset);
         image = objectImage;
         return true;
-    } else if (!drawObjectKeyPoints && !drawFilteredMatches && !drawAllMatches) {
+    } else if (drawSceneKeyPoints && !drawObjectKeyPoints && !drawFilteredMatches && !drawAllMatches) {
         Point2f offset; float scale;
         scaleImageToSize(sceneImage, imageSize, scale, offset);
         image = sceneImage;
         return true;
     }
     
-    // matches have to be drawn, so scale both object and scene image to fit into one
+    // both object and scene image have to be drawn, so scale them down to fit into one
     Size imageSizeFlipped = Size(imageSize.height, imageSize.width);
-    image = Mat(imageSizeFlipped.height, imageSizeFlipped.width, CV_8UC3, Scalar(0, 0, 0));
+    int objImgCh = objectImage.channels();
+    int scnImgCh = sceneImage.channels();
+    if (objImgCh != scnImgCh) {
+        // conversion if images are not in same color space
+        if (objImgCh == 4) { cvtColor(objectImage, objectImage, CV_BGRA2BGR); }
+        if (scnImgCh == 4) { cvtColor(sceneImage, sceneImage, CV_BGRA2BGR); }
+    }
+
+    image = Mat(imageSizeFlipped.height, imageSizeFlipped.width, CV_8UC3, Scalar(0));
     float scaleObj, scaleScn;
     Point2f offsetObj, offsetScn;
     imageSizeFlipped.height *= 0.5f;

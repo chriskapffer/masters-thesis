@@ -10,4 +10,8 @@
 
 @interface MainViewController : UIViewController
 
+@property (nonatomic, strong) IBOutlet UIImageView* imageView;
+
+- (IBAction)objectImagePickerButtonClicked:(id)sender;
+
 @end

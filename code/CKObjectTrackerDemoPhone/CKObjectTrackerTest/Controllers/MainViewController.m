@@ -14,7 +14,7 @@
 
 #define RESOURCE_FOLDER_NAME @"testdata"
 
-@interface MainViewController () <ResourceViewControllerDelegate, VideoReaderDelegate, ObjectTrackerLibraryDelegate>
+@interface MainViewController () <VideoReaderDelegate, ObjectTrackerLibraryDelegate, ResourceViewControllerDelegate>
 
 @property (nonatomic, strong) ResourceViewController* resourceController;
 @property (nonatomic, strong) VideoReader* videoReader;
@@ -37,21 +37,40 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:NO];
+    
+    self.imageView.transform = CGAffineTransformMakeRotation(M_PI); // recorded videos and images are flipped
+    
     self.resourceController = nil;
     self.videoReader = [[VideoReader alloc] init];
-    self.videoReader.delegate = self;
-    
-    [[ObjectTrackerLibrary instance] setDelegate:self];
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    
     self.imageView = nil;
     
     if (self.resourceController != nil)
         self.resourceController = nil;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
+    [[ObjectTrackerLibrary instance] setDelegate:self];
+    self.videoReader.delegate = self;
+    self.videoReader.paused = NO;
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+
+    self.videoReader.paused = YES;
+    self.videoReader.delegate = nil;
+    [[ObjectTrackerLibrary instance] setDelegate:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -84,7 +103,6 @@
 {
     [self dismissViewControllerAnimated:YES completion:nil];
     [self.videoReader stopReading];
-    
     [self setNewObjectImage:imageName];
     [self startNewVideoSession:videoName];
 }
@@ -98,15 +116,15 @@
 
 #pragma mark - object tracker library delegate
 
-- (void)didProcessFrame
+- (void)trackerLibraryDidProcessFrame
 {
-    UIImage* debugImage;
-    if ([[ObjectTrackerLibrary instance] trackingDebugImage:&debugImage WithObjectRect:YES FilteredPoints:YES AllPoints:NO SearchWindow:NO]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIImage* debugImage;
+        if ([[ObjectTrackerLibrary instance] trackingDebugImage:&debugImage WithObjectRect:YES FilteredPoints:YES AllPoints:NO SearchWindow:NO]) {
             [self.imageView setImage:debugImage];
-        });
-    }
-    NSLog(@"\n%@", [[ObjectTrackerLibrary instance] frameDebugInfoString]);
+        }
+    });
+    //NSLog(@"\n%@", [[ObjectTrackerLibrary instance] frameDebugInfoString]);
 }
 
 #pragma mark - helper methods
@@ -130,8 +148,8 @@
 {
     //NSString* fullImageName = [NSString stringWithFormat:@"%@/%@", RESOURCE_FOLDER_NAME, imageName];
     NSString* fullImageName = @"testdata/img_408x306_book1.jpg";
-    UIImage* image = [UIImage imageWithCGImage:[UIImage imageNamed:fullImageName].CGImage scale:1.0 orientation:UIImageOrientationLeft];
-    [[ObjectTrackerLibrary instance] setObjectImageWithImage:image];
+    [[ObjectTrackerLibrary instance] setObjectImageWithImage:[UIImage imageNamed:fullImageName]];
+    [[ObjectTrackerLibrary instance] clearVideoDebugInfo];
 }
 
 @end

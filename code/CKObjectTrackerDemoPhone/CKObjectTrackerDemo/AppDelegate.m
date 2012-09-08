@@ -8,19 +8,19 @@
 
 #import "AppDelegate.h"
 
-#import "MainViewController.h"
+#import "StartViewController.h"
 
 @implementation AppDelegate
 
 @synthesize window = _window;
-@synthesize mainViewController = _mainViewController;
+@synthesize startViewController = _startViewController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-    self.mainViewController = [[MainViewController alloc] initWithNibName:@"MainViewController" bundle:nil];
-    self.window.rootViewController = self.mainViewController;
+    self.startViewController = [[StartViewController alloc] initWithNibName:@"StartViewController" bundle:nil];
+    self.window.rootViewController = self.startViewController;
     [self.window makeKeyAndVisible];
     return YES;
 }

@@ -16,6 +16,7 @@
 
 @property (nonatomic, strong) id<VideoReaderDelegate> delegate;
 @property (nonatomic, assign, readonly) float framesPerSecond;
+@property (nonatomic, assign, getter = isPaused) BOOL paused;
 
 - (void)readVideoWithURL:(NSURL*)videoURL Completion:(void (^)(void))completion;
 - (void)stopReading;

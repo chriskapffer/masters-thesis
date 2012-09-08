@@ -11,5 +11,6 @@
 @interface CVImageConverter (PixelBuffer)
 
 + (void) CVMat:(cv::Mat&)cv_image FromCVPixelBuffer:(CVPixelBufferRef)cv_pxBuffer error:(NSError **)outError;
++ (void) CVMat:(cv::Mat&)cv_image FromCVPixelBuffer:(CVPixelBufferRef)cv_pxBuffer error:(NSError **)outError stripAlpha:(BOOL)stripAlpha;
 
 @end

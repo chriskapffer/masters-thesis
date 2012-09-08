@@ -256,8 +256,8 @@ using namespace cv;
             [self.delegate trackedObjectWithHomography:[self homography]];
         }
     }
-    if ([self.delegate respondsToSelector:@selector(didProcessFrame)]) {
-        [self.delegate didProcessFrame];
+    if ([self.delegate respondsToSelector:@selector(trackerLibraryDidProcessFrame)]) {
+        [self.delegate trackerLibraryDidProcessFrame];
     }
 }
 
@@ -272,8 +272,8 @@ using namespace cv;
             [self.delegate failedToTrackObjectInImage];
         }
     }
-    if ([self.delegate respondsToSelector:@selector(didProcessFrame)]) {
-        [self.delegate didProcessFrame];
+    if ([self.delegate respondsToSelector:@selector(trackerLibraryDidProcessFrame)]) {
+        [self.delegate trackerLibraryDidProcessFrame];
     }
 }
 

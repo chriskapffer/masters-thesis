@@ -12,6 +12,11 @@
 
 + (void) CVMat:(cv::Mat&)cv_image FromCVPixelBuffer:(CVPixelBufferRef)cv_pxBuffer error:(NSError **)outError
 {
+    [self CVMat:cv_image FromCVPixelBuffer:cv_pxBuffer error:outError stripAlpha:YES];
+}
+
++ (void) CVMat:(cv::Mat&)cv_image FromCVPixelBuffer:(CVPixelBufferRef)cv_pxBuffer error:(NSError **)outError stripAlpha:(BOOL)stripAlpha
+{
     size_t width = CVPixelBufferGetWidth(cv_pxBuffer);
     size_t height = CVPixelBufferGetHeight(cv_pxBuffer);
     OSType format = CVPixelBufferGetPixelFormatType(cv_pxBuffer);
@@ -35,6 +40,10 @@
     }
     
     cv_image = cv::Mat(height, width, type, baseAddress);
+    if (stripAlpha && format == kCVPixelFormatType_32BGRA) {
+        cv::cvtColor(cv_image, cv_image, CV_BGRA2BGR);
+    }
+    
     CVPixelBufferUnlockBaseAddress(cv_pxBuffer, 0);
 }
 

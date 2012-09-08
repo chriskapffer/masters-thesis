@@ -22,7 +22,7 @@ typedef struct {
 - (void)trackedObjectWithHomography:(Homography)homography;
 - (void)reachedDebugInfoRecordingLimit:(NSString*)debugInfo;
 - (void)failedToTrackObjectInImage;
-- (void)didProcessFrame;
+- (void)trackerLibraryDidProcessFrame;
 
 @end
 
