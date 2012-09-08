@@ -93,7 +93,6 @@
 
 - (void)didReadFrameWithPixelBuffer:(CVPixelBufferRef)pixelBuffer
 {
-    NSLog(@"did read");
     [[ObjectTrackerLibrary instance] trackObjectInVideoWithBuffer:pixelBuffer];
 }
 
@@ -101,12 +100,13 @@
 
 - (void)didProcessFrame
 {
-    NSLog(@"did proc");
     UIImage* debugImage;
-    //NSLog(@"\n%@", [[ObjectTrackerLibrary instance] frameDebugInfoString]);
-//    if ([[ObjectTrackerLibrary instance] trackingDebugImage:&debugImage WithObjectRect:YES FilteredPoints:YES AllPoints:NO SearchWindow:NO]) {
-//        [self.imageView setImage:debugImage];
-//    }
+    if ([[ObjectTrackerLibrary instance] trackingDebugImage:&debugImage WithObjectRect:YES FilteredPoints:YES AllPoints:NO SearchWindow:NO]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.imageView setImage:debugImage];
+        });
+    }
+    NSLog(@"\n%@", [[ObjectTrackerLibrary instance] frameDebugInfoString]);
 }
 
 #pragma mark - helper methods

@@ -25,7 +25,7 @@ using namespace cv;
     vector<TrackerDebugInfoStripped> _videoDebugInfo;
 }
 
-@property (nonatomic, assign) dispatch_queue_t trackerQueue;
+@property (nonatomic, assign) dispatch_queue_t stillImageTrackerQueue;
 
 - (void)handleTrackingInVideoResult;
 - (void)handleTrackingInImageResult;
@@ -39,7 +39,7 @@ using namespace cv;
 #pragma mark - properties
 
 @synthesize delegate = _delegate;
-@synthesize trackerQueue = _trackerQueue;
+@synthesize stillImageTrackerQueue = _stillImageTrackerQueue;
 @synthesize recordDebugInfo = _recordDebugInfo;
 
 #pragma mark - initialization
@@ -61,7 +61,7 @@ using namespace cv;
         _objectImage = Mat();
         _tracker = new ObjectTracker();
         _videoDebugInfo = vector<TrackerDebugInfoStripped>();
-        _trackerQueue = dispatch_queue_create("ck.objecttracker.trackerlibrary.trackobject", DISPATCH_QUEUE_SERIAL);
+        _stillImageTrackerQueue = dispatch_queue_create("ck.objecttracker.trackerlibrary.stillimage", DISPATCH_QUEUE_SERIAL);
         _recordDebugInfo = YES;
     }
     return self;
@@ -72,7 +72,7 @@ using namespace cv;
     delete _tracker;
     _tracker = 0;
     
-    dispatch_release(_trackerQueue);
+    dispatch_release(_stillImageTrackerQueue);
 }
 
 #pragma mark - tracking methods
@@ -136,7 +136,7 @@ using namespace cv;
 - (void)trackObjectInImageWithImage:(UIImage*)image
 {
     __block UIImage* retainedImage = [image copy];
-    dispatch_async(self.trackerQueue, ^{
+    dispatch_async(self.stillImageTrackerQueue, ^{
         Mat frame;
         NSError* error = NULL;
         [CVImageConverter CVMat:frame FromUIImage:retainedImage error:&error];
@@ -146,56 +146,37 @@ using namespace cv;
             _tracker->trackObjectInStillImage(frame, output, debugInfo);
             _frameDebugInfo = *(debugInfo.end() - 1);
             _output = *(output.end() - 1);
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                [self handleTrackingInImageResult];
-            });
+            [self handleTrackingInImageResult];
         } else {
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                [self showError:error];
-            });
+            [self showError:error];
         }
     });
 }
 
 - (void)trackObjectInVideoWithImage:(UIImage*)image
 {
-    __block UIImage* retainedImage = [image copy];
-    dispatch_async(self.trackerQueue, ^{
-        Mat frame;
-        NSError* error = NULL;
-        [CVImageConverter CVMat:frame FromUIImage:retainedImage error:&error];
-        if (error == NULL) {
-            _tracker->trackObjectInVideo(frame, _output, _frameDebugInfo);
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                [self handleTrackingInVideoResult];
-            });
-        } else {
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                [self showError:error];
-            });
-        }
-    });
+    Mat frame;
+    NSError* error = NULL;
+    [CVImageConverter CVMat:frame FromUIImage:image error:&error];
+    if (error == NULL) {
+        _tracker->trackObjectInVideo(frame, _output, _frameDebugInfo);
+        [self handleTrackingInVideoResult];
+    } else {
+        [self showError:error];
+    }
 }
 
 - (void)trackObjectInVideoWithBuffer:(CVPixelBufferRef)buffer
 {
-    __block CVPixelBufferRef retainedBuffer = CVBufferRetain(buffer);
-    dispatch_async(self.trackerQueue, ^{
-        Mat frame;
-        NSError* error = NULL;
-        [CVImageConverter CVMat:frame FromCVPixelBuffer:retainedBuffer error:&error];
-        CVPixelBufferRelease(retainedBuffer);
-        if (error == NULL) {
-            _tracker->trackObjectInVideo(frame, _output, _frameDebugInfo);
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                [self handleTrackingInVideoResult];
-            });
-        } else {
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                [self showError:error];
-            });
-        }
-    });
+    Mat frame;
+    NSError* error = NULL;
+    [CVImageConverter CVMat:frame FromCVPixelBuffer:buffer error:&error];
+    if (error == NULL) {
+        _tracker->trackObjectInVideo(frame, _output, _frameDebugInfo);
+        [self handleTrackingInVideoResult];
+    } else {
+        [self showError:error];
+    }
 }
 
 #pragma mark - debug methods

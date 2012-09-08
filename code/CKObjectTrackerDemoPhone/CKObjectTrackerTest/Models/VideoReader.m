@@ -131,14 +131,13 @@
         return NO;
     
     [self.fpsCalculator calculateFramerateAtTimestamp:CMSampleBufferGetPresentationTimeStamp(sampleBuffer)];
-    __block CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+    CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
 
     OSType format = CVPixelBufferGetPixelFormatType(pixelBuffer);
     if (format == kCVPixelFormatType_32BGRA || format == kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange || format == kCVPixelFormatType_422YpCbCr8) {
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            if ([self.delegate respondsToSelector:@selector(didReadFrameWithPixelBuffer:)])
+        if ([self.delegate respondsToSelector:@selector(didReadFrameWithPixelBuffer:)]) {
                 [self.delegate didReadFrameWithPixelBuffer:pixelBuffer];
-        });
+        }
     } else {
         NSLog(@"Unsupported pixel format.");
     }
