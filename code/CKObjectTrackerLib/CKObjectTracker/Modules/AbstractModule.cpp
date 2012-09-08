@@ -19,7 +19,7 @@ namespace ck {
 
 void AbstractModule::process(ModuleParams& params, TrackerDebugInfo& debugInfo)
 {
-    assert(params.successor == _moduleType);
+    assert(params.successor == _moduleType || params.successor == MODULE_TYPE_EMPTY || _moduleType == MODULE_TYPE_EMPTY);
     
     Profiler* profiler = Profiler::Instance();
     profiler->clearAll();

@@ -65,14 +65,15 @@ void ObjectTracker::Implementation::initModules(const cv::Mat& objectImage)
     }
     double elapsedTime = ((double)cv::getTickCount() - startTime) / cv::getTickFrequency() * 1000;
     cout << "Initialization took " << elapsedTime << " ms." << endl;
+
     _moduleParams.successor = MODULE_TYPE_DETECTION;
     _currentModule = _allModules[MODULE_TYPE_DETECTION];
 }
 
 void ObjectTracker::Implementation::setObject(const Mat& objectImage)
 {
-    _moduleParams.successor = MODULE_TYPE_EMPTY;
     _currentModule = _allModules[MODULE_TYPE_EMPTY];
+    _moduleParams.successor = MODULE_TYPE_EMPTY;
 
 #if defined(__NECESSARY_CPP11_FEATURES_AVAILABLE__)
     // use C++11 features for concurrency
