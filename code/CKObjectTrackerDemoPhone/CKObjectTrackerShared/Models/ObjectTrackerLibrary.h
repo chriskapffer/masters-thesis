@@ -26,9 +26,12 @@ typedef struct {
 
 @end
 
+@class ObjectTrackerParameterCollection;
+
 @interface ObjectTrackerLibrary : NSObject
 
 @property (nonatomic, weak) id<ObjectTrackerLibraryDelegate> delegate;
+@property (nonatomic, strong, readonly) ObjectTrackerParameterCollection* parameters;
 @property (nonatomic, assign) bool recordDebugInfo;
 
 + (id)instance;
@@ -37,6 +40,11 @@ typedef struct {
 - (UIImage*)objectHistogram;
 - (void)setObjectImageWithImage:(UIImage *)objectImage;
 - (void)setObjectImageWithBuffer:(CVPixelBufferRef)objectImage;
+
+- (void)setBoolParameterWithName:(NSString*)name Value:(BOOL)value;
+- (void)setintParameterWithName:(NSString*)name Value:(int)value;
+- (void)setFloatParameterWithName:(NSString*)name Value:(float)value;
+- (void)setStringParameterWithName:(NSString*)name Value:(NSString*)value;
 
 - (void)trackObjectInImageWithImage:(UIImage *)image;
 - (void)trackObjectInVideoWithImage:(UIImage *)image;

@@ -7,6 +7,7 @@
 //
 
 #import "MainViewController.h"
+#import "SettingsViewController.h"
 #import "ResourceViewController.h"
 
 #import "ObjectTrackerLibrary.h"
@@ -14,8 +15,9 @@
 
 #define RESOURCE_FOLDER_NAME @"testdata"
 
-@interface MainViewController () <VideoReaderDelegate, ObjectTrackerLibraryDelegate, ResourceViewControllerDelegate>
+@interface MainViewController () <VideoReaderDelegate, ObjectTrackerLibraryDelegate, SettingsViewControllerDelegate, ResourceViewControllerDelegate>
 
+@property (nonatomic, strong) SettingsViewController* settingsController;
 @property (nonatomic, strong) ResourceViewController* resourceController;
 @property (nonatomic, strong) VideoReader* videoReader;
 
@@ -28,6 +30,7 @@
 
 #pragma mark - properties
 
+@synthesize settingsController = _settingsController;
 @synthesize resourceController = _resourceController;
 @synthesize videoReader = _videoReader;
 @synthesize imageView = _imageView;
@@ -40,7 +43,8 @@
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:NO];
     
     self.imageView.transform = CGAffineTransformMakeRotation(M_PI); // recorded videos and images are flipped
-    
+
+    self.settingsController = nil;
     self.resourceController = nil;
     self.videoReader = [[VideoReader alloc] init];
 }
@@ -50,6 +54,9 @@
     [super viewDidUnload];
     
     self.imageView = nil;
+    
+    if (self.settingsController != nil)
+        self.settingsController = nil;
     
     if (self.resourceController != nil)
         self.resourceController = nil;
@@ -80,6 +87,18 @@
 
 #pragma mark - interface builder actions
 
+- (IBAction)showSettingsButtonClicked:(id)sender
+{
+    if (self.settingsController == nil) {
+        self.settingsController = [[SettingsViewController alloc] init];
+        self.settingsController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        self.settingsController.parameters = [[ObjectTrackerLibrary instance] parameters];
+        self.settingsController.delegate = self;
+    }
+    
+    [self presentViewController:self.settingsController animated:YES completion:nil];
+}
+
 - (IBAction)resourcePickerButtonClicked:(id)sender
 {
     if (self.resourceController == nil) {
@@ -90,6 +109,13 @@
     }
     
     [self presentViewController:self.resourceController animated:YES completion:nil];
+}
+
+#pragma mark - settings view controller delegate
+
+- (void)settingsControllerfinished
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - resource view controller delegate

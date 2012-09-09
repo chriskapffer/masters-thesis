@@ -8,6 +8,11 @@
 
 #import <sys/utsname.h>
 
+static inline CGPoint CGPointInvert(CGPoint p)
+{
+    return CGPointMake(-p.x, -p.y);
+}
+
 static inline BOOL isRunningInSimulator()
 {
 #ifdef __i386__

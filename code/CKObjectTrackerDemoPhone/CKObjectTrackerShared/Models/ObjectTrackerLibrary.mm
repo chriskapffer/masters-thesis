@@ -6,9 +6,10 @@
 //  Copyright (c) 2012 HTW Berlin. All rights reserved.
 //
 
-#import "ObjectTrackerLibrary.h"
-#import "ObjectTrackerDebugger.h"
-#import "ObjectTracker.h"
+#import "ObjectTrackerLibrary.h" // Obj-C
+#import "ObjectTrackerParameter.h" // Obj-C
+#import "ObjectTrackerDebugger.h" // C++
+#import "ObjectTracker.h" // C++
 
 #import "CVImageConverter+PixelBuffer.h"
 
@@ -39,8 +40,13 @@ using namespace cv;
 #pragma mark - properties
 
 @synthesize delegate = _delegate;
-@synthesize stillImageTrackerQueue = _stillImageTrackerQueue;
 @synthesize recordDebugInfo = _recordDebugInfo;
+@synthesize stillImageTrackerQueue = _stillImageTrackerQueue;
+
+- (ObjectTrackerParameterCollection*) parameters
+{
+    return [self parameterCollectionFromSettings:_tracker->getSettings()];
+}
 
 #pragma mark - initialization
 
@@ -75,7 +81,7 @@ using namespace cv;
     dispatch_release(_stillImageTrackerQueue);
 }
 
-#pragma mark - tracking methods
+#pragma mark - object related methods
 
 - (UIImage*)objectImage
 {
@@ -124,14 +130,29 @@ using namespace cv;
     }
 }
 
-- (Homography)homography
+#pragma mark - parameter related methods
+
+- (void)setBoolParameterWithName:(NSString*)name Value:(BOOL)value
 {
-    return [self homographyWithMatrix:_output.homography];
+    _tracker->getSettings().setBoolValue([name UTF8String], value);
 }
-- (BOOL)foundObject
+
+- (void)setintParameterWithName:(NSString*)name Value:(int)value
 {
-    return _output.isObjectPresent;
+    _tracker->getSettings().setIntValue([name UTF8String], value);
 }
+
+- (void)setFloatParameterWithName:(NSString*)name Value:(float)value
+{
+    _tracker->getSettings().setFloatValue([name UTF8String], value);
+}
+
+- (void)setStringParameterWithName:(NSString*)name Value:(NSString*)value
+{
+    _tracker->getSettings().setStringValue([name UTF8String], [value UTF8String]);
+}
+
+#pragma mark - tracking related methods
 
 - (void)trackObjectInImageWithImage:(UIImage*)image
 {
@@ -177,6 +198,15 @@ using namespace cv;
     } else {
         [self showError:error];
     }
+}
+
+- (Homography)homography
+{
+    return [self homographyWithMatrix:_output.homography];
+}
+- (BOOL)foundObject
+{
+    return _output.isObjectPresent;
 }
 
 #pragma mark - debug methods
@@ -297,6 +327,124 @@ using namespace cv;
     UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:error.domain message:error.description delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alertView show];
     NSLog(@"\n%@\n%@", error.domain, error.description);
+}
+
+- (ObjectTrackerParameter*)boolParameterWithName:(string)name FromSettings:(Settings)settings
+{
+    bool critical;
+    bool value;
+    settings.getBoolValue(name, value);
+    settings.getBoolInfo(name, critical);
+
+    ObjectTrackerParameter* parameter = [[ObjectTrackerParameter alloc] init];
+    [parameter setName:[NSString stringWithUTF8String:name.c_str()]];
+    [parameter setType:ObjectTrackerParameterTypeBool];
+    [parameter setBoolValue:value];
+    [parameter setCritical:critical];
+    return parameter;
+}
+
+- (ObjectTrackerParameter*)intParameterWithName:(string)name FromSettings:(Settings)settings
+{
+    bool critical;
+    int value, min, max;
+    vector<int> values;
+    settings.getIntValue(name, value);
+    settings.getIntInfo(name, min, max, values, critical);
+    NSMutableArray* intValues = [NSMutableArray arrayWithCapacity:values.size()];
+    for (int i = 0; i < values.size(); i++) {
+        [intValues addObject:[NSNumber numberWithInt:values[i]]];
+    }
+    
+    ObjectTrackerParameter* parameter = [[ObjectTrackerParameter alloc] init];
+    [parameter setName:[NSString stringWithUTF8String:name.c_str()]];
+    [parameter setType:ObjectTrackerParameterTypeInt];
+    [parameter setIntValue:value];
+    [parameter setIntMax:max];
+    [parameter setIntMin:min];
+    [parameter setIntValues:intValues];
+    [parameter setCritical:critical];
+    return parameter;
+}
+
+- (ObjectTrackerParameter*)floatParameterWithName:(string)name FromSettings:(Settings)settings
+{
+    bool critical;
+    float value, min, max;
+    settings.getFloatValue(name, value);
+    settings.getFloatInfo(name, min, max, critical);
+
+    ObjectTrackerParameter* parameter = [[ObjectTrackerParameter alloc] init];
+    [parameter setName:[NSString stringWithUTF8String:name.c_str()]];
+    [parameter setType:ObjectTrackerParameterTypeFloat];
+    [parameter setFloatValue:value];
+    [parameter setFloatMax:max];
+    [parameter setFloatMin:min];
+    [parameter setCritical:critical];
+    return parameter;
+}
+
+- (ObjectTrackerParameter*)stringParameterWithName:(string)name FromSettings:(Settings)settings
+{
+    bool critical;
+    string value;
+    vector<string> values;
+    settings.getStringValue(name, value);
+    settings.getStringInfo(name, values, critical);
+    NSMutableArray* stringValues = [NSMutableArray arrayWithCapacity:values.size()];
+    for (int i = 0; i < values.size(); i++) {
+        [stringValues addObject:[NSString stringWithUTF8String:values[i].c_str()]];
+    }
+    
+    ObjectTrackerParameter* parameter = [[ObjectTrackerParameter alloc] init];
+    [parameter setName:[NSString stringWithUTF8String:name.c_str()]];
+    [parameter setType:ObjectTrackerParameterTypeString];
+    [parameter setStringValue:[NSString stringWithUTF8String:value.c_str()]];
+    [parameter setStringValues:stringValues];
+    [parameter setCritical:critical];
+    return parameter;
+}
+
+- (ObjectTrackerParameter*)parameterWithName:(string)name FromSettings:(Settings)settings
+{
+    ObjectTrackerParameter* parameter = nil;
+    Type type; settings.getParameterType(name, type);
+    switch (type) {
+        case ck::CK_TYPE_BOOL:
+            parameter = [self boolParameterWithName:name FromSettings:settings];
+            break;
+        case ck::CK_TYPE_INT:
+            parameter = [self intParameterWithName:name FromSettings:settings];
+            break;
+        case ck::CK_TYPE_FLOAT:
+            parameter = [self floatParameterWithName:name FromSettings:settings];
+            break;
+        case ck::CK_TYPE_STRING:
+            parameter = [self stringParameterWithName:name FromSettings:settings];
+            break;
+    }
+    return parameter;
+}
+
+- (ObjectTrackerParameterCollection*) parameterCollectionFromSettings:(Settings)settings
+{
+    vector<string> parameterNames = settings.getParameterNames();
+    NSMutableArray* parameters = [NSMutableArray arrayWithCapacity:parameterNames.size()];
+    for (int i = 0; i < parameterNames.size(); i++) {
+        [parameters addObject:[self parameterWithName:parameterNames[i] FromSettings:settings]];
+    }
+    
+    vector<Settings> subCategories = settings.getSubCategories();
+    NSMutableArray* subCollections = [NSMutableArray arrayWithCapacity:subCategories.size()];
+    for (int i = 0; i < subCategories.size(); i++) {
+        [subCollections addObject:[self parameterCollectionFromSettings:subCategories[i]]];
+    }
+    
+    ObjectTrackerParameterCollection* collection = [[ObjectTrackerParameterCollection alloc] init];
+    [collection setName:[NSString stringWithUTF8String:settings.getName().c_str()]];
+    [collection setSubCollections:subCollections];
+    [collection setParameters:parameters];
+    return collection;
 }
 
 @end

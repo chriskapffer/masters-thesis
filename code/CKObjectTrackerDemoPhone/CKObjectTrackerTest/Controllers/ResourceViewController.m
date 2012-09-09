@@ -28,6 +28,9 @@
 #pragma mark - properties
 
 @synthesize tableView = _tableView;
+@synthesize labelImage = _labelImage;
+@synthesize labelVideo = _labelVideo;
+
 @synthesize delegate = _delegate;
 @synthesize resourceFolderPath = _resourceFolderPath;
 
@@ -51,12 +54,24 @@
     _selectedVideoIndex = 0;
     _prevSelectedImageIndex = -1;
     _prevSelectedVideoIndex = -1;
+    _labelImage.text = @"";
+    _labelVideo.text = @"";
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
     self.tableView = nil;
+    self.labelImage = nil;
+    self.labelVideo = nil;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    self.labelImage.text = [self.imageArray objectAtIndex:self.selectedImageIndex];
+    self.labelVideo.text = [self.videoArray objectAtIndex:self.selectedVideoIndex];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -104,8 +119,10 @@
     
     if (indexPath.section == 0) {
         self.selectedImageIndex = indexPath.row;
+        self.labelImage.text = [self.imageArray objectAtIndex:indexPath.row];
     } else {
         self.selectedVideoIndex = indexPath.row;
+        self.labelVideo.text = [self.videoArray objectAtIndex:indexPath.row];
     }
 }
 
@@ -113,8 +130,8 @@
 
 - (IBAction)cancelButtonClicked:(id)sender
 {
-    self.selectedImageIndex = self.prevSelectedImageIndex;
-    self.selectedVideoIndex = self.prevSelectedVideoIndex;
+    self.selectedImageIndex = MAX(self.prevSelectedImageIndex, 0);
+    self.selectedVideoIndex = MAX(self.prevSelectedVideoIndex, 0);
     
     if ([self.delegate respondsToSelector:@selector(resourceControllerCanceled:)])
         [self.delegate resourceControllerCanceled:self];

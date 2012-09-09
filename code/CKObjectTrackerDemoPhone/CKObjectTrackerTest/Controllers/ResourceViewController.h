@@ -13,6 +13,9 @@
 @interface ResourceViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) IBOutlet UITableView* tableView;
+@property (nonatomic, strong) IBOutlet UILabel* labelImage;
+@property (nonatomic, strong) IBOutlet UILabel* labelVideo;
+
 @property (nonatomic, assign) id<ResourceViewControllerDelegate> delegate;
 @property (nonatomic, strong) NSString* resourceFolderPath;
 

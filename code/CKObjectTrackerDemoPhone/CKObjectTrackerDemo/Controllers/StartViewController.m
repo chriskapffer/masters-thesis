@@ -10,6 +10,7 @@
 #import "MainViewController.h"
 
 #import "CaptureManager.h"
+#import "Utils.h"
 
 @interface StartViewController ()
 
@@ -37,15 +38,31 @@
 {
     [super viewWillAppear:animated];
     
-    [self.activityIndicator startAnimating];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(captureSessionDidStartRunning) name:AVCaptureSessionDidStartRunningNotification object:nil];
+    if (isRunningInSimulator()) {
+        [self.activityIndicator setHidden:YES];
+    } else {
+        [self.activityIndicator startAnimating];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(captureSessionDidStartRunning) name:AVCaptureSessionDidStartRunningNotification object:nil];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
-    [[CaptureManager instance] setUpAndStartCaptureSession];
+    if (isRunningInSimulator()) {
+        UILabel* label = [[UILabel alloc] initWithFrame:self.view.frame];
+        label.lineBreakMode = UILineBreakModeWordWrap;
+        label.textAlignment = UITextAlignmentCenter;
+        label.font = [UIFont systemFontOfSize:14];
+        label.backgroundColor = [UIColor blackColor];
+        label.textColor = [UIColor whiteColor];
+        label.numberOfLines = 0;
+        label.text = @"This application can not be run in simulator, because there is no camera.\nTry the 'CKObjectTrackerTest' app instead.\nIt contains pre-recorded videos for demonstration.";
+        [self.view addSubview:label];
+    } else {
+        [[CaptureManager instance] setUpAndStartCaptureSession];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated

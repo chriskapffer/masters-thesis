@@ -29,6 +29,28 @@
 		4C7F441215FB52FC00869927 /* UIImage+Scaling.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7F441015FB52FC00869927 /* UIImage+Scaling.m */; };
 		4C7F441615FB834100869927 /* StartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7F441515FB834100869927 /* StartViewController.m */; };
 		4C7F441915FB834B00869927 /* StartViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C7F441715FB834B00869927 /* StartViewController.xib */; };
+		4C8620BB15FBE66E00C72DE7 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620B915FBE66E00C72DE7 /* SettingsViewController.m */; };
+		4C8620BC15FBE66E00C72DE7 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620B915FBE66E00C72DE7 /* SettingsViewController.m */; };
+		4C8620BD15FBE66E00C72DE7 /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C8620BA15FBE66E00C72DE7 /* SettingsViewController.xib */; };
+		4C8620BE15FBE66E00C72DE7 /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C8620BA15FBE66E00C72DE7 /* SettingsViewController.xib */; };
+		4C8620C115FBEC2400C72DE7 /* ObjectTrackerParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620C015FBEC2400C72DE7 /* ObjectTrackerParameter.m */; };
+		4C8620C215FBEC2400C72DE7 /* ObjectTrackerParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620C015FBEC2400C72DE7 /* ObjectTrackerParameter.m */; };
+		4C8620C915FC011C00C72DE7 /* ParameterSliderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620C815FC011C00C72DE7 /* ParameterSliderCell.m */; };
+		4C8620CA15FC011C00C72DE7 /* ParameterSliderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620C815FC011C00C72DE7 /* ParameterSliderCell.m */; };
+		4C8620CD15FC013200C72DE7 /* ParameterSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620CC15FC013200C72DE7 /* ParameterSwitchCell.m */; };
+		4C8620CE15FC013200C72DE7 /* ParameterSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620CC15FC013200C72DE7 /* ParameterSwitchCell.m */; };
+		4C8620D115FC014C00C72DE7 /* ParameterSegmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620D015FC014C00C72DE7 /* ParameterSegmentCell.m */; };
+		4C8620D215FC014C00C72DE7 /* ParameterSegmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620D015FC014C00C72DE7 /* ParameterSegmentCell.m */; };
+		4C8620D415FC016400C72DE7 /* ParameterSegmentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C8620D315FC016400C72DE7 /* ParameterSegmentCell.xib */; };
+		4C8620D515FC016400C72DE7 /* ParameterSegmentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C8620D315FC016400C72DE7 /* ParameterSegmentCell.xib */; };
+		4C8620D715FC017600C72DE7 /* ParameterSliderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C8620D615FC017600C72DE7 /* ParameterSliderCell.xib */; };
+		4C8620D815FC017600C72DE7 /* ParameterSliderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C8620D615FC017600C72DE7 /* ParameterSliderCell.xib */; };
+		4C8620DA15FC018A00C72DE7 /* ParameterSwitchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C8620D915FC018A00C72DE7 /* ParameterSwitchCell.xib */; };
+		4C8620DB15FC018A00C72DE7 /* ParameterSwitchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C8620D915FC018A00C72DE7 /* ParameterSwitchCell.xib */; };
+		4C8620DE15FC181000C72DE7 /* ParameterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620DD15FC181000C72DE7 /* ParameterCell.m */; };
+		4C8620DF15FC181000C72DE7 /* ParameterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620DD15FC181000C72DE7 /* ParameterCell.m */; };
+		4C8620E715FC2CB400C72DE7 /* UIView+EasyFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620E615FC2CB400C72DE7 /* UIView+EasyFrame.m */; };
+		4C8620E815FC2CB400C72DE7 /* UIView+EasyFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620E615FC2CB400C72DE7 /* UIView+EasyFrame.m */; };
 		4C962F0115F96A3500C804E5 /* testdata in Resources */ = {isa = PBXBuildFile; fileRef = 4C962F0015F96A3500C804E5 /* testdata */; };
 		4CD86B8015FAA88400B1767C /* ResourceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CD86B7E15FAA88400B1767C /* ResourceViewController.xib */; };
 		4CE1863015F9E071004C3372 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1862A15F9E071004C3372 /* MainViewController.m */; };
@@ -86,6 +108,24 @@
 		4C7F441515FB834100869927 /* StartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartViewController.m; sourceTree = "<group>"; };
 		4C7F441815FB834B00869927 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = CKObjectTrackerDemo/en.lproj/StartViewController.xib; sourceTree = SOURCE_ROOT; };
 		4C84AF6D15FB866600581974 /* Definitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Definitions.h; sourceTree = "<group>"; };
+		4C8620B815FBE66E00C72DE7 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		4C8620B915FBE66E00C72DE7 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		4C8620BA15FBE66E00C72DE7 /* SettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingsViewController.xib; sourceTree = "<group>"; };
+		4C8620BF15FBEC2400C72DE7 /* ObjectTrackerParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectTrackerParameter.h; sourceTree = "<group>"; };
+		4C8620C015FBEC2400C72DE7 /* ObjectTrackerParameter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectTrackerParameter.m; sourceTree = "<group>"; };
+		4C8620C715FC011C00C72DE7 /* ParameterSliderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParameterSliderCell.h; sourceTree = "<group>"; };
+		4C8620C815FC011C00C72DE7 /* ParameterSliderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParameterSliderCell.m; sourceTree = "<group>"; };
+		4C8620CB15FC013200C72DE7 /* ParameterSwitchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParameterSwitchCell.h; sourceTree = "<group>"; };
+		4C8620CC15FC013200C72DE7 /* ParameterSwitchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParameterSwitchCell.m; sourceTree = "<group>"; };
+		4C8620CF15FC014C00C72DE7 /* ParameterSegmentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParameterSegmentCell.h; sourceTree = "<group>"; };
+		4C8620D015FC014C00C72DE7 /* ParameterSegmentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParameterSegmentCell.m; sourceTree = "<group>"; };
+		4C8620D315FC016400C72DE7 /* ParameterSegmentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ParameterSegmentCell.xib; sourceTree = "<group>"; };
+		4C8620D615FC017600C72DE7 /* ParameterSliderCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ParameterSliderCell.xib; sourceTree = "<group>"; };
+		4C8620D915FC018A00C72DE7 /* ParameterSwitchCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ParameterSwitchCell.xib; sourceTree = "<group>"; };
+		4C8620DC15FC180F00C72DE7 /* ParameterCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParameterCell.h; sourceTree = "<group>"; };
+		4C8620DD15FC181000C72DE7 /* ParameterCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParameterCell.m; sourceTree = "<group>"; };
+		4C8620E515FC2CB400C72DE7 /* UIView+EasyFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+EasyFrame.h"; sourceTree = "<group>"; };
+		4C8620E615FC2CB400C72DE7 /* UIView+EasyFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+EasyFrame.m"; sourceTree = "<group>"; };
 		4C962F0015F96A3500C804E5 /* testdata */ = {isa = PBXFileReference; lastKnownFileType = folder; name = testdata; path = ../../../testdata; sourceTree = "<group>"; };
 		4CD86B7F15FAA88400B1767C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = CKObjectTrackerTest/en.lproj/ResourceViewController.xib; sourceTree = SOURCE_ROOT; };
 		4CE1862915F9E071004C3372 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
@@ -253,6 +293,8 @@
 			children = (
 				4CE1865D15FA3EA1004C3372 /* CVImageConverter+PixelBuffer.h */,
 				4CE1865E15FA3EA1004C3372 /* CVImageConverter+PixelBuffer.mm */,
+				4C8620E515FC2CB400C72DE7 /* UIView+EasyFrame.h */,
+				4C8620E615FC2CB400C72DE7 /* UIView+EasyFrame.m */,
 				4C7F440F15FB52FC00869927 /* UIImage+Scaling.h */,
 				4C7F441015FB52FC00869927 /* UIImage+Scaling.m */,
 			);
@@ -262,6 +304,9 @@
 		4C4E0DBC15DE3ABE002BE9A4 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				4C8620B815FBE66E00C72DE7 /* SettingsViewController.h */,
+				4C8620B915FBE66E00C72DE7 /* SettingsViewController.m */,
+				4C8620BA15FBE66E00C72DE7 /* SettingsViewController.xib */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -271,6 +316,8 @@
 			children = (
 				4CE1865915F9EA90004C3372 /* ObjectTrackerLibrary.h */,
 				4CE1865A15F9EA90004C3372 /* ObjectTrackerLibrary.mm */,
+				4C8620BF15FBEC2400C72DE7 /* ObjectTrackerParameter.h */,
+				4C8620C015FBEC2400C72DE7 /* ObjectTrackerParameter.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -278,8 +325,27 @@
 		4C4E0DBE15DE3ABE002BE9A4 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4C8620AE15FBE3F100C72DE7 /* Cells */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		4C8620AE15FBE3F100C72DE7 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				4C8620DC15FC180F00C72DE7 /* ParameterCell.h */,
+				4C8620DD15FC181000C72DE7 /* ParameterCell.m */,
+				4C8620C715FC011C00C72DE7 /* ParameterSliderCell.h */,
+				4C8620C815FC011C00C72DE7 /* ParameterSliderCell.m */,
+				4C8620D615FC017600C72DE7 /* ParameterSliderCell.xib */,
+				4C8620CB15FC013200C72DE7 /* ParameterSwitchCell.h */,
+				4C8620CC15FC013200C72DE7 /* ParameterSwitchCell.m */,
+				4C8620D915FC018A00C72DE7 /* ParameterSwitchCell.xib */,
+				4C8620CF15FC014C00C72DE7 /* ParameterSegmentCell.h */,
+				4C8620D015FC014C00C72DE7 /* ParameterSegmentCell.m */,
+				4C8620D315FC016400C72DE7 /* ParameterSegmentCell.xib */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		4CE1862815F9E071004C3372 /* Controllers */ = {
@@ -415,6 +481,10 @@
 				4C4E0D1B15DE33C0002BE9A4 /* InfoPlist.strings in Resources */,
 				4C4E0D2715DE33C0002BE9A4 /* MainViewController.xib in Resources */,
 				4C7F441915FB834B00869927 /* StartViewController.xib in Resources */,
+				4C8620BE15FBE66E00C72DE7 /* SettingsViewController.xib in Resources */,
+				4C8620D515FC016400C72DE7 /* ParameterSegmentCell.xib in Resources */,
+				4C8620D815FC017600C72DE7 /* ParameterSliderCell.xib in Resources */,
+				4C8620DB15FC018A00C72DE7 /* ParameterSwitchCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -426,6 +496,10 @@
 				4C4E0D4515DE344C002BE9A4 /* MainViewController.xib in Resources */,
 				4C962F0115F96A3500C804E5 /* testdata in Resources */,
 				4CD86B8015FAA88400B1767C /* ResourceViewController.xib in Resources */,
+				4C8620BD15FBE66E00C72DE7 /* SettingsViewController.xib in Resources */,
+				4C8620D415FC016400C72DE7 /* ParameterSegmentCell.xib in Resources */,
+				4C8620D715FC017600C72DE7 /* ParameterSliderCell.xib in Resources */,
+				4C8620DA15FC018A00C72DE7 /* ParameterSwitchCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -448,6 +522,13 @@
 				4CE1866015FA3EA1004C3372 /* CVImageConverter+PixelBuffer.mm in Sources */,
 				4C7F441215FB52FC00869927 /* UIImage+Scaling.m in Sources */,
 				4C7F441615FB834100869927 /* StartViewController.m in Sources */,
+				4C8620BC15FBE66E00C72DE7 /* SettingsViewController.m in Sources */,
+				4C8620C215FBEC2400C72DE7 /* ObjectTrackerParameter.m in Sources */,
+				4C8620CA15FC011C00C72DE7 /* ParameterSliderCell.m in Sources */,
+				4C8620CE15FC013200C72DE7 /* ParameterSwitchCell.m in Sources */,
+				4C8620D215FC014C00C72DE7 /* ParameterSegmentCell.m in Sources */,
+				4C8620DF15FC181000C72DE7 /* ParameterCell.m in Sources */,
+				4C8620E815FC2CB400C72DE7 /* UIView+EasyFrame.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -467,6 +548,13 @@
 				4CE1865B15F9EA90004C3372 /* ObjectTrackerLibrary.mm in Sources */,
 				4CE1865F15FA3EA1004C3372 /* CVImageConverter+PixelBuffer.mm in Sources */,
 				4C7F441115FB52FC00869927 /* UIImage+Scaling.m in Sources */,
+				4C8620BB15FBE66E00C72DE7 /* SettingsViewController.m in Sources */,
+				4C8620C115FBEC2400C72DE7 /* ObjectTrackerParameter.m in Sources */,
+				4C8620C915FC011C00C72DE7 /* ParameterSliderCell.m in Sources */,
+				4C8620CD15FC013200C72DE7 /* ParameterSwitchCell.m in Sources */,
+				4C8620D115FC014C00C72DE7 /* ParameterSegmentCell.m in Sources */,
+				4C8620DE15FC181000C72DE7 /* ParameterCell.m in Sources */,
+				4C8620E715FC2CB400C72DE7 /* UIView+EasyFrame.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
