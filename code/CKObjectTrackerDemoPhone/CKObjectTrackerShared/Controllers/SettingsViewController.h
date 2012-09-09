@@ -20,8 +20,7 @@
 
 @property (nonatomic, strong) IBOutlet UIScrollView* scrollView;
 @property (nonatomic, strong) IBOutlet UIPageControl* pageControl;
-
-@property (nonatomic, strong) ObjectTrackerParameterCollection* parameters;
+@property (nonatomic, strong) IBOutlet UINavigationItem* navBarItem;
 @property (nonatomic, weak) id<SettingsViewControllerDelegate> delegate;
 
 - (IBAction)doneButtonClicked:(id)sender;

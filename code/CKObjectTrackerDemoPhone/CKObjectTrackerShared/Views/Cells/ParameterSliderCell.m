@@ -84,6 +84,10 @@
     self.value = self.valueSlider.value;
     if (_isFloat) { self.valueLabel.text = [NSString stringWithFormat:@"%.4f", _value]; }
     if (_isInt) { self.valueLabel.text = [NSString stringWithFormat:@"%d", (int)_value]; }
+}
+
+- (IBAction)sliderStoppedSliding:(id)sender
+{
     if ([self.delegate respondsToSelector:@selector(parameterCellValueDidChange:)]) {
         [self.delegate parameterCellValueDidChange:self];
     }

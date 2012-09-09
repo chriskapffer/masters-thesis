@@ -180,7 +180,9 @@ using namespace cv;
     NSError* error = NULL;
     [CVImageConverter CVMat:frame FromUIImage:image error:&error];
     if (error == NULL) {
-        _tracker->trackObjectInVideo(frame, _output, _frameDebugInfo);
+        TrackerOutput output; TrackerDebugInfo debugInfo;
+        _tracker->trackObjectInVideo(frame, output, debugInfo);
+        _output = output; _frameDebugInfo = debugInfo;
         [self handleTrackingInVideoResult];
     } else {
         [self showError:error];
@@ -193,7 +195,9 @@ using namespace cv;
     NSError* error = NULL;
     [CVImageConverter CVMat:frame FromCVPixelBuffer:buffer error:&error];
     if (error == NULL) {
-        _tracker->trackObjectInVideo(frame, _output, _frameDebugInfo);
+        TrackerOutput output; TrackerDebugInfo debugInfo;
+        _tracker->trackObjectInVideo(frame, output, debugInfo);
+        _output = output; _frameDebugInfo = debugInfo;
         [self handleTrackingInVideoResult];
     } else {
         [self showError:error];

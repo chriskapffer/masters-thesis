@@ -50,6 +50,8 @@
     NSArray* resources = [self contentFromDirectory:self.resourceFolderPath];
     _imageArray = [self filterFiles:resources WithExtension:@"jpg"];
     _videoArray = [self filterFiles:resources WithExtension:@"mov"];
+    _imageArray = [self sortedStringArrayNumerically:_imageArray];
+    _videoArray = [self sortedStringArrayNumerically:_videoArray];
     _selectedImageIndex = 0;
     _selectedVideoIndex = 0;
     _prevSelectedImageIndex = -1;
@@ -102,6 +104,7 @@
     int selectedIndex = (indexPath.section == 0) ? self.selectedImageIndex : self.selectedVideoIndex;
     NSArray* sourceArray = (indexPath.section == 0) ? self.imageArray : self.videoArray;
     cell.textLabel.text = [sourceArray objectAtIndex:indexPath.row];
+    cell.textLabel.font = [UIFont systemFontOfSize:17];
     cell.accessoryType = (indexPath.row == selectedIndex)
         ? UITableViewCellAccessoryCheckmark
         : UITableViewCellAccessoryNone;
@@ -150,6 +153,13 @@
 }
 
 #pragma mark - helper methods
+
+- (NSArray*)sortedStringArrayNumerically:(NSArray*)array
+{
+    return [array sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        return [(NSString*)obj1 compare:(NSString*)obj2 options:NSNumericSearch];
+    }];
+}
 
 - (NSArray*)contentFromDirectory:(NSString*)directory
 {

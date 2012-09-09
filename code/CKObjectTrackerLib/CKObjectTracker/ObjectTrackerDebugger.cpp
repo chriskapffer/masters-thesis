@@ -156,7 +156,7 @@ std::string ObjectTrackerDebugger::getDebugString(const std::vector<TrackerDebug
     char buffer[length];
     // summary header
     snprintf(buffer, length, "%s\nProcessed %ld frames (%d detection, %d validation, %d tracking)\n\n",
-             "#### #### #### #### Summary #### #### #### ####", info.size(),
+             "#### #### #### Summary #### #### ####", info.size(),
              frameCountDetection, frameCountValidation, frameCountTracking);
     // compose everything
     snprintf(buffer, length, "%s%s(averaged)\n\n%s(averaged)\n\n%s(averaged)\n\n%d garbage homographies", buffer,

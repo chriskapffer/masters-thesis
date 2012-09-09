@@ -27,11 +27,16 @@
 - (void)setValues:(NSArray *)values
 {
     _values = values;
-    [self.valueSegControl removeAllSegments];
+    [_valueSegControl removeAllSegments];
     for (int i = 0; i < _values.count; i++) {
-        [self.valueSegControl insertSegmentWithTitle:[_values objectAtIndex:i] atIndex:i animated:NO];
+        [_valueSegControl insertSegmentWithTitle:[_values objectAtIndex:i] atIndex:i animated:NO];
     }
-    self.valueSegControl.selectedSegmentIndex = [self.values indexOfObject:_value];
+    _valueSegControl.selectedSegmentIndex = [_values indexOfObject:_value];
+}
+
+- (NSArray*)values // custom getter for atomicy
+{
+    return _values;
 }
 
 - (void)setIsString:(BOOL)isString

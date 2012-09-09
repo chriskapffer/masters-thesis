@@ -21,9 +21,12 @@
 #define SwitchCellIdentifier NSStringFromClass([ParameterSwitchCell class])
 #define SegmentCellIdentifier NSStringFromClass([ParameterSegmentCell class])
 
-@interface SettingsViewController () <UITableViewDataSource, UITableViewDelegate, ParameterCellDelegate>
+#define EMPTY_TITLE_HEADER @"General"
+
+@interface SettingsViewController () <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, ParameterCellDelegate>
 
 @property (nonatomic, strong) NSMutableArray* tableViews;
+@property (nonatomic, strong, readonly) ObjectTrackerParameterCollection* parameters;
 
 @end
 
@@ -33,15 +36,16 @@
 
 @synthesize scrollView = _scrollView;
 @synthesize pageControl = _pageControl;
+@synthesize navBarItem = _navBarItem;
+
 @synthesize parameters = _parameters;
 @synthesize delegate = _delegate;
 
 @synthesize tableViews = _tableViews;
 
-- (void)setParameters:(ObjectTrackerParameterCollection *)parameters
+- (ObjectTrackerParameterCollection*)parameters
 {
-    _parameters = parameters;
-    [self recreateTableViewsWithCount:parameters.subCollections.count];
+    return [[ObjectTrackerLibrary instance] parameters];
 }
 
 #pragma mark - view lifecycle
@@ -60,7 +64,6 @@
     [super viewDidLoad];
     
     self.tableViews = [NSMutableArray array];
-//    self.scrollView = asd TODO: scrollview set up
 }
 
 - (void)viewDidUnload
@@ -69,6 +72,7 @@
     
     self.scrollView = nil;
     self.pageControl = nil;
+    self.navBarItem = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -76,6 +80,7 @@
     [super viewWillAppear:animated];
     
     [self recreateTableViewsWithCount:self.parameters.subCollections.count];
+    [self updateNavBarItem];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -94,7 +99,7 @@
 - (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     ObjectTrackerParameterCollection* collection = [self topLevelCollectionFromTableView:tableView];
-    if (section == 0) { return @"General Settings"; }
+    if (section == 0) { return EMPTY_TITLE_HEADER; }
     return [[collection.subCollections objectAtIndex:section - 1] name];
 }
 
@@ -141,6 +146,18 @@
 {
     if ([self.delegate respondsToSelector:@selector(settingsControllerfinished)]) {
         [self.delegate settingsControllerfinished];
+    }
+}
+
+#pragma mark - scroll view delegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)sender {
+    // Update the page when more than 50% of the previous/next page is visible
+    CGFloat pageWidth = self.scrollView.frame.size.width;
+    int page = floor((self.scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+    if (page != self.pageControl.currentPage) {
+        self.pageControl.currentPage = page;
+        [self updateNavBarItem];
     }
 }
 
@@ -284,6 +301,11 @@
     [self.pageControl setCurrentPage:0];
     [self.pageControl setNumberOfPages:self.tableViews.count];
     [self.scrollView setContentSize:CGSizeMake(self.tableViews.count * width, self.scrollView.frame.size.height)];
+}
+
+- (void)updateNavBarItem
+{
+    [self.navBarItem setTitle:[[self.parameters.subCollections objectAtIndex:self.pageControl.currentPage] name]];
 }
 
 - (ObjectTrackerParameterCollection*)topLevelCollectionFromTableView:(UITableView *)tableView

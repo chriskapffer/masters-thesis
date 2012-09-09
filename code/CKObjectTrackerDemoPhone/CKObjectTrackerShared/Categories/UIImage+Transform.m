@@ -1,14 +1,14 @@
 //
-//  UIImage+Scaling.m
+//  UIImage+Transform.m
 //  CKObjectTrackerDemoPhone
 //
 //  Created by Christoph Kapffer on 08.09.12.
 //  Copyright (c) 2012 HTW Berlin. All rights reserved.
 //
 
-#import "UIImage+Scaling.h"
+#import "UIImage+Transform.h"
 
-@implementation UIImage (Scaling)
+@implementation UIImage (Transform)
 
 - (UIImage*)scaledImageWithSize:(CGSize)size
 {
@@ -36,6 +36,28 @@
     
     // Return our new scaled image
     return scaledImage;
+}
+
+// from: http://stackoverflow.com/a/5017568/782862
+- (UIImage*)rotatedImageWithAngle:(float)radians
+{
+    UIView* rotatedViewBox = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.size.width, self.size.height)];
+    rotatedViewBox.transform = CGAffineTransformMakeRotation(radians);
+    CGSize rotatedSize = rotatedViewBox.frame.size;
+    
+    UIGraphicsBeginImageContext(rotatedSize);
+    CGContextRef bitmap = UIGraphicsGetCurrentContext();
+    CGContextTranslateCTM(bitmap, rotatedSize.width/2, rotatedSize.height/2);
+    CGContextRotateCTM(bitmap, radians);
+    
+    CGRect targetRect = CGRectMake(-self.size.width / 2, -self.size.height / 2, self.size.width, self.size.height);
+    CGContextScaleCTM(bitmap, 1.0, -1.0);
+    CGContextDrawImage(bitmap, targetRect, [self CGImage]);
+    
+    UIImage* rotatedImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return rotatedImage;
 }
 
 @end

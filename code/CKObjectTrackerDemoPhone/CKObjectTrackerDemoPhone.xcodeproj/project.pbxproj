@@ -25,8 +25,8 @@
 		4C4E0DE715DE4077002BE9A4 /* libCKObjectTrackerPhone.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0DE415DE4034002BE9A4 /* libCKObjectTrackerPhone.a */; };
 		4C4E0DE915DE4221002BE9A4 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0DE815DE4221002BE9A4 /* opencv2.framework */; };
 		4C4E0DEA15DE423B002BE9A4 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0DE815DE4221002BE9A4 /* opencv2.framework */; };
-		4C7F441115FB52FC00869927 /* UIImage+Scaling.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7F441015FB52FC00869927 /* UIImage+Scaling.m */; };
-		4C7F441215FB52FC00869927 /* UIImage+Scaling.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7F441015FB52FC00869927 /* UIImage+Scaling.m */; };
+		4C7F441115FB52FC00869927 /* UIImage+Transform.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7F441015FB52FC00869927 /* UIImage+Transform.m */; };
+		4C7F441215FB52FC00869927 /* UIImage+Transform.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7F441015FB52FC00869927 /* UIImage+Transform.m */; };
 		4C7F441615FB834100869927 /* StartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7F441515FB834100869927 /* StartViewController.m */; };
 		4C7F441915FB834B00869927 /* StartViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C7F441715FB834B00869927 /* StartViewController.xib */; };
 		4C8620BB15FBE66E00C72DE7 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620B915FBE66E00C72DE7 /* SettingsViewController.m */; };
@@ -52,6 +52,8 @@
 		4C8620E715FC2CB400C72DE7 /* UIView+EasyFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620E615FC2CB400C72DE7 /* UIView+EasyFrame.m */; };
 		4C8620E815FC2CB400C72DE7 /* UIView+EasyFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620E615FC2CB400C72DE7 /* UIView+EasyFrame.m */; };
 		4C962F0115F96A3500C804E5 /* testdata in Resources */ = {isa = PBXBuildFile; fileRef = 4C962F0015F96A3500C804E5 /* testdata */; };
+		4CCC7D0715FCF980007DFC92 /* UIImage+PixelBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC7D0615FCF97F007DFC92 /* UIImage+PixelBuffer.m */; };
+		4CCC7D0815FCF980007DFC92 /* UIImage+PixelBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC7D0615FCF97F007DFC92 /* UIImage+PixelBuffer.m */; };
 		4CD86B8015FAA88400B1767C /* ResourceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CD86B7E15FAA88400B1767C /* ResourceViewController.xib */; };
 		4CE1863015F9E071004C3372 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1862A15F9E071004C3372 /* MainViewController.m */; };
 		4CE1863115F9E071004C3372 /* ResourceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1862C15F9E071004C3372 /* ResourceViewController.m */; };
@@ -102,8 +104,8 @@
 		4C4E0D4415DE344C002BE9A4 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainViewController.xib; sourceTree = "<group>"; };
 		4C4E0DE415DE4034002BE9A4 /* libCKObjectTrackerPhone.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCKObjectTrackerPhone.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C4E0DE815DE4221002BE9A4 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = ../opencv2.framework; sourceTree = "<group>"; };
-		4C7F440F15FB52FC00869927 /* UIImage+Scaling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Scaling.h"; sourceTree = "<group>"; };
-		4C7F441015FB52FC00869927 /* UIImage+Scaling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Scaling.m"; sourceTree = "<group>"; };
+		4C7F440F15FB52FC00869927 /* UIImage+Transform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Transform.h"; sourceTree = "<group>"; };
+		4C7F441015FB52FC00869927 /* UIImage+Transform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Transform.m"; sourceTree = "<group>"; };
 		4C7F441415FB834100869927 /* StartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartViewController.h; sourceTree = "<group>"; };
 		4C7F441515FB834100869927 /* StartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartViewController.m; sourceTree = "<group>"; };
 		4C7F441815FB834B00869927 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = CKObjectTrackerDemo/en.lproj/StartViewController.xib; sourceTree = SOURCE_ROOT; };
@@ -127,6 +129,8 @@
 		4C8620E515FC2CB400C72DE7 /* UIView+EasyFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+EasyFrame.h"; sourceTree = "<group>"; };
 		4C8620E615FC2CB400C72DE7 /* UIView+EasyFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+EasyFrame.m"; sourceTree = "<group>"; };
 		4C962F0015F96A3500C804E5 /* testdata */ = {isa = PBXFileReference; lastKnownFileType = folder; name = testdata; path = ../../../testdata; sourceTree = "<group>"; };
+		4CCC7D0515FCF97F007DFC92 /* UIImage+PixelBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+PixelBuffer.h"; sourceTree = "<group>"; };
+		4CCC7D0615FCF97F007DFC92 /* UIImage+PixelBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+PixelBuffer.m"; sourceTree = "<group>"; };
 		4CD86B7F15FAA88400B1767C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = CKObjectTrackerTest/en.lproj/ResourceViewController.xib; sourceTree = SOURCE_ROOT; };
 		4CE1862915F9E071004C3372 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		4CE1862A15F9E071004C3372 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
@@ -295,8 +299,10 @@
 				4CE1865E15FA3EA1004C3372 /* CVImageConverter+PixelBuffer.mm */,
 				4C8620E515FC2CB400C72DE7 /* UIView+EasyFrame.h */,
 				4C8620E615FC2CB400C72DE7 /* UIView+EasyFrame.m */,
-				4C7F440F15FB52FC00869927 /* UIImage+Scaling.h */,
-				4C7F441015FB52FC00869927 /* UIImage+Scaling.m */,
+				4C7F440F15FB52FC00869927 /* UIImage+Transform.h */,
+				4C7F441015FB52FC00869927 /* UIImage+Transform.m */,
+				4CCC7D0515FCF97F007DFC92 /* UIImage+PixelBuffer.h */,
+				4CCC7D0615FCF97F007DFC92 /* UIImage+PixelBuffer.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -520,7 +526,7 @@
 				4CE1864B15F9E2EF004C3372 /* FPSCalculator.m in Sources */,
 				4CE1865C15F9EA90004C3372 /* ObjectTrackerLibrary.mm in Sources */,
 				4CE1866015FA3EA1004C3372 /* CVImageConverter+PixelBuffer.mm in Sources */,
-				4C7F441215FB52FC00869927 /* UIImage+Scaling.m in Sources */,
+				4C7F441215FB52FC00869927 /* UIImage+Transform.m in Sources */,
 				4C7F441615FB834100869927 /* StartViewController.m in Sources */,
 				4C8620BC15FBE66E00C72DE7 /* SettingsViewController.m in Sources */,
 				4C8620C215FBEC2400C72DE7 /* ObjectTrackerParameter.m in Sources */,
@@ -529,6 +535,7 @@
 				4C8620D215FC014C00C72DE7 /* ParameterSegmentCell.m in Sources */,
 				4C8620DF15FC181000C72DE7 /* ParameterCell.m in Sources */,
 				4C8620E815FC2CB400C72DE7 /* UIView+EasyFrame.m in Sources */,
+				4CCC7D0815FCF980007DFC92 /* UIImage+PixelBuffer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -547,7 +554,7 @@
 				4CE1864A15F9E2EF004C3372 /* FPSCalculator.m in Sources */,
 				4CE1865B15F9EA90004C3372 /* ObjectTrackerLibrary.mm in Sources */,
 				4CE1865F15FA3EA1004C3372 /* CVImageConverter+PixelBuffer.mm in Sources */,
-				4C7F441115FB52FC00869927 /* UIImage+Scaling.m in Sources */,
+				4C7F441115FB52FC00869927 /* UIImage+Transform.m in Sources */,
 				4C8620BB15FBE66E00C72DE7 /* SettingsViewController.m in Sources */,
 				4C8620C115FBEC2400C72DE7 /* ObjectTrackerParameter.m in Sources */,
 				4C8620C915FC011C00C72DE7 /* ParameterSliderCell.m in Sources */,
@@ -555,6 +562,7 @@
 				4C8620D115FC014C00C72DE7 /* ParameterSegmentCell.m in Sources */,
 				4C8620DE15FC181000C72DE7 /* ParameterCell.m in Sources */,
 				4C8620E715FC2CB400C72DE7 /* UIView+EasyFrame.m in Sources */,
+				4CCC7D0715FCF980007DFC92 /* UIImage+PixelBuffer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

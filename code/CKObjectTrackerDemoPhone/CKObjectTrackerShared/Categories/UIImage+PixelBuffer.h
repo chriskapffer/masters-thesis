@@ -10,4 +10,6 @@
 
 @interface UIImage (PixelBuffer)
 
++ (UIImage*)imageFromPixelBuffer:(CVPixelBufferRef)pixelBuffer;
+
 @end

@@ -25,5 +25,6 @@
 @property (nonatomic, assign) BOOL isInt;
 
 - (IBAction)sliderValueChanged:(id)sender;
+- (IBAction)sliderStoppedSliding:(id)sender;
 
 @end
