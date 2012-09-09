@@ -191,9 +191,8 @@
     __block CVPixelBufferRef retainedBuffer = CVPixelBufferRetain(pixelBuffer);
     dispatch_async(dispatch_get_main_queue(), ^{
         UIImage* image = [UIImage imageFromPixelBuffer:retainedBuffer];
-        CVPixelBufferRelease(retainedBuffer);
         [self.debugViewRawData setImage:[image rotatedImageWithAngle:M_PI_2]];
-        //[self.debugViewRawData setImage:[self.videoReader imageFromPixelBuffer:pixelBuffer]];
+        CVPixelBufferRelease(retainedBuffer);
     });
     [[ObjectTrackerLibrary instance] trackObjectInVideoWithBuffer:pixelBuffer];
 }

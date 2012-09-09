@@ -55,9 +55,10 @@
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:NO];
     
     [[CaptureManager instance] setPixelFormat:kCVPixelFormatType_32BGRA];
-    [[CaptureManager instance] setSessionPreset:AVCaptureSessionPresetMedium];
+    [[CaptureManager instance] setSessionPreset:AVCaptureSessionPreset352x288];
     [[CaptureManager instance] setDelegate:self];
     [[ObjectTrackerLibrary instance] setDelegate:self];
+    [[ObjectTrackerLibrary instance] setRecordDebugInfo:NO];
     
     self.imageViewNames = [NSArray arrayWithObjects:
                            @"Object Image", @"Statistics", @"Raw Data", @"Tracking View", @"Validation View", @"Detection View", nil];
@@ -168,11 +169,13 @@
     
     CaptureManager* captureManager = [CaptureManager instance];
     CGSize targetSize = [captureManager videoResolutionForSessionPreset:captureManager.sessionPreset];
-    UIImage* image = [info objectForKey:UIImagePickerControllerEditedImage];
+    NSLog(@"size: %d, %d", (int)targetSize.width, (int)targetSize.height);
+    UIImage* image = [[info objectForKey:UIImagePickerControllerEditedImage] rotatedImageWithAngle:-M_PI_2];
     if (!image) { image = [info objectForKey:UIImagePickerControllerOriginalImage]; }
     
     [[ObjectTrackerLibrary instance] setObjectImageWithImage:[image scaledImageWithSize:targetSize]];
-    [[ObjectTrackerLibrary instance] clearVideoDebugInfo];
+    [self.debugViewObject setImage:[image rotatedImageWithAngle:M_PI_2]];
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -195,9 +198,8 @@
     __block CVPixelBufferRef retainedBuffer = CVPixelBufferRetain(pixelBuffer);
     dispatch_async(dispatch_get_main_queue(), ^{
         UIImage* image = [UIImage imageFromPixelBuffer:retainedBuffer];
-        CVPixelBufferRelease(retainedBuffer);
         [self.debugViewRawData setImage:[image rotatedImageWithAngle:M_PI_2]];
-        //[self.debugViewRawData setImage:[self.videoReader imageFromPixelBuffer:pixelBuffer]];
+        CVPixelBufferRelease(retainedBuffer);
     });
     [[ObjectTrackerLibrary instance] trackObjectInVideoWithBuffer:pixelBuffer];
 }
@@ -228,7 +230,6 @@
 {
     UIImageView* imageView = [[UIImageView alloc] initWithFrame:self.scrollView.bounds];
     [imageView setFrameOriginX:self.scrollView.bounds.size.width * index];
-    [imageView setTransform:CGAffineTransformMakeRotation(M_PI)];
     [imageView setContentMode:UIViewContentModeScaleAspectFit];
     [self.scrollView addSubview:imageView];
     return imageView;

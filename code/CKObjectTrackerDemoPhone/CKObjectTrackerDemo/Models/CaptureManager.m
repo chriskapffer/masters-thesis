@@ -33,6 +33,7 @@
 @synthesize videoOutput = _videoOutput;
 @synthesize previewLayer = _previewLayer;
 @synthesize videoCaptureQueue = _videoCaptureQueue;
+@synthesize sessionPreset = _sessionPreset;
 
 @synthesize fpsCalculator = _fpsCalculator;
 @synthesize delegate = _delegate;
@@ -89,7 +90,7 @@
 
 - (NSString*)sessionPreset
 {
-    return [self.captureSession sessionPreset];
+    return _sessionPreset;
 }
 
 - (OSType)pixelFormat
@@ -221,8 +222,9 @@
 
 - (void)setSessionPreset:(NSString *)sessionPreset
 {
-    if ([self.captureSession.sessionPreset isEqualToString:sessionPreset] || ![self canSetSessionPreset:sessionPreset])
+    if ([_sessionPreset isEqualToString:sessionPreset] || ![self canSetSessionPreset:sessionPreset])
         return;
+    _sessionPreset = sessionPreset;
     
     [self.captureSession beginConfiguration];
     [self.captureSession setSessionPreset:sessionPreset];
@@ -247,7 +249,8 @@
     if(self)
     {
         //fpsCalculator = [[FPSCalcSummerhill alloc] init];
-        self.fpsCalculator = [[FPSCalcApple alloc] init];
+        _sessionPreset = AVCaptureSessionPresetMedium;
+        _fpsCalculator = [[FPSCalcApple alloc] init];
     }
     return self;
 }
@@ -295,16 +298,17 @@
         [newCaptureSession addOutput:newVideoOutput];
     }
     
-    // try to set session preset, start with highest
-    if ([newCaptureSession canSetSessionPreset:AVCaptureSessionPreset1920x1080]) {
-        newCaptureSession.sessionPreset = AVCaptureSessionPreset1920x1080;
-    } else if ([newCaptureSession canSetSessionPreset:AVCaptureSessionPreset1280x720]) {
-        newCaptureSession.sessionPreset = AVCaptureSessionPreset1280x720;
-    } else if ([newCaptureSession canSetSessionPreset:AVCaptureSessionPreset640x480]) {
-        newCaptureSession.sessionPreset = AVCaptureSessionPreset640x480;
-    } else {
-        newCaptureSession.sessionPreset = AVCaptureSessionPresetMedium;
-    }
+//    // try to set session preset, start with highest
+//    if ([newCaptureSession canSetSessionPreset:AVCaptureSessionPreset1920x1080]) {
+//        newCaptureSession.sessionPreset = AVCaptureSessionPreset1920x1080;
+//    } else if ([newCaptureSession canSetSessionPreset:AVCaptureSessionPreset1280x720]) {
+//        newCaptureSession.sessionPreset = AVCaptureSessionPreset1280x720;
+//    } else if ([newCaptureSession canSetSessionPreset:AVCaptureSessionPreset640x480]) {
+//        newCaptureSession.sessionPreset = AVCaptureSessionPreset640x480;
+//    } else {
+//        newCaptureSession.sessionPreset = AVCaptureSessionPresetMedium;
+//    }
+    newCaptureSession.sessionPreset = self.sessionPreset;
     
     [self setVideoInput:newVideoInput];
     [self setVideoOutput:newVideoOutput];
