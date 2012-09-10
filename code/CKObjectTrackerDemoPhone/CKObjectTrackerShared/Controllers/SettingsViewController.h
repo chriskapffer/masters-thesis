@@ -10,7 +10,8 @@
 
 @protocol SettingsViewControllerDelegate <NSObject>
 
-- (void)settingsControllerfinished;
+- (void)settingsControllerFinished;
+- (void)criticalParameterHasChanged;
 
 @end
 

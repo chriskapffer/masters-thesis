@@ -186,9 +186,16 @@
 
 #pragma mark - settings view controller delegate
 
-- (void)settingsControllerfinished
+- (void)settingsControllerFinished
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)criticalParameterHasChanged
+{
+    // re-init object image
+    ObjectTrackerLibrary* objectTrackerLibrary = [ObjectTrackerLibrary instance];
+    [objectTrackerLibrary setObjectImageWithImage:objectTrackerLibrary.objectImage];
 }
 
 #pragma mark - capture manager delegate

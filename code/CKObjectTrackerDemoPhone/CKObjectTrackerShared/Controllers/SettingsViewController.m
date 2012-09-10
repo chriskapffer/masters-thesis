@@ -144,8 +144,8 @@
 
 - (IBAction)doneButtonClicked:(id)sender
 {
-    if ([self.delegate respondsToSelector:@selector(settingsControllerfinished)]) {
-        [self.delegate settingsControllerfinished];
+    if ([self.delegate respondsToSelector:@selector(settingsControllerFinished)]) {
+        [self.delegate settingsControllerFinished];
     }
 }
 
@@ -185,6 +185,10 @@
             [objectTrackerLibrary setFloatParameterWithName:cell.name Value:sliderCell.value];
         }
     }
+    if (cell.critical && [self.delegate respondsToSelector:@selector(criticalParameterHasChanged:)]) {
+        [self.delegate criticalParameterHasChanged];
+    }
+    
 }
 
 #pragma mark - parameter related methods

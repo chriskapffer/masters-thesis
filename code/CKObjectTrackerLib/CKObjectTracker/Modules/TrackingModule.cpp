@@ -131,6 +131,13 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
     // calculate optical flow
     profiler->startTimer(TIMER_TRACK);
     calcOpticalFlowPyrLK(previousImage, currentImage, pointsIn, pointsOut, status, error, _winSizeFlow, _maxLevel, _terminationCriteria, _lkFlags, _minEigenThreshold);
+    if (countNonZero(status) == 0) {
+        profiler->stopTimer(TIMER_TRACK);
+        cout << "All points lost." << endl;
+        // stop tracking and prepare for a new initial call to this module in the future
+        _isInitialCall = true;
+        return false;
+    }
     removeUntrackedPoints(pointsIn, pointsOut, _initialPoints, status, error, avgError, avgDistance, maxDistance, minDistance);
     profiler->stopTimer(TIMER_TRACK);
     

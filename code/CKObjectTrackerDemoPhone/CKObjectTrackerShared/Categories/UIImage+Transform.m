@@ -38,7 +38,7 @@
     return scaledImage;
 }
 
-// from: http://stackoverflow.com/a/5017568/782862
+// taken from http://stackoverflow.com/a/5017568/782862
 - (UIImage*)rotatedImageWithAngle:(float)radians
 {
     UIView* rotatedViewBox = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.size.width, self.size.height)];
