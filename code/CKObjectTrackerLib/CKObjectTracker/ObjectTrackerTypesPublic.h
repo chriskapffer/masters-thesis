@@ -12,7 +12,11 @@
 #include "SettingsPublicScope.h"
 #include "ObjectTrackerDebugInfo.h"
 
-#define OT_SETTING_DETEC_ ""
+#define OT_SETTING_DETEC_ENABLED "Detection Enabled"
+#define OT_SETTING_DETEC_SEARCH_RECT_MIN "Search Rect Min (% image size)"
+#define OT_SETTING_DETEC_SEARCH_RECT_MAX "Search Rect Max (% image size)"
+#define OT_SETTING_DETEC_CAMSHIFT_TERM_MAX_ITER "max Iterations (until termination)"
+#define OT_SETTING_DETEC_CAMSHIFT_TERM_MIN_EPS "min Epsilon (until termination)"
 
 #define OT_SETTING_VALID_DETECTOR "Feature Detector"
 #define OT_SETTING_VALID_EXTRACTOR "Descriptor Extractor"
@@ -35,7 +39,7 @@
 #define OT_SETTING_VALID_FAST_THRESHLD "Fast Threshold (FAST)"
 #define OT_SETTING_VALID_HESS_THRESHLD "Hessian Threshold (SURF)"
 
-#define OT_SETTING_TRACK_ENABLED "Tracking"
+#define OT_SETTING_TRACK_ENABLED "Tracking Enabled"
 
 #define OT_SETTING_TRACK_MAX_PTS "Number of Points"
 #define OT_SETTING_TRACK_MIN_PTS_ABS "n Points remaining"

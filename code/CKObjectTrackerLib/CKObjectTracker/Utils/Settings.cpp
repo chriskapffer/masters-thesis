@@ -300,14 +300,16 @@ namespace ck {
     {
         vector<string> tmp;
         vector<string> result;
-        tmp = getParameterNamesFromCollection(_parameters->boolParams);
+        
+        tmp = getParameterNamesFromCollection(_parameters->floatParams);
         result.insert(result.begin(), tmp.begin(), tmp.end());
         tmp = getParameterNamesFromCollection(_parameters->intParams);
         result.insert(result.begin(), tmp.begin(), tmp.end());
-        tmp = getParameterNamesFromCollection(_parameters->floatParams);
-        result.insert(result.begin(), tmp.begin(), tmp.end());
         tmp = getParameterNamesFromCollection(_parameters->stringParams);
         result.insert(result.begin(), tmp.begin(), tmp.end());
+        tmp = getParameterNamesFromCollection(_parameters->boolParams);
+        result.insert(result.begin(), tmp.begin(), tmp.end());
+        
         return result;
     }
         

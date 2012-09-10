@@ -60,12 +60,25 @@ namespace ck {
             return modules;
         }
 
-        static void initDetectionSettings(DetectionModule* module, Settings& settings) {
+        static void initDetectionSettings(DetectionModule* module, Settings& settings)
+        {
+            Settings camShiftSettings = Settings("Cam Shift Parameters");
+            
+            camShiftSettings.registerInt(OT_SETTING_DETEC_SEARCH_RECT_MIN, module, &DetectionModule::setMinSearchRectSizeRelative, &DetectionModule::getMinSearchRectSizeRelative, 1, 99);
+            camShiftSettings.registerInt(OT_SETTING_DETEC_SEARCH_RECT_MAX, module, &DetectionModule::setMaxSearchRectSizeRelative, &DetectionModule::getMaxSearchRectSizeRelative, 1, 99);
+            camShiftSettings.registerInt(OT_SETTING_DETEC_CAMSHIFT_TERM_MAX_ITER, module, &DetectionModule::setCamShiftTermIter, &DetectionModule::getCamShiftTermIter, 10, 50);
+            camShiftSettings.registerFloat(OT_SETTING_DETEC_CAMSHIFT_TERM_MIN_EPS, module, &DetectionModule::setCamShiftTermEpsilon, &DetectionModule::getCamShiftTermEpsilon, 0.001f, 0.1f);
+            
             Settings detectionSettings = Settings("Detection Settings");
+            detectionSettings.registerBool(OT_SETTING_DETEC_ENABLED, module, &DetectionModule::setEnabled, &DetectionModule::getEnabled);
+            
+            detectionSettings.addCategory(camShiftSettings);
+            
             settings.addCategory(detectionSettings);
         }
         
-        static void initValidationSettings(ValidationModule* module, Settings& settings) {
+        static void initValidationSettings(ValidationModule* module, Settings& settings)
+        {
             std::vector<std::string> estMethVals; estMethVals.push_back(EST_METHOD_RANSAC); estMethVals.push_back(EST_METHOD_LMEDS); estMethVals.push_back(EST_METHOD_DEFAULT);
             std::vector<std::string> detectorVals; detectorVals.push_back("FAST"); detectorVals.push_back("GFTT"); detectorVals.push_back("SIFT"); detectorVals.push_back("SURF"); detectorVals.push_back("ORB");
             std::vector<std::string> extractorVals; extractorVals.push_back("SIFT"); extractorVals.push_back("SURF"); extractorVals.push_back("ORB"); extractorVals.push_back("FREAK");
@@ -98,7 +111,8 @@ namespace ck {
             settings.addCategory(validationSettings);
         }
         
-        static void initTrackingSettings(TrackingModule* module, Settings& settings) {
+        static void initTrackingSettings(TrackingModule* module, Settings& settings)
+        {
             std::vector<int> winSizeVals; winSizeVals.push_back(11); winSizeVals.push_back(21); winSizeVals.push_back(31); winSizeVals.push_back(41);
             
             Settings terminationSettings = Settings("Stop tracking after");
