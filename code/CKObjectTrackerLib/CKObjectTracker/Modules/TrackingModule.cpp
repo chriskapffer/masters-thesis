@@ -190,8 +190,8 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
     
     if (isHomographyValid) {
         params.searchRect = boundingRect;
-        debugInfo.searchRect = boundingRect;
     }
+    debugInfo.searchRect = params.searchRect;
     
     // set initial call to true if homography is invalid and tracking fails
     _isInitialCall = !isHomographyValid;
@@ -220,9 +220,9 @@ bool TrackingModule::prepareForProcessing(const Mat& homography, vector<Point2f>
                                                    // cause initial point set will be changed over time
         homography.copyTo(_initialHomography);
         prevCorners.clear();
-        // store initial point count in debug info
-        debugInfo.initialPointCount = _initialPointCount;
     }
+    // store initial point count in debug info
+    debugInfo.initialPointCount = _initialPointCount;
 
     _succFrameCount++;
     

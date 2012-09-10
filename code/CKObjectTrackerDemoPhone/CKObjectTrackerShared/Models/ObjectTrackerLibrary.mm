@@ -48,6 +48,26 @@ using namespace cv;
     return [self parameterCollectionFromSettings:_tracker->getSettings()];
 }
 
+- (Homography)homography
+{
+    return [self homographyWithMatrix:_output.homography];
+}
+- (BOOL)foundObject
+{
+    return _output.isObjectPresent;
+}
+
+- (NSString*)frameDebugInfoString
+{
+    string result = ObjectTrackerDebugger::getDebugString(TrackerDebugInfoStripped(_frameDebugInfo));
+    return [NSString stringWithUTF8String:result.c_str()];
+}
+- (NSString*)videoDebugInfoString
+{
+    string result = ObjectTrackerDebugger::getDebugString(_videoDebugInfo);
+    return [NSString stringWithUTF8String:result.c_str()];
+}
+
 #pragma mark - initialization
 
 + (id)instance
@@ -180,9 +200,11 @@ using namespace cv;
     NSError* error = NULL;
     [CVImageConverter CVMat:frame FromUIImage:image error:&error];
     if (error == NULL) {
-        TrackerOutput output; TrackerDebugInfo debugInfo;
+        TrackerOutput output = _output;
+        TrackerDebugInfo debugInfo = _frameDebugInfo;
         _tracker->trackObjectInVideo(frame, output, debugInfo);
-        _output = output; _frameDebugInfo = debugInfo;
+        _frameDebugInfo = debugInfo;
+        _output = output;
         [self handleTrackingInVideoResult];
     } else {
         [self showError:error];
@@ -195,36 +217,18 @@ using namespace cv;
     NSError* error = NULL;
     [CVImageConverter CVMat:frame FromCVPixelBuffer:buffer error:&error];
     if (error == NULL) {
-        TrackerOutput output; TrackerDebugInfo debugInfo;
+        TrackerOutput output = _output;
+        TrackerDebugInfo debugInfo = _frameDebugInfo;
         _tracker->trackObjectInVideo(frame, output, debugInfo);
-        _output = output; _frameDebugInfo = debugInfo;
+        _frameDebugInfo = debugInfo;
+        _output = output;
         [self handleTrackingInVideoResult];
     } else {
         [self showError:error];
     }
 }
 
-- (Homography)homography
-{
-    return [self homographyWithMatrix:_output.homography];
-}
-- (BOOL)foundObject
-{
-    return _output.isObjectPresent;
-}
-
 #pragma mark - debug methods
-
-- (NSString*)frameDebugInfoString
-{
-    string result = ObjectTrackerDebugger::getDebugString(TrackerDebugInfoStripped(_frameDebugInfo));
-    return [NSString stringWithUTF8String:result.c_str()];
-}
-- (NSString*)videoDebugInfoString
-{
-    string result = ObjectTrackerDebugger::getDebugString(_videoDebugInfo);
-    return [NSString stringWithUTF8String:result.c_str()];
-}
 
 - (void)clearVideoDebugInfo
 {

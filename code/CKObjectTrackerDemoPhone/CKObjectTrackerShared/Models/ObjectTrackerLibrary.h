@@ -30,9 +30,14 @@ typedef struct {
 
 @interface ObjectTrackerLibrary : NSObject
 
+@property (nonatomic, assign) bool recordDebugInfo;
 @property (nonatomic, weak) id<ObjectTrackerLibraryDelegate> delegate;
 @property (nonatomic, strong, readonly) ObjectTrackerParameterCollection* parameters;
-@property (nonatomic, assign) bool recordDebugInfo;
+
+@property (atomic, assign, readonly) Homography homography;
+@property (atomic, assign, readonly) BOOL foundObject;
+@property (atomic, copy, readonly) NSString* frameDebugInfoString;
+@property (atomic, copy, readonly) NSString* videoDebugInfoString;
 
 + (id)instance;
 
@@ -49,11 +54,7 @@ typedef struct {
 - (void)trackObjectInImageWithImage:(UIImage *)image;
 - (void)trackObjectInVideoWithImage:(UIImage *)image;
 - (void)trackObjectInVideoWithBuffer:(CVPixelBufferRef)buffer;
-- (Homography)homography;
-- (BOOL)foundObject;
 
-- (NSString*)frameDebugInfoString;
-- (NSString*)videoDebugInfoString;
 - (void)clearVideoDebugInfo;
 
 - (BOOL)detectionDebugImage:(UIImage**)image WithSearchWindow:(BOOL)searchWindow;
