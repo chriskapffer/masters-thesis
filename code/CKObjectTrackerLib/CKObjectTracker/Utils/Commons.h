@@ -18,7 +18,7 @@ inline static bool vectorContains(const std::vector<T>& vector, const T& object)
 }
 
 template<typename T>
-inline static void setItemCounts(const std::vector<std::pair<std::string, std::vector<T> > >& vectorItems, std::vector<std::pair<std::string, int> >& vectorItemCounts)
+inline static void setItemCounts(const std::vector<std::pair<std::string, std::vector<T> > >& vectorItems, std::vector<std::pair<std::string, float> >& vectorItemCounts)
 {
     typename std::vector<std::pair<std::string, std::vector<T> > >::const_iterator iter;
     for (iter = vectorItems.begin(); iter != vectorItems.end(); iter++) {

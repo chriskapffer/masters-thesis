@@ -55,12 +55,12 @@ struct TrackerDebugInfoStripped
     std::string currentModuleType;
     
     // validation
-    std::vector<std::pair<std::string, int> > namedMatchCounts;
+    std::vector<std::pair<std::string, float> > namedMatchCounts;
     int objectKeyPointCount;
     int sceneKeyPointCount;
 
     // tracking
-    std::vector<std::pair<std::string, int> > namedPointCounts;
+    std::vector<std::pair<std::string, float> > namedPointCounts;
     int initialPointCount;
     float transformationDelta;
     float distortion;

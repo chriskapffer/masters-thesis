@@ -57,10 +57,10 @@ public:
     inline void setSPWinSize(const int& value) { _winSizeSubPix = cv::Size(value, value); }
     inline int getSPWinSize() const { return MIN(_winSizeSubPix.width, _winSizeSubPix.height); }
     
-    inline void setLKTermIter(const int& value) { _terminationCriteria.maxCount = value; }
+    inline void setLKTermIter(const int& value) { _terminationCriteria = cv::TermCriteria(CV_TERMCRIT_ITER | CV_TERMCRIT_EPS, value, _terminationCriteria.epsilon); }
     inline int getLKTermIter() const { return _terminationCriteria.maxCount; }
 
-    inline void setLKTermEpsilon(const float& value) { _terminationCriteria.epsilon = value; }
+    inline void setLKTermEpsilon(const float& value) { _terminationCriteria = cv::TermCriteria(CV_TERMCRIT_ITER | CV_TERMCRIT_EPS, _terminationCriteria.maxCount, value); }
     inline float getLKTermEpsilon() const { return _terminationCriteria.epsilon; }
     
     inline void setLKWinSize(const int& value) { _winSizeFlow = cv::Size(value, value); }

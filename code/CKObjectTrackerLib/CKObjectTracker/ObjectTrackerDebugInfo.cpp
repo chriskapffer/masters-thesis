@@ -20,12 +20,12 @@ TrackerDebugInfoStripped::TrackerDebugInfoStripped() {
     currentModuleType = "undefined";
     
     // validation
-    namedMatchCounts = vector<pair<string, int> >();
+    namedMatchCounts = vector<pair<string, float> >();
     objectKeyPointCount = 0;
     sceneKeyPointCount = 0;
     
     // tracking
-    namedPointCounts = vector<pair<string, int> >();
+    namedPointCounts = vector<pair<string, float> >();
     initialPointCount = 0;
     transformationDelta = 0;
     distortion = 0;

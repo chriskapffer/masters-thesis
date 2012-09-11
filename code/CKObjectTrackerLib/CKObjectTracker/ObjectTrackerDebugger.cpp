@@ -87,7 +87,7 @@ std::string ObjectTrackerDebugger::getValidationModuleDebugString(const TrackerD
     snprintf(buffer, length, "%ssceneKeyPoints: %d\n", buffer, info.sceneKeyPointCount);
     for (int i = 0; i < info.namedMatchCounts.size(); i++) {
         snprintf(buffer, length, "%smatches %s: %d\n", buffer,
-                 info.namedMatchCounts[i].first.c_str(), info.namedMatchCounts[i].second);
+                 info.namedMatchCounts[i].first.c_str(), (int)info.namedMatchCounts[i].second);
     }
     
     snprintf(buffer, length, "%sdelta transform (px): %.3f\n", buffer, info.transformationDelta);
@@ -104,9 +104,9 @@ std::string ObjectTrackerDebugger::getTrackingModuleDebugString(const TrackerDeb
     snprintf(buffer, length, "%sinitial point set: %d\n", buffer, info.initialPointCount);
     for (int i = 0; i < info.namedPointCounts.size(); i++) {
         if (i == 0) {
-            snprintf(buffer, length, "%scurrent point set: %d\n", buffer, info.namedPointCounts[i].second);
+            snprintf(buffer, length, "%scurrent point set: %f.3\n", buffer, info.namedPointCounts[i].second);
         } else {
-            snprintf(buffer, length, "%slost after %s: %d\n", buffer, info.namedPointCounts[i].first.c_str(),
+            snprintf(buffer, length, "%slost after %s: %.3f\n", buffer, info.namedPointCounts[i].first.c_str(),
                      info.namedPointCounts[i - 1].second - info.namedPointCounts[i].second);
         }
     }
