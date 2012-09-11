@@ -99,6 +99,7 @@ namespace ck {
 
             Settings validationSettings = Settings("Validation Settings");
             validationSettings.registerBool(OT_SETTING_VALID_CVT_TO_GRAY, module, &ValidationModule::setConvertToGray, &ValidationModule::getConvertToGray, true);
+            validationSettings.registerBool(OT_SETTING_VALID_ALL_POINTS_OUT, module, &ValidationModule::setUseAllKeyPointsForOutput, &ValidationModule::getUseAllKeyPointsForOutput);
             validationSettings.registerString(OT_SETTING_VALID_DETECTOR, module, &ValidationModule::setDetector, &ValidationModule::getDetector, detectorVals, true);
             validationSettings.registerString(OT_SETTING_VALID_EXTRACTOR, module, &ValidationModule::setExtractor, &ValidationModule::getExtractor, extractorVals, true);
             validationSettings.registerInt(OT_SETTING_VALID_N_FEATURES, module, &ValidationModule::setMaxFeatures, &ValidationModule::getMaxFeatures, 20, 1000);

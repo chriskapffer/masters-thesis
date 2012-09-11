@@ -75,6 +75,9 @@ public:
     inline void setRefineHomography(const bool& value) { _refineHomography = value; }
     inline bool getRefineHomography() const { return _refineHomography; }
     
+    inline void setUseAllKeyPointsForOutput(const bool& value) { _useAllKeyPointsForOutput = value; }
+    inline bool getUseAllKeyPointsForOutput() const { return _useAllKeyPointsForOutput; }
+    
 #pragma mark
     
 private:
@@ -97,6 +100,7 @@ private:
     int _estimationMethod;
     int _ransacThreshold;
     bool _refineHomography;
+    bool _useAllKeyPointsForOutput;
 
     // detector, extractor, matcher params    
     cv::Ptr<cv::FeatureDetector> _detector;

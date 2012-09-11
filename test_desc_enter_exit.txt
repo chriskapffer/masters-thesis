@@ -1,0 +1,123 @@
+fast im simulator
+
+Default params:
+
+DetectionModule -> disabled
+TrackingModule -> disabled
+
+ValidationModule:
+    // general
+    convertToGray = false;
+    useAllKeyPointsForOutput = true;
+
+    // extracting params
+    maxFeatures = 295;
+    fastThreshold = 10;
+    hessianThreshold = 400;
+    
+    // filtering params
+    filterFlags = ratioTest;
+    sortMatches = false;
+    nBestMatches = 20;
+    ratio = 0.7;
+    
+    // estimation params
+    estimationMethod = ransac;
+    ransacThreshold = 3;
+    refineHomography = true;
+
+------------------------------------------ img_408x306_book1, vid_480x360_enter_exit_book1
+
+#### #### #### Summary #### #### #### ORB
+Processed 417 frames (93 detection, 208 validation, 116 tracking)
+
+ValidationModule took 25.15 ms --> 39.77 FPS
+extracting:	10.512578 ms (41.80%)
+detecting:	8.714282 ms (34.65%)
+matching:	3.687415 ms (14.66%)
+objectKeyPoints: 295
+sceneKeyPoints: 196
+matches ratio: 30
+matches masked: 24
+delta transform (px): 1273.471
+
+22 garbage homographies
+
+#### #### #### Summary #### #### #### SIFT
+Processed 416 frames (68 detection, 181 validation, 113 tracking)
+
+ValidationModule took 84.96 ms --> 11.77 FPS
+detecting:	42.554208 ms (50.09%)
+extracting:	38.125144 ms (44.87%)
+matching:	2.053703 ms (2.42%)
+objectKeyPoints: 198
+sceneKeyPoints: 113
+matches ratio: 39
+matches masked: 32
+delta transform (px): 87.204
+
+14 garbage homographies
+
+------------------------------------------ img_408x306_book2, vid_480x360_enter_exit_book2
+
+#### #### #### Summary #### #### #### ORB
+Processed 321 frames (99 detection, 160 validation, 62 tracking)
+
+ValidationModule took 26.11 ms --> 38.30 FPS
+extracting:	10.024973 ms (38.40%)
+detecting:	9.786859 ms (37.49%)
+matching:	3.700275 ms (14.17%)
+objectKeyPoints: 295
+sceneKeyPoints: 197
+matches ratio: 19
+matches masked: 13
+delta transform (px): 82.301
+
+31 garbage homographies
+
+#### #### #### Summary #### #### #### SIFT
+Processed 321 frames (59 detection, 134 validation, 76 tracking)
+
+ValidationModule took 92.97 ms --> 10.76 FPS
+detecting:	43.488045 ms (46.78%)
+extracting:	42.489966 ms (45.70%)
+matching:	4.738047 ms (5.10%)
+objectKeyPoints: 327
+sceneKeyPoints: 163
+matches ratio: 58
+matches masked: 49
+delta transform (px): 183.453
+
+17 garbage homographies
+
+------------------------------------------ img_408x306_pen, vid_480x360_enter_exit_pen
+
+#### #### #### Summary #### #### #### ORB
+Processed 427 frames (115 detection, 213 validation, 99 tracking)
+
+ValidationModule took 20.20 ms --> 49.49 FPS
+extracting:	7.705744 ms (38.14%)
+detecting:	6.866830 ms (33.99%)
+matching:	2.810866 ms (13.91%)
+objectKeyPoints: 295
+sceneKeyPoints: 144
+matches ratio: 25
+matches masked: 19
+delta transform (px): 1029.180
+
+21 garbage homographies
+
+#### #### #### Summary #### #### ####
+Processed 427 frames (114 detection, 208 validation, 94 tracking)
+
+ValidationModule took 61.06 ms --> 16.38 FPS
+detecting:	39.114495 ms (64.06%)
+extracting:	20.492877 ms (33.56%)
+matching:	0.236356 ms (0.39%)
+objectKeyPoints: 83
+sceneKeyPoints: 26
+matches ratio: 12
+matches masked: 9
+delta transform (px): 579.297
+
+20 garbage homographies

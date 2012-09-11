@@ -68,7 +68,7 @@ void ValidationModule::setExtractor(const string& value, bool updateMatcher)
         _extractor = new SiftDescriptorExtractor(_maxFeatures);
         if (updateMatcher) { _matcher = new BFMatcher(NORM_L2); }
     } else if (value == "SURF") {
-        _extractor = new SurfFeatureDetector(_hessianThreshold, 4, 2, false);
+        _extractor = new SurfDescriptorExtractor(_hessianThreshold, 4, 2, false);
         if (updateMatcher) { _matcher = new BFMatcher(NORM_L2); }
     } else if (value == "ORB") {
         _extractor = new OrbDescriptorExtractor(_maxFeatures);
@@ -220,9 +220,10 @@ ValidationModule::ValidationModule(const vector<FilterFlag>& filterFlags, int es
     _estimationMethod = estimationMethod;
     _ransacThreshold = ransacThreshold;
     _refineHomography = refineHomography;
+    _useAllKeyPointsForOutput = true;
     
     // detector, extractor, matcher params
-    _detector = new OrbDescriptorExtractor(_maxFeatures);
+    _detector = new OrbFeatureDetector(_maxFeatures);
     _extractor = new OrbDescriptorExtractor(_maxFeatures);
     _matcher = new BFMatcher(NORM_HAMMING);
     
@@ -275,6 +276,7 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     vector<Point2f> sceneCoordinates;
     vector<Point2f> objectCoordinates;
     vector<Point2f> objectCornersTransformed;
+    vector<Point2f> objectCornersTransformedPreviousFrame;
     vector<unsigned char> mask;
     vector<DMatch> matches;
     bool isHomographyValid;
@@ -285,6 +287,7 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     searchRect = params.searchRect;
     sceneImageFull = params.sceneImageCurrent;
     sceneImagePart = sceneImageFull(searchRect);
+    objectCornersTransformedPreviousFrame = params.previosTransformedCorners;
     
     // clear module specific debug information
     debugInfo.objectCornersTransformed.clear();
@@ -338,6 +341,12 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
         vector<DMatch> noOutliers;
         // filter matches with mask and compute homography again (uses internal profiling)
         MatcherFilterer::filterMatchesWithMask(matches, mask, noOutliers, debugInfo.namedMatches);
+        
+        // check if there are enough matches left, stop validation if not
+        if (noOutliers.size() < MIN_HOMOGRAPHY_INPUT) {
+            cout << "Not enough matches!" << endl;
+            return false;
+        }
         profiler->startTimer(TIMER_ESTIMATE);
         PointOps::coordinatesOfMatches(noOutliers, _objectKeyPoints, sceneKeyPoints, objectCoordinates, sceneCoordinates, Point2f(), searchRect.tl());
         homography = findHomography(objectCoordinates, sceneCoordinates, 0); // default method, because there are no outliers
@@ -349,17 +358,22 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     isHomographyValid = SanityCheck::validate(homography, Size(sceneImageFull.cols, sceneImageFull.rows), _objectCorners, objectCornersTransformed);
     profiler->stopTimer(TIMER_VALIDATE);
     
-    // get positions of all scene keypoints again (sceneCoordinates contained positions of matches only) (full scene image space)
-    PointOps::coordinatesOfKeyPoints(sceneKeyPoints, sceneCoordinates, searchRect.tl());
+    if (_useAllKeyPointsForOutput) {
+        // get positions of all scene keypoints again (sceneCoordinates contained positions of matches only) (full scene image space)
+        PointOps::coordinatesOfKeyPoints(sceneKeyPoints, sceneCoordinates, searchRect.tl());
+    }
 
     // set output params
     params.sceneImageCurrent.copyTo(params.sceneImagePrevious);
+    params.previosTransformedCorners = objectCornersTransformed;
     params.isObjectPresent = isHomographyValid;
     params.homography = homography;
     params.points = sceneCoordinates;
 
     // set debug info values
-    debugInfo.transformationDelta = PointOps::averageDistance(objectCornersTransformed, debugInfo.objectCornersTransformed);
+    if (isHomographyValid) {
+        debugInfo.transformationDelta = PointOps::averageDistance(objectCornersTransformed, objectCornersTransformedPreviousFrame);
+    }
     debugInfo.objectCornersTransformed = objectCornersTransformed;
     debugInfo.badHomography = !isHomographyValid;
     debugInfo.homography = homography;

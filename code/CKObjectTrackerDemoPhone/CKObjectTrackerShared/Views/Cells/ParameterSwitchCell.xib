@@ -56,7 +56,7 @@
 							<object class="IBUILabel" id="268002005">
 								<reference key="NSNextResponder" ref="293893096"/>
 								<int key="NSvFlags">302</int>
-								<string key="NSFrame">{{10, 5}, {213, 33}}</string>
+								<string key="NSFrame">{{10, 4}, {213, 35}}</string>
 								<reference key="NSSuperview" ref="293893096"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="96344896"/>
@@ -76,8 +76,8 @@
 									<bytes key="NSWhite">MQA</bytes>
 								</object>
 								<int key="IBUIBaselineAdjustment">0</int>
-								<float key="IBUIMinimumFontSize">14</float>
-								<int key="IBUINumberOfLines">2</int>
+								<float key="IBUIMinimumFontSize">12</float>
+								<int key="IBUINumberOfLines">0</int>
 								<int key="IBUILineBreakMode">0</int>
 								<object class="IBUIFontDescription" key="IBUIFontDescription">
 									<int key="type">1</int>

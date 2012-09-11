@@ -1,0 +1,27 @@
+fast im simulator
+
+Default params:
+
+DetectionModule -> disabled
+TrackingModule -> disabled
+
+ValidationModule:
+    // general
+    convertToGray = false;
+    useAllKeyPointsForOutput = true;
+
+    // extracting params
+    maxFeatures = 295;
+    fastThreshold = 10;
+    hessianThreshold = 400;
+    
+    // filtering params
+    filterFlags = ratioTest;
+    sortMatches = false;
+    nBestMatches = 20;
+    ratio = 0.7;
+    
+    // estimation params
+    estimationMethod = ransac;
+    ransacThreshold = 3;
+    refineHomography = true;

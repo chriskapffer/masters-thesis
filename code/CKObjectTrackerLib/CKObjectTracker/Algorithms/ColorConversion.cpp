@@ -23,7 +23,7 @@ namespace ck {
         }
         
 #if !defined(__ARM_NEON_IS_AVAILABLE__)
-        method = COLOR_CONV_CV; // change method to default, if neon is not available
+        method = COLOR_CONV_OPEN_CV; // change method to default, if neon is not available
 #endif
         if (method == COLOR_CONV_OPEN_CV) {
             int code = type == CV_8UC3 ? CV_BGR2GRAY : CV_BGRA2GRAY;
@@ -55,7 +55,7 @@ namespace ck {
     void ColorConvert::bgrOrBgra2Hsv(const cv::Mat& imgIn, cv::Mat& imgOut, ColorConversionMethod method)
     {
 //#if !defined(__ARM_NEON_IS_AVAILABLE__)
-//        method = COLOR_CONV_CV; // change method to default, if neon is not available
+//        method = COLOR_CONV_OPEN_CV; // change method to default, if neon is not available
 //#endif
         method = COLOR_CONV_OPEN_CV; // as long as neon conversion is not implemented, always fall back to default
         if (method == COLOR_CONV_OPEN_CV) {

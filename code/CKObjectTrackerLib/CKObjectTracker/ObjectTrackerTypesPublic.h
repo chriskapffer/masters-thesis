@@ -23,6 +23,7 @@
 #define OT_SETTING_VALID_EST_METHOD "Estimation Method"
 
 #define OT_SETTING_VALID_CVT_TO_GRAY "Convert to Gray"
+#define OT_SETTING_VALID_ALL_POINTS_OUT "Use all Points for Tracking"
 #define OT_SETTING_VALID_REFINE_HOMOGRAPHY "Refine Homography"
 
 #define OT_SETTING_VALID_MATCHES_SORT "Sort Matches"
