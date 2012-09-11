@@ -207,7 +207,7 @@ ValidationModule::ValidationModule(const vector<FilterFlag>& filterFlags, int es
     _sortMatches = sortMatches;
     
     // extracting params
-    _maxFeatures = 500;
+    _maxFeatures = 200;
     _fastThreshold = 10;
     _hessianThreshold = 400;
     

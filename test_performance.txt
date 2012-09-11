@@ -1,0 +1,387 @@
+fast im simulator
+
+Default params:
+
+DetectionModule -> disabled
+
+ValidationModule:
+    // general
+    convertToGray = false;
+    useAllKeyPointsForOutput = true;
+
+    // extracting params
+    detector = ORB;
+    extractor = ORB;
+    maxFeatures = 200;
+
+    // filtering params
+    filterFlags = ratioTest;
+    sortMatches = false;
+    nBestMatches = 20;
+    ratio = 0.7;
+    
+    // estimation params
+    estimationMethod = ransac;
+    ransacThreshold = 3;
+    refineHomography = true;
+
+TrackingModule:
+    useSubPixels = false;
+    calcHomRelToFrame = false;
+    filterDistortions = true;
+    distortionThreshold = 1;
+
+    maxPointsAbsolute = 500;
+    maxTransformationDelta = 50;
+    maxSuccessiveFrames = -1;
+
+    minPointsAbsolute = 10;
+    minPointsRelative = 10;
+    
+    winSizeFlow = Size(21, 21);
+    minEigenThreshold = 0.0001f;
+    maxLevel = 3;
+
+   CV_TERMCRIT_ITER | CV_TERMCRIT_EPS, 30, 0.01)
+
+
+------ mac mini (default build)  ------
+
+#### #### #### Summary #### #### #### img_408x306_book1 - vid_480_360_book1
+Processed 472 frames (2 detection, 10 validation, 460 tracking)
+
+ValidationModule took 15.85 ms --> 63.07 FPS
+extracting:	6.178032 ms (38.97%)
+detecting:	4.752478 ms (29.98%)
+matching:	2.625770 ms (16.56%)
+estimating:	1.731676 ms (10.92%)
+filtering:	0.127615 ms (0.80%)
+validating:	0.017238 ms (0.11%)
+other:		0.421505 ms (2.66%)
+TrackingModule took 10.41 ms --> 96.06 FPS
+tracking:	7.878753 ms (75.68%)
+converting:	1.087306 ms (10.44%)
+estimating:	0.865270 ms (8.31%)
+validating:	0.014489 ms (0.14%)
+filtering:	0.013938 ms (0.13%)
+other:		0.550856 ms (5.29%)
+
+10 garbage homographies
+
+#### #### #### Summary #### #### #### img_408x306_book1 - vid_352_288_book1
+Processed 472 frames (3 detection, 8 validation, 461 tracking)
+
+ValidationModule took 11.45 ms --> 87.36 FPS
+extracting:	4.286795 ms (37.45%)
+detecting:	3.478331 ms (30.39%)
+matching:	1.981086 ms (17.31%)
+estimating:	1.282136 ms (11.20%)
+filtering:	0.124382 ms (1.09%)
+validating:	0.016475 ms (0.14%)
+other:		0.277394 ms (2.42%)
+
+TrackingModule took 7.72 ms --> 129.61 FPS
+tracking:	6.029013 ms (78.14%)
+estimating:	0.761589 ms (9.87%)
+converting:	0.626582 ms (8.12%)
+validating:	0.014326 ms (0.19%)
+filtering:	0.011285 ms (0.15%)
+other:		0.272735 ms (3.53%)
+
+7 garbage homographies
+
+#### #### #### Summary #### #### #### img_204x153_book1 - vid_192x144_book1
+Processed 472 frames (6 detection, 12 validation, 454 tracking)
+
+ValidationModule took 5.52 ms --> 181.15 FPS
+extracting:	1.915172 ms (34.69%)
+detecting:	1.502565 ms (27.22%)
+matching:	1.117000 ms (20.23%)
+estimating:	0.774297 ms (14.03%)
+filtering:	0.084359 ms (1.53%)
+validating:	0.010634 ms (0.19%)
+other:		0.116155 ms (2.10%)
+
+TrackingModule took 3.95 ms --> 252.92 FPS
+tracking:	2.953636 ms (74.70%)
+estimating:	0.688553 ms (17.42%)
+converting:	0.178272 ms (4.51%)
+validating:	0.011993 ms (0.30%)
+filtering:	0.008259 ms (0.21%)
+other:		0.113035 ms (2.86%)
+
+7 garbage homographies
+
+------ simulator (default build)  ------
+
+#### #### #### Summary #### #### #### img_408x306_book1 - vid_480_360_book1
+Processed 471 frames (3 detection, 10 validation, 434 tracking)
+
+ValidationModule took 66.24 ms --> 15.10 FPS
+extracting:	28.037007 ms (42.33%)
+detecting:	25.798615 ms (38.95%)
+estimating:	6.035997 ms (9.11%)
+matching:	5.895253 ms (8.90%)
+filtering:	0.145692 ms (0.22%)
+validating:	0.017043 ms (0.03%)
+other:		0.306158 ms (0.46%)
+
+TrackingModule took 45.36 ms --> 22.04 FPS
+tracking:	37.426394 ms (82.50%)
+converting:	5.212558 ms (11.49%)
+estimating:	2.258196 ms (4.98%)
+validating:	0.020151 ms (0.04%)
+filtering:	0.016223 ms (0.04%)
+other:		0.429658 ms (0.95%)
+
+9 garbage homographies
+
+#### #### #### Summary #### #### #### img_408x306_book1 - vid_352_288_book1
+Processed 471 frames (1 detection, 7 validation, 463 tracking)
+
+ValidationModule took 49.59 ms --> 20.16 FPS
+extracting:	19.934938 ms (40.20%)
+detecting:	18.273423 ms (36.85%)
+matching:	5.705343 ms (11.50%)
+estimating:	5.263340 ms (10.61%)
+filtering:	0.151235 ms (0.30%)
+validating:	0.016806 ms (0.03%)
+other:		0.247234 ms (0.50%)
+
+TrackingModule took 39.08 ms --> 25.59 FPS
+tracking:	34.165081 ms (87.42%)
+estimating:	2.321686 ms (5.94%)
+converting:	2.293503 ms (5.87%)
+validating:	0.020298 ms (0.05%)
+filtering:	0.014917 ms (0.04%)
+other:		0.268035 ms (0.69%)
+
+6 garbage homographies
+
+#### #### #### Summary #### #### #### img_204x153_book1 - vid_192x144_book1
+Processed 471 frames (2 detection, 7 validation, 459 tracking)
+
+ValidationModule took 22.19 ms --> 45.07 FPS
+detecting:	7.855506 ms (35.40%)
+extracting:	6.651832 ms (29.98%)
+matching:	3.835513 ms (17.29%)
+estimating:	3.593024 ms (16.19%)
+filtering:	0.106350 ms (0.48%)
+validating:	0.017799 ms (0.08%)
+other:		0.128607 ms (0.58%)
+
+TrackingModule took 18.49 ms --> 54.07 FPS
+tracking:	15.759192 ms (85.22%)
+estimating:	1.871360 ms (10.12%)
+converting:	0.688479 ms (3.72%)
+validating:	0.020828 ms (0.11%)
+filtering:	0.009733 ms (0.05%)
+other:		0.143716 ms (0.78%)
+
+5 garbage homographies
+
+------ iPhone 4S (default build)  ------
+
+#### #### #### Summary #### #### #### img_408x306_book1 - vid_480_360_book1
+Processed 471 frames (7 detection, 14 validation, 441 tracking)
+
+ValidationModule took 467.54 ms --> 2.14 FPS
+extracting:	226.570393 ms (48.46%)
+detecting:	167.540318 ms (35.83%)
+matching:	46.123420 ms (9.87%)
+estimating:	24.747542 ms (5.29%)
+filtering:	0.845283 ms (0.18%)
+validating:	0.131003 ms (0.03%)
+other:		1.584163 ms (0.34%)
+
+TrackingModule took 369.81 ms --> 2.70 FPS
+tracking:	326.132832 ms (88.19%)
+converting:	27.336080 ms (7.39%)
+estimating:	14.258558 ms (3.86%)
+filtering:	0.094072 ms (0.03%)
+validating:	0.070456 ms (0.02%)
+other:		1.917781 ms (0.52%)
+
+12 garbage homographies
+
+#### #### #### Summary #### #### #### img_408x306_book1 - vid_352_288_book1
+Processed 471 frames (2 detection, 9 validation, 444 tracking)
+
+ValidationModule took 337.46 ms --> 2.96 FPS
+extracting:	141.145716 ms (41.83%)
+detecting:	118.998639 ms (35.26%)
+matching:	46.537828 ms (13.79%)
+estimating:	28.572801 ms (8.47%)
+filtering:	0.881931 ms (0.26%)
+validating:	0.062523 ms (0.02%)
+other:		1.264566 ms (0.37%)
+
+TrackingModule took 292.64 ms --> 3.42 FPS
+tracking:	261.284027 ms (89.29%)
+converting:	16.143347 ms (5.52%)
+estimating:	13.633904 ms (4.66%)
+filtering:	0.086947 ms (0.03%)
+validating:	0.070011 ms (0.02%)
+other:		1.422205 ms (0.49%)
+
+7 garbage homographies
+
+#### #### #### Summary #### #### #### img_204x153_book1 - vid_192x144_book1
+Processed 471 frames (7 detection, 13 validation, 437 tracking)
+
+ValidationModule took 148.89 ms --> 6.72 FPS
+detecting:	52.312549 ms (35.14%)
+extracting:	46.456468 ms (31.20%)
+matching:	24.818596 ms (16.67%)
+estimating:	23.955388 ms (16.09%)
+filtering:	0.619522 ms (0.42%)
+validating:	0.064333 ms (0.04%)
+other:		0.661105 ms (0.44%)
+
+TrackingModule took 131.19 ms --> 7.62 FPS
+tracking:	113.953314 ms (86.86%)
+estimating:	11.169002 ms (8.51%)
+converting:	5.236103 ms (3.99%)
+validating:	0.067373 ms (0.05%)
+filtering:	0.055480 ms (0.04%)
+other:		0.711784 ms (0.54%)
+
+12 garbage homographies
+
+------ simulator (fast build)  ------
+
+#### #### #### Summary #### #### #### img_408x306_book1 - vid_480_360_book1
+Processed 471 frames (4 detection, 12 validation, 455 tracking)
+
+ValidationModule took 21.84 ms --> 45.78 FPS
+extracting:	10.752442 ms (49.23%)
+detecting:	6.857632 ms (31.40%)
+matching:	2.410005 ms (11.03%)
+estimating:	1.369425 ms (6.27%)
+filtering:	0.148433 ms (0.68%)
+validating:	0.008577 ms (0.04%)
+other:		0.296526 ms (1.36%)
+
+TrackingModule took 14.28 ms --> 70.02 FPS
+tracking:	11.627469 ms (81.41%)
+converting:	1.302678 ms (9.12%)
+estimating:	0.882842 ms (6.18%)
+filtering:	0.017915 ms (0.13%)
+validating:	0.014297 ms (0.10%)
+other:		0.437440 ms (3.06%)
+
+9 garbage homographies
+
+#### #### #### Summary #### #### #### img_408x306_book1 - vid_352_288_book1
+Processed 471 frames (3 detection, 10 validation, 458 tracking)
+
+ValidationModule took 16.30 ms --> 61.34 FPS
+extracting:	6.769897 ms (41.53%)
+detecting:	5.058974 ms (31.03%)
+matching:	2.747384 ms (16.85%)
+estimating:	1.296773 ms (7.96%)
+filtering:	0.158073 ms (0.97%)
+validating:	0.010925 ms (0.07%)
+other:		0.259314 ms (1.59%)
+
+TrackingModule took 10.93 ms --> 91.53 FPS
+tracking:	8.970478 ms (82.11%)
+estimating:	0.846811 ms (7.75%)
+converting:	0.763433 ms (6.99%)
+filtering:	0.016225 ms (0.15%)
+validating:	0.015363 ms (0.14%)
+other:		0.313306 ms (2.87%)
+
+8 garbage homographies
+
+#### #### #### Summary #### #### #### img_204x153_book1 - vid_192x144_book1
+Processed 471 frames (3 detection, 9 validation, 459 tracking)
+
+ValidationModule took 8.47 ms --> 118.06 FPS
+extracting:	3.288640 ms (38.83%)
+detecting:	2.333177 ms (27.55%)
+matching:	1.293584 ms (15.27%)
+estimating:	1.288463 ms (15.21%)
+filtering:	0.111364 ms (1.31%)
+validating:	0.011597 ms (0.14%)
+other:		0.143235 ms (1.69%)
+
+TrackingModule took 5.11 ms --> 195.77 FPS
+tracking:	3.945706 ms (77.24%)
+estimating:	0.744457 ms (14.57%)
+converting:	0.217301 ms (4.25%)
+filtering:	0.018385 ms (0.36%)
+validating:	0.014591 ms (0.29%)
+other:		0.167616 ms (3.28%)
+
+8 garbage homographies
+
+------ iPhone 4S (fast build)  ------
+
+#### #### #### Summary #### #### #### img_408x306_book1 - vid_480_360_book1
+Processed 471 frames (6 detection, 13 validation, 451 tracking)
+
+ValidationModule took 139.70 ms --> 7.16 FPS
+extracting:	70.930958 ms (50.77%)
+detecting:	46.526448 ms (33.30%)
+matching:	11.366856 ms (8.14%)
+estimating:	8.185103 ms (5.86%)
+filtering:	0.889051 ms (0.64%)
+validating:	0.102776 ms (0.07%)
+other:		1.702344 ms (1.22%)
+
+TrackingModule took 101.89 ms --> 9.81 FPS
+tracking:	87.071874 ms (85.45%)
+converting:	7.621897 ms (7.48%)
+estimating:	5.068180 ms (4.97%)
+filtering:	0.092488 ms (0.09%)
+validating:	0.049686 ms (0.05%)
+other:		1.989865 ms (1.95%)
+
+11 garbage homographies
+
+#### #### #### Summary #### #### #### img_408x306_book1 - vid_352_288_book1
+Processed 471 frames (1 detection, 7 validation, 456 tracking)
+
+
+ValidationModule took 97.36 ms --> 10.27 FPS
+extracting:	42.538405 ms (43.69%)
+detecting:	32.290631 ms (33.16%)
+matching:	11.174714 ms (11.48%)
+estimating:	9.107679 ms (9.35%)
+filtering:	0.922458 ms (0.95%)
+validating:	0.041964 ms (0.04%)
+other:		1.288715 ms (1.32%)
+
+TrackingModule took 85.00 ms --> 11.76 FPS
+tracking:	74.080802 ms (87.15%)
+estimating:	4.874997 ms (5.73%)
+converting:	4.487646 ms (5.28%)
+filtering:	0.085046 ms (0.10%)
+validating:	0.048139 ms (0.06%)
+other:		1.428259 ms (1.68%)
+
+6 garbage homographies
+
+#### #### #### Summary #### #### #### img_204x153_book1 - vid_192x144_book1
+Processed 471 frames (1 detection, 6 validation, 464 tracking)
+
+ValidationModule took 44.55 ms --> 22.44 FPS
+extracting:	16.308632 ms (36.60%)
+detecting:	13.686159 ms (30.72%)
+estimating:	7.142285 ms (16.03%)
+matching:	6.046139 ms (13.57%)
+filtering:	0.653868 ms (1.47%)
+validating:	0.040833 ms (0.09%)
+other:		0.676292 ms (1.52%)
+
+TrackingModule took 38.52 ms --> 25.96 FPS
+tracking:	32.395886 ms (84.09%)
+estimating:	3.806342 ms (9.88%)
+converting:	1.468716 ms (3.81%)
+filtering:	0.054210 ms (0.14%)
+validating:	0.048076 ms (0.12%)
+other:		0.750077 ms (1.95%)
+
+4 garbage homographies
+
