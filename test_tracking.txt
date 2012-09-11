@@ -1,0 +1,64 @@
+fast im simulator
+
+Default params:
+
+DetectionModule -> disabled
+
+ValidationModule:
+    // general
+    convertToGray = false;
+    useAllKeyPointsForOutput = true;
+
+    // extracting params
+    detector = SIFT;
+    extractor = SIFT;
+    
+    // filtering params
+    filterFlags = ratioTest;
+    sortMatches = false;
+    nBestMatches = 20;
+    ratio = 0.7;
+    
+    // estimation params
+    estimationMethod = ransac;
+    ransacThreshold = 3;
+    refineHomography = true;
+
+TrackingModule:
+    useSubPixels = false;
+    calcHomRelToFrame = false;
+    filterDistortions = false;
+    distortionThreshold = 1;
+
+    maxPointsAbsolute = 1000;
+    maxTransformationDelta = 200;
+    maxSuccessiveFrames = -1;
+
+    minPointsAbsolute = 4;
+    minPointsRelative = 1;
+    
+    winSizeFlow = Size(21, 21);
+    minEigenThreshold = 0.0001f;
+    maxLevel = 3;
+
+   CV_TERMCRIT_ITER | CV_TERMCRIT_EPS, 30, 0.01)
+
+#### #### #### Summary #### #### ####
+Processed 471 frames (1 detection, 1 validation, 413 tracking)
+
+TrackingModule took 10.91 ms --> 91.65 FPS
+tracking:	9.197679 ms (84.30%)
+estimating:	0.735155 ms (6.74%)
+converting:	0.670737 ms (6.15%)
+validating:	0.013603 ms (0.12%)
+other:		0.293549 ms (2.69%)
+initial point set: 125
+current point set: 108
+lost after tracking: 0
+lost after filtering: 0
+delta transform (px): 5.840
+distance range (px): 6.700
+average error: 5.323
+(averaged)
+
+0 garbage homographies
