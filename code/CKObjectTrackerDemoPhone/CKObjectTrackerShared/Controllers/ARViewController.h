@@ -12,6 +12,6 @@
 @interface ARViewController : GLKViewController
 
 @property (nonatomic, assign) GLKMatrix3 homography;
-@property (nonatomic, assign) CVPixelBufferRef cameraImage;
+@property (nonatomic, assign) CVPixelBufferRef background;
 
 @end

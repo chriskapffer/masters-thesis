@@ -9,7 +9,7 @@
 #import "DrawableObject.h"
 #import <GLKit/GLKit.h>
 
-const Vertex vertices[] = {
+const Vertex objVertices[] = {
     // Front < Position >    < Normal >    < Color >  < Texture >
     {{ 0.5f, -0.5f,  0.5f}, { 0,  0, -1}, {1, 0, 0, 1}, {1, 0}},
     {{ 0.5f,  0.5f,  0.5f}, { 0,  0, -1}, {0, 1, 0, 1}, {1, 1}},
@@ -42,7 +42,7 @@ const Vertex vertices[] = {
     {{-0.5f, -0.5f, -0.5f}, { 0, -1,  0}, {0, 0, 0, 1}, {0, 0}}
 };
 
-const GLubyte indices[] = {
+const GLubyte objIndices[] = {
     // Front
     0, 1, 2,
     2, 3, 0,
@@ -116,11 +116,11 @@ const GLubyte indices[] = {
     // set up buffers
     glGenBuffers(1, &_vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(objVertices), objVertices, GL_STATIC_DRAW);
     
     glGenBuffers(1, &_indexBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(objIndices), objIndices, GL_STATIC_DRAW);
     
     glEnableVertexAttribArray(GLKVertexAttribPosition);
     glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, Position));
@@ -132,7 +132,7 @@ const GLubyte indices[] = {
     glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid *) offsetof(Vertex, TexCoord));
     
     
-    glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(indices[0]), GL_UNSIGNED_BYTE, 0);
+    glDrawElements(GL_TRIANGLES, sizeof(objIndices)/sizeof(objIndices[0]), GL_UNSIGNED_BYTE, 0);
 }
 
 

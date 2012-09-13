@@ -213,7 +213,7 @@
     __block CVPixelBufferRef retainedBuffer = CVPixelBufferRetain(pixelBuffer);
     dispatch_async(dispatch_get_main_queue(), ^{
         //UIImage* image = [UIImage imageFromPixelBuffer:retainedBuffer];
-        self.arViewController.cameraImage = retainedBuffer;
+        self.arViewController.background = retainedBuffer;
         CVPixelBufferRelease(retainedBuffer);
     });
     [[ObjectTrackerLibrary instance] trackObjectInVideoWithBuffer:pixelBuffer];
