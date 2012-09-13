@@ -25,7 +25,7 @@
 @property (nonatomic, strong) ResourceViewController* resourceController;
 @property (nonatomic, strong) VideoReader* videoReader;
 
-@property (nonatomic, strong) UIImageView* debugViewRawData;
+@property (nonatomic, strong) UIImageView* resultView;
 @property (nonatomic, strong) UIImageView* debugViewTracking;
 @property (nonatomic, strong) UIImageView* debugViewValidation;
 @property (nonatomic, strong) UIImageView* debugViewDetection;
@@ -50,7 +50,7 @@
 @synthesize resourceController = _resourceController;
 @synthesize videoReader = _videoReader;
 
-@synthesize debugViewRawData = _debugViewRawData;
+@synthesize resultView = _resultView;
 @synthesize debugViewTracking = _debugViewTracking;
 @synthesize debugViewValidation = _debugViewValidation;
 @synthesize debugViewDetection = _debugViewDetection;
@@ -69,7 +69,7 @@
     
     self.debugViewObject = [self registeredImageViewWithIndex:0];
     [self.textView setFrameOrigin:CGPointMake(self.scrollView.bounds.size.width, 0)]; // <-- index 1
-    self.debugViewRawData = [self registeredImageViewWithIndex:2];
+    self.resultView = [self registeredImageViewWithIndex:2];
     self.debugViewTracking = [self registeredImageViewWithIndex:3];
     self.debugViewValidation = [self registeredImageViewWithIndex:4];
     self.debugViewDetection = [self registeredImageViewWithIndex:5];
@@ -197,8 +197,9 @@
 {
     __block CVPixelBufferRef retainedBuffer = CVPixelBufferRetain(pixelBuffer);
     dispatch_async(dispatch_get_main_queue(), ^{
+        // TODO: draw transformed rect
         UIImage* image = [UIImage imageFromPixelBuffer:retainedBuffer];
-        [self.debugViewRawData setImage:[image rotatedImageWithAngle:M_PI_2]];
+        [self.resultView setImage:[image rotatedImageWithAngle:M_PI_2]];
         CVPixelBufferRelease(retainedBuffer);
     });
     [[ObjectTrackerLibrary instance] trackObjectInVideoWithBuffer:pixelBuffer];

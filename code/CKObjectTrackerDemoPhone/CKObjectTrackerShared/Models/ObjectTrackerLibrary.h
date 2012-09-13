@@ -11,9 +11,9 @@
 #define MAX_RECORDED_FRAMES 10000
 
 typedef struct {
-    CGFloat m11, m12, m13;
-    CGFloat m21, m22, m23;
-    CGFloat m31, m32, m33;
+    CGFloat m00, m01, m02;
+    CGFloat m10, m11, m12;
+    CGFloat m20, m21, m22;
 } Homography;
 
 @protocol ObjectTrackerLibraryDelegate <NSObject>

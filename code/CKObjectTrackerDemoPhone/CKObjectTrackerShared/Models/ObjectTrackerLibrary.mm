@@ -318,15 +318,15 @@ using namespace cv;
 - (Homography)homographyWithMatrix:(Mat&)matrix
 {
     Homography result;
-    result.m11 = matrix.at<double>(0,0);
-    result.m12 = matrix.at<double>(0,1);
-    result.m13 = matrix.at<double>(0,2);
-    result.m21 = matrix.at<double>(1,0);
-    result.m22 = matrix.at<double>(1,1);
-    result.m23 = matrix.at<double>(1,2);
-    result.m31 = matrix.at<double>(2,0);
-    result.m32 = matrix.at<double>(2,1);
-    result.m33 = matrix.at<double>(2,2);
+    result.m00 = matrix.at<double>(0,0);
+    result.m01 = matrix.at<double>(0,1);
+    result.m02 = matrix.at<double>(0,2);
+    result.m10 = matrix.at<double>(1,0);
+    result.m11 = matrix.at<double>(1,1);
+    result.m12 = matrix.at<double>(1,2);
+    result.m20 = matrix.at<double>(2,0);
+    result.m21 = matrix.at<double>(2,1);
+    result.m22 = matrix.at<double>(2,2);
     return result;
 }
 

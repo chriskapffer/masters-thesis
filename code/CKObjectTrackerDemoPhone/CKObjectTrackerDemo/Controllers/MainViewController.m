@@ -8,6 +8,7 @@
 
 #import "MainViewController.h"
 #import "SettingsViewController.h"
+#import "ARViewController.h"
 
 #import "ObjectTrackerLibrary.h"
 #import "CaptureManager.h"
@@ -19,8 +20,8 @@
 @interface MainViewController () <CaptureManagerDelegate, ObjectTrackerLibraryDelegate, SettingsViewControllerDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate>
 
 @property (nonatomic, strong) SettingsViewController* settingsController;
+@property (nonatomic, strong) ARViewController* arViewController;
 
-@property (nonatomic, strong) UIImageView* debugViewRawData;
 @property (nonatomic, strong) UIImageView* debugViewTracking;
 @property (nonatomic, strong) UIImageView* debugViewValidation;
 @property (nonatomic, strong) UIImageView* debugViewDetection;
@@ -39,8 +40,8 @@
 @synthesize navBarItem = _navBarItem;
 
 @synthesize settingsController = _settingsController;
+@synthesize arViewController = _arViewController;
 
-@synthesize debugViewRawData = _debugViewRawData;
 @synthesize debugViewTracking = _debugViewTracking;
 @synthesize debugViewValidation = _debugViewValidation;
 @synthesize debugViewDetection = _debugViewDetection;
@@ -60,12 +61,16 @@
     [[ObjectTrackerLibrary instance] setDelegate:self];
     [[ObjectTrackerLibrary instance] setRecordDebugInfo:NO];
     
+    self.arViewController = [[ARViewController alloc] init];
+    self.arViewController.view.frame = self.scrollView.frame;
+    [self.scrollView addSubview:self.arViewController.view];
+    
     self.imageViewNames = [NSArray arrayWithObjects:
-                           @"Object Image", @"Statistics", @"Raw Data", @"Tracking View", @"Validation View", @"Detection View", nil];
+                           @"Object Image", @"Statistics", @"Augmented Reality", @"Tracking View", @"Validation View", @"Detection View", nil];
     
     self.debugViewObject = [self registeredImageViewWithIndex:0];
-    [self.textView setFrameOrigin:CGPointMake(self.scrollView.bounds.size.width, 0)]; // <-- index 1
-    self.debugViewRawData = [self registeredImageViewWithIndex:2];
+    [self.textView setFrameOrigin:CGPointMake(self.scrollView.bounds.size.width* 1, 0)]; // <-- index 1
+    [self.arViewController.view setFrameOrigin:CGPointMake(self.scrollView.bounds.size.width * 2, 0)]; // <-- index 2
     self.debugViewTracking = [self registeredImageViewWithIndex:3];
     self.debugViewValidation = [self registeredImageViewWithIndex:4];
     self.debugViewDetection = [self registeredImageViewWithIndex:5];
@@ -76,6 +81,7 @@
     self.textView.text = @"";
     
     self.settingsController = nil;
+
 }
 
 - (void)viewDidUnload
@@ -89,6 +95,8 @@
     
     if (self.settingsController != nil)
         self.settingsController = nil;
+    if (self.arViewController != nil)
+        self.arViewController = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -204,8 +212,8 @@
 {
     __block CVPixelBufferRef retainedBuffer = CVPixelBufferRetain(pixelBuffer);
     dispatch_async(dispatch_get_main_queue(), ^{
-        UIImage* image = [UIImage imageFromPixelBuffer:retainedBuffer];
-        [self.debugViewRawData setImage:[image rotatedImageWithAngle:M_PI_2]];
+        //UIImage* image = [UIImage imageFromPixelBuffer:retainedBuffer];
+        self.arViewController.cameraImage = retainedBuffer;
         CVPixelBufferRelease(retainedBuffer);
     });
     [[ObjectTrackerLibrary instance] trackObjectInVideoWithBuffer:pixelBuffer];
@@ -217,13 +225,17 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         UIImage* debugImage;
-        if ([[ObjectTrackerLibrary instance] detectionDebugImage:&debugImage WithSearchWindow:YES]) {
+        ObjectTrackerLibrary* trackerLib = [ObjectTrackerLibrary instance];
+        if (trackerLib.foundObject) {
+            self.arViewController.homography = [self matrixFromHomography:trackerLib.homography];
+        }
+        if ([trackerLib detectionDebugImage:&debugImage WithSearchWindow:YES]) {
             [self.debugViewDetection setImage:debugImage];
         }
-        if ([[ObjectTrackerLibrary instance] validationDebugImage:&debugImage WithObjectRect:YES ObjectKeyPoints:YES SceneKeyPoints:YES FilteredMatches:YES AllMatches:YES]) {
+        if ([trackerLib validationDebugImage:&debugImage WithObjectRect:YES ObjectKeyPoints:YES SceneKeyPoints:YES FilteredMatches:YES AllMatches:YES]) {
             [self.debugViewValidation setImage:debugImage];
         }
-        if ([[ObjectTrackerLibrary instance] trackingDebugImage:&debugImage WithObjectRect:YES FilteredPoints:YES AllPoints:YES SearchWindow:NO]) {
+        if ([trackerLib trackingDebugImage:&debugImage WithObjectRect:YES FilteredPoints:YES AllPoints:YES SearchWindow:NO]) {
             [self.debugViewTracking setImage:debugImage];
         }
         self.textView.text = [[ObjectTrackerLibrary instance] frameDebugInfoString];
@@ -245,6 +257,21 @@
 - (void)updateNavBarItem
 {
     [self.navBarItem setTitle:[self.imageViewNames objectAtIndex:self.pageControl.currentPage]];
+}
+
+- (GLKMatrix3)matrixFromHomography:(Homography)homography
+{
+    GLKMatrix3 result;
+    result.m00 = homography.m00;
+    result.m01 = homography.m01;
+    result.m02 = homography.m02;
+    result.m10 = homography.m10;
+    result.m11 = homography.m11;
+    result.m12 = homography.m12;
+    result.m20 = homography.m20;
+    result.m21 = homography.m21;
+    result.m22 = homography.m22;
+    return result;
 }
 
 @end

@@ -29,6 +29,14 @@
 		4C7F441215FB52FC00869927 /* UIImage+Transform.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7F441015FB52FC00869927 /* UIImage+Transform.m */; };
 		4C7F441615FB834100869927 /* StartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7F441515FB834100869927 /* StartViewController.m */; };
 		4C7F441915FB834B00869927 /* StartViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C7F441715FB834B00869927 /* StartViewController.xib */; };
+		4C85112B1600F329002AEB77 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C85111C1600B313002AEB77 /* OpenGLES.framework */; };
+		4C85112C1600F32F002AEB77 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C85111B1600B313002AEB77 /* GLKit.framework */; };
+		4C85113F16013120002AEB77 /* tile_floor.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C85113E16013120002AEB77 /* tile_floor.png */; };
+		4C85114016013120002AEB77 /* tile_floor.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C85113E16013120002AEB77 /* tile_floor.png */; };
+		4C8511431601315C002AEB77 /* ARViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8511421601315C002AEB77 /* ARViewController.m */; };
+		4C8511441601315C002AEB77 /* ARViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8511421601315C002AEB77 /* ARViewController.m */; };
+		4C8511471601319E002AEB77 /* DrawableObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8511461601319E002AEB77 /* DrawableObject.m */; };
+		4C8511481601319E002AEB77 /* DrawableObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8511461601319E002AEB77 /* DrawableObject.m */; };
 		4C8620BB15FBE66E00C72DE7 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620B915FBE66E00C72DE7 /* SettingsViewController.m */; };
 		4C8620BC15FBE66E00C72DE7 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620B915FBE66E00C72DE7 /* SettingsViewController.m */; };
 		4C8620BD15FBE66E00C72DE7 /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C8620BA15FBE66E00C72DE7 /* SettingsViewController.xib */; };
@@ -111,6 +119,13 @@
 		4C7F441515FB834100869927 /* StartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartViewController.m; sourceTree = "<group>"; };
 		4C7F441815FB834B00869927 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = CKObjectTrackerDemo/en.lproj/StartViewController.xib; sourceTree = SOURCE_ROOT; };
 		4C84AF6D15FB866600581974 /* Definitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Definitions.h; sourceTree = "<group>"; };
+		4C85111B1600B313002AEB77 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		4C85111C1600B313002AEB77 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		4C85113E16013120002AEB77 /* tile_floor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tile_floor.png; sourceTree = "<group>"; };
+		4C8511411601315C002AEB77 /* ARViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARViewController.h; sourceTree = "<group>"; };
+		4C8511421601315C002AEB77 /* ARViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARViewController.m; sourceTree = "<group>"; };
+		4C8511451601319E002AEB77 /* DrawableObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrawableObject.h; sourceTree = "<group>"; };
+		4C8511461601319E002AEB77 /* DrawableObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DrawableObject.m; sourceTree = "<group>"; };
 		4C8620B815FBE66E00C72DE7 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		4C8620B915FBE66E00C72DE7 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		4C8620BA15FBE66E00C72DE7 /* SettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingsViewController.xib; sourceTree = "<group>"; };
@@ -176,6 +191,8 @@
 				4CE1865615F9E727004C3372 /* CoreVideo.framework in Frameworks */,
 				4CE1865715F9E73D004C3372 /* QuartzCore.framework in Frameworks */,
 				4C23D20D15FE3C1100A1AC55 /* opencv2fast.framework in Frameworks */,
+				4C85112B1600F329002AEB77 /* OpenGLES.framework in Frameworks */,
+				4C85112C1600F32F002AEB77 /* GLKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -228,6 +245,8 @@
 				4CE1865215F9E5E5004C3372 /* CoreVideo.framework */,
 				4C4E0CF415DE3378002BE9A4 /* CoreGraphics.framework */,
 				4CE1865015F9E5D2004C3372 /* QuartzCore.framework */,
+				4C85111B1600B313002AEB77 /* GLKit.framework */,
+				4C85111C1600B313002AEB77 /* OpenGLES.framework */,
 				4C4E0DE815DE4221002BE9A4 /* opencv2.framework */,
 				4C23D20B15FE3A5600A1AC55 /* opencv2fast.framework */,
 				4C4E0DE415DE4034002BE9A4 /* libCKObjectTrackerPhone.a */,
@@ -285,6 +304,7 @@
 		4C4E0DBA15DE3ABE002BE9A4 /* CKObjectTrackerShared */ = {
 			isa = PBXGroup;
 			children = (
+				4C85113C16013120002AEB77 /* Drawables */,
 				4C4E0DBB15DE3ABE002BE9A4 /* Categories */,
 				4C4E0DBC15DE3ABE002BE9A4 /* Controllers */,
 				4C4E0DBD15DE3ABE002BE9A4 /* Models */,
@@ -312,6 +332,8 @@
 		4C4E0DBC15DE3ABE002BE9A4 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				4C8511411601315C002AEB77 /* ARViewController.h */,
+				4C8511421601315C002AEB77 /* ARViewController.m */,
 				4C8620B815FBE66E00C72DE7 /* SettingsViewController.h */,
 				4C8620B915FBE66E00C72DE7 /* SettingsViewController.m */,
 				4C8620BA15FBE66E00C72DE7 /* SettingsViewController.xib */,
@@ -336,6 +358,24 @@
 				4C8620AE15FBE3F100C72DE7 /* Cells */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		4C85113C16013120002AEB77 /* Drawables */ = {
+			isa = PBXGroup;
+			children = (
+				4C85113D16013120002AEB77 /* Assets */,
+				4C8511451601319E002AEB77 /* DrawableObject.h */,
+				4C8511461601319E002AEB77 /* DrawableObject.m */,
+			);
+			path = Drawables;
+			sourceTree = "<group>";
+		};
+		4C85113D16013120002AEB77 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				4C85113E16013120002AEB77 /* tile_floor.png */,
+			);
+			path = Assets;
 			sourceTree = "<group>";
 		};
 		4C8620AE15FBE3F100C72DE7 /* Cells */ = {
@@ -493,6 +533,7 @@
 				4C8620D515FC016400C72DE7 /* ParameterSegmentCell.xib in Resources */,
 				4C8620D815FC017600C72DE7 /* ParameterSliderCell.xib in Resources */,
 				4C8620DB15FC018A00C72DE7 /* ParameterSwitchCell.xib in Resources */,
+				4C85114016013120002AEB77 /* tile_floor.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -508,6 +549,7 @@
 				4C8620D415FC016400C72DE7 /* ParameterSegmentCell.xib in Resources */,
 				4C8620D715FC017600C72DE7 /* ParameterSliderCell.xib in Resources */,
 				4C8620DA15FC018A00C72DE7 /* ParameterSwitchCell.xib in Resources */,
+				4C85113F16013120002AEB77 /* tile_floor.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -538,6 +580,8 @@
 				4C8620DF15FC181000C72DE7 /* ParameterCell.m in Sources */,
 				4C8620E815FC2CB400C72DE7 /* UIView+EasyFrame.m in Sources */,
 				4CCC7D0815FCF980007DFC92 /* UIImage+PixelBuffer.m in Sources */,
+				4C8511441601315C002AEB77 /* ARViewController.m in Sources */,
+				4C8511481601319E002AEB77 /* DrawableObject.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -565,6 +609,8 @@
 				4C8620DE15FC181000C72DE7 /* ParameterCell.m in Sources */,
 				4C8620E715FC2CB400C72DE7 /* UIView+EasyFrame.m in Sources */,
 				4CCC7D0715FCF980007DFC92 /* UIImage+PixelBuffer.m in Sources */,
+				4C8511431601315C002AEB77 /* ARViewController.m in Sources */,
+				4C8511471601319E002AEB77 /* DrawableObject.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
