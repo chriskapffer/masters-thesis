@@ -7,48 +7,20 @@
 //
 
 #import "ARViewController.h"
+#import "BackgroundTexture.h"
 #import "DrawableObject.h"
 
 #define FIELD_OF_VIEW_DEG 65
 #define NEAR_PLANE 1.0f
 #define FAR_PLAN 20.0f
 
-static const GLfloat squareVertices[] = {
-    -1.0f, -1.0f,
-    1.0f, -1.0f,
-    -1.0f,  1.0f,
-    1.0f,  1.0f,
-};
-
-GLfloat textureVertices[8];
-
-// Uniform index.
-enum
-{
-    UNIFORM_VIDEO_FRAME,
-    NUM_UNIFORMS
-};
-GLint uniforms[NUM_UNIFORMS];
-
-// Attribute index.
-enum {
-    ATTRIB_VERTEX,
-    ATTRIB_TEXCOORD,
-    NUM_ATTRIBUTES
-};
-
 @interface ARViewController ()
 {
-    GLuint _program;
+
     
-    GLuint _positionVBO;
-    GLuint _indexVBO;
+
     
-    size_t _textureWidth;
-    size_t _textureHeight;
-    
-    CVOpenGLESTextureRef _backgroundTexture;
-    CVOpenGLESTextureCacheRef _videoTextureCache;
+    BackgroundTexture* _backgroundObj;
 }
 
 @property (nonatomic, strong) EAGLContext* context;
@@ -91,7 +63,7 @@ enum {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     // Create context
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     if (!self.context) {
@@ -108,18 +80,17 @@ enum {
     // Initialize view
     GLKView *view = (GLKView *)self.view;
     view.context = self.context;
-    //view.drawableColorFormat = GLKViewDrawableColorFormatRGBA8888; // or GLKViewDrawableColorFormatRGBA8888
+    view.drawableColorFormat = GLKViewDrawableColorFormatRGB565; // or GLKViewDrawableColorFormatRGBA8888
     //view.drawableDepthFormat = GLKViewDrawableDepthFormat16; // or GLKViewDrawableDepthFormat24
     view.drawableMultisample = GLKViewDrawableMultisample4X;
     
-    CVReturn err = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault, NULL, (__bridge void *)_context, NULL, &_videoTextureCache);
-    if (err)
-    {
-        NSLog(@"Error at CVOpenGLESTextureCacheCreate %d", err);
-        return;
-    }
+
     
     [self setupOpenGL];
+    
+    _backgroundObj = [[BackgroundTexture alloc] initWithContext:self.context];
+    [_backgroundObj loadShaders];
+    
     [self setViewPortSize:self.view.bounds.size];
     [self setPreferredFramesPerSecond:30];
 }
@@ -127,12 +98,12 @@ enum {
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+ 
+    _backgroundObj = nil;
     
     [self tearDownOpenGL];
     
-    [self cleanUpTextures];
     
-    CFRelease(_videoTextureCache);
     
     if ([EAGLContext currentContext] == self.context)
         [EAGLContext setCurrentContext:nil];
@@ -178,9 +149,6 @@ enum {
     //[self.baseEffect prepareToDraw];
     
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    
-    //glDrawElements(GL_TRIANGLE_STRIP, sizeof(bgIndices)/sizeof(bgIndices[0]), GL_UNSIGNED_SHORT, 0);
-    
 }
 
 #pragma mark glkit view controller delegate
@@ -188,11 +156,7 @@ enum {
 - (void)update
 {
     [self setViewPortSize:self.view.bounds.size];
-    
-    
-    
-    
-//    glBufferData(GL_ARRAY_BUFFER, [_ripple getVertexSize], [_ripple getTexCoords], GL_DYNAMIC_DRAW);
+    _backgroundObj.viewPortSize = self.viewPortSize;
     
     self.baseEffect.transform.projectionMatrix = self.projectionMatrix;
     
@@ -209,44 +173,9 @@ enum {
     //modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, GLKMathDegreesToRadians(25), 1, 0, 0);
     modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, GLKMathDegreesToRadians(45), 0, 1, 0);
     self.baseEffect.transform.modelviewMatrix = modelViewMatrix;
-    
 }
 
 #pragma mark - helper methods
-
-- (void)cleanUpTextures
-{
-    if (_backgroundTexture)
-    {
-        CFRelease(_backgroundTexture);
-        _backgroundTexture = NULL;
-    }
-    // Periodic texture cache flush every frame
-    CVOpenGLESTextureCacheFlush(_videoTextureCache, 0);
-}
-
-- (void)initBuffers
-{
-//    glGenBuffers(1, &_positionVBO);
-//    glBindBuffer(GL_ARRAY_BUFFER, _positionVBO);
-//    glBufferData(GL_ARRAY_BUFFER, sizeof(bgVertices), bgVertices, GL_STATIC_DRAW);
-//    
-//    glGenBuffers(1, &_indexVBO);
-//    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _indexVBO);
-//    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(bgIndices), bgIndices, GL_STATIC_DRAW);
-//    
-//    glEnableVertexAttribArray(GLKVertexAttribPosition);
-//    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTexture), (const GLvoid *) offsetof(VertexPositionTexture, Position));
-//    
-//    glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
-//    glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTexture), (const GLvoid *) offsetof(VertexPositionTexture, TexCoord));
-    
-    
-    glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_FLOAT, 0, 0, squareVertices);
-	glEnableVertexAttribArray(ATTRIB_VERTEX);
-	glVertexAttribPointer(ATTRIB_TEXCOORD, 2, GL_FLOAT, 0, 0, textureVertices);
-	glEnableVertexAttribArray(ATTRIB_TEXCOORD);
-}
 
 - (void)setupOpenGL
 {
@@ -260,11 +189,7 @@ enum {
     // init shader
     self.baseEffect = [[GLKBaseEffect alloc] init];
     
-    [self loadShaders];
-    
-    glUseProgram(_program);
-    
-    glUniform1i(uniforms[UNIFORM_VIDEO_FRAME], 0);
+
 }
 
 - (void)tearDownOpenGL
@@ -272,93 +197,14 @@ enum {
     // make our context current if neccessary
     if ([EAGLContext currentContext] != self.context)
         [EAGLContext setCurrentContext:self.context];
-        
-    glDeleteBuffers(1, &_positionVBO);
-    glDeleteBuffers(1, &_indexVBO);
-    
-    if (_program) {
-        glDeleteProgram(_program);
-        _program = 0;
-    }
-    
+            
     // clear shader
     self.baseEffect = nil;
 }
 
-- (CGRect)textureSamplingRectForCroppingTextureWithAspectRatio:(CGSize)textureAspectRatio toAspectRatio:(CGSize)croppingAspectRatio
-{
-	CGRect normalizedSamplingRect = CGRectZero;
-	CGSize cropScaleAmount = CGSizeMake(croppingAspectRatio.width / textureAspectRatio.width, croppingAspectRatio.height / textureAspectRatio.height);
-	CGFloat maxScale = fmax(cropScaleAmount.width, cropScaleAmount.height);
-	CGSize scaledTextureSize = CGSizeMake(textureAspectRatio.width * maxScale, textureAspectRatio.height * maxScale);
-	
-	if ( cropScaleAmount.height > cropScaleAmount.width ) {
-		normalizedSamplingRect.size.width = croppingAspectRatio.width / scaledTextureSize.width;
-		normalizedSamplingRect.size.height = 1.0;
-	}
-	else {
-		normalizedSamplingRect.size.height = croppingAspectRatio.height / scaledTextureSize.height;
-		normalizedSamplingRect.size.width = 1.0;
-	}
-	// Center crop
-	normalizedSamplingRect.origin.x = (1.0 - normalizedSamplingRect.size.width)/2.0;
-	normalizedSamplingRect.origin.y = (1.0 - normalizedSamplingRect.size.height)/2.0;
-	
-	return normalizedSamplingRect;
-}
-
 - (void)updateBackground:(CVPixelBufferRef)pixelBuffer
 {
-    CVReturn error;
-    size_t width = CVPixelBufferGetWidth(pixelBuffer);
-    size_t height = CVPixelBufferGetHeight(pixelBuffer);
-    
-    if (!_videoTextureCache)
-    {
-        NSLog(@"No video texture cache");
-        return;
-    }
-    
-    if (!textureVertices || width != _textureWidth || height != _textureHeight)
-    {
-        _textureWidth = width;
-        _textureHeight = height;
-        
-        CGRect textureSamplingRect = [self textureSamplingRectForCroppingTextureWithAspectRatio:CGSizeMake(_textureWidth, _textureHeight) toAspectRatio:self.view.bounds.size];
-        GLfloat tmp[] = {
-            CGRectGetMinX(textureSamplingRect), CGRectGetMaxY(textureSamplingRect),
-            CGRectGetMaxX(textureSamplingRect), CGRectGetMaxY(textureSamplingRect),
-            CGRectGetMinX(textureSamplingRect), CGRectGetMinY(textureSamplingRect),
-            CGRectGetMaxX(textureSamplingRect), CGRectGetMinY(textureSamplingRect),
-        };
-        *textureVertices = *tmp;
-        
-        [self initBuffers];
-    }
-    
-    [self cleanUpTextures];
-    
-    glActiveTexture(GL_TEXTURE0);
-    error = CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault,
-                                                         _videoTextureCache,
-                                                         pixelBuffer,
-                                                         NULL,
-                                                         GL_TEXTURE_2D,
-                                                         GL_RGBA,
-                                                         _textureWidth,
-                                                         _textureHeight,
-                                                         GL_BGRA,
-                                                         GL_UNSIGNED_BYTE,
-                                                         0,
-                                                         &_backgroundTexture);
-    if (error)
-    {
-        NSLog(@"Error at CVOpenGLESTextureCacheCreateTextureFromImage %d", error);
-    }
-    
-    glBindTexture(CVOpenGLESTextureGetTarget(_backgroundTexture), CVOpenGLESTextureGetName(_backgroundTexture));
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    [_backgroundObj updateContent:pixelBuffer];
 }
 
 - (void)updateProjectionMatrixWithAspect:(float)aspect
@@ -367,134 +213,112 @@ enum {
     _projectionMatrix = GLKMatrix4MakePerspective(fovRad, aspect, NEAR_PLANE, FAR_PLAN);
 }
 
-#pragma mark - OpenGL ES 2 shader compilation
-
-- (BOOL)loadShaders
-{
-    GLuint vertShader, fragShader;
-    NSString *vertShaderPathname, *fragShaderPathname;
-    
-    // Create shader program.
-    _program = glCreateProgram();
-    
-    // Create and compile vertex shader.
-    vertShaderPathname = [[NSBundle mainBundle] pathForResource:@"passThrough" ofType:@"vsh"];
-    if (![self compileShader:&vertShader type:GL_VERTEX_SHADER file:vertShaderPathname]) {
-        NSLog(@"Failed to compile vertex shader");
-        return NO;
-    }
-    
-    // Create and compile fragment shader.
-    fragShaderPathname = [[NSBundle mainBundle] pathForResource:@"passThrough" ofType:@"fsh"];
-    if (![self compileShader:&fragShader type:GL_FRAGMENT_SHADER file:fragShaderPathname]) {
-        NSLog(@"Failed to compile fragment shader");
-        return NO;
-    }
-    
-    // Attach vertex shader to program.
-    glAttachShader(_program, vertShader);
-    
-    // Attach fragment shader to program.
-    glAttachShader(_program, fragShader);
-        
-    // Bind attribute locations.
-    // This needs to be done prior to linking.
-    glBindAttribLocation(_program, ATTRIB_VERTEX, "position");
-    glBindAttribLocation(_program, ATTRIB_TEXCOORD, "texCoord");
-    
-    // Link program.
-    if (![self linkProgram:_program]) {
-        NSLog(@"Failed to link program: %d", _program);
-        
-        if (vertShader) {
-            glDeleteShader(vertShader);
-            vertShader = 0;
-        }
-        if (fragShader) {
-            glDeleteShader(fragShader);
-            fragShader = 0;
-        }
-        if (_program) {
-            glDeleteProgram(_program);
-            _program = 0;
-        }
-        
-        return NO;
-    }
-    
-    // Get uniform locations.
-    uniforms[UNIFORM_VIDEO_FRAME] = glGetUniformLocation(_program, "Videoframe");
-    
-    // Release vertex and fragment shaders.
-    if (vertShader) {
-        glDetachShader(_program, vertShader);
-        glDeleteShader(vertShader);
-    }
-    if (fragShader) {
-        glDetachShader(_program, fragShader);
-        glDeleteShader(fragShader);
-    }
-    
-    return YES;
-}
-
-- (BOOL)compileShader:(GLuint *)shader type:(GLenum)type file:(NSString *)file
-{
-    GLint status;
-    const GLchar *source;
-    
-    source = (GLchar *)[[NSString stringWithContentsOfFile:file encoding:NSUTF8StringEncoding error:nil] UTF8String];
-    if (!source) {
-        NSLog(@"Failed to load vertex shader");
-        return NO;
-    }
-    
-    *shader = glCreateShader(type);
-    glShaderSource(*shader, 1, &source, NULL);
-    glCompileShader(*shader);
-    
-#if defined(DEBUG)
-    GLint logLength;
-    glGetShaderiv(*shader, GL_INFO_LOG_LENGTH, &logLength);
-    if (logLength > 0) {
-        GLchar *log = (GLchar *)malloc(logLength);
-        glGetShaderInfoLog(*shader, logLength, &logLength, log);
-        NSLog(@"Shader compile log:\n%s", log);
-        free(log);
-    }
-#endif
-    
-    glGetShaderiv(*shader, GL_COMPILE_STATUS, &status);
-    if (status == 0) {
-        glDeleteShader(*shader);
-        return NO;
-    }
-    
-    return YES;
-}
-
-- (BOOL)linkProgram:(GLuint)prog
-{
-    GLint status;
-    glLinkProgram(prog);
-    
-#if defined(DEBUG)
-    GLint logLength;
-    glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &logLength);
-    if (logLength > 0) {
-        GLchar *log = (GLchar *)malloc(logLength);
-        glGetProgramInfoLog(prog, logLength, &logLength, log);
-        NSLog(@"Program link log:\n%s", log);
-        free(log);
-    }
-#endif
-    
-    glGetProgramiv(prog, GL_LINK_STATUS, &status);
-    if (status == 0) {
-        return NO;
-    }
-    
-    return YES;
-}
 
 @end
+// http://urbanar.blogspot.de/2011/04/from-homography-to-opengl-modelview.html
+// http://urbanar.blogspot.de/2011/04/offline-camera-calibration-for.html
+
+// http://computer-vision-talks.com/2011/11/pose-estimation-problem/
+
+
+// code from https://gist.github.com/740979/97f54a63eb5f61f8f2eb578d60eb44839556ff3f
+//var intrinsic:Vector.<Number> = new Vector.<Number>(9, true);
+//var intrinsicInverse:Vector.<Number> = new Vector.<Number>(9, true);
+//
+//var R:Vector.<Number> = new Vector.<Number>( 9, true );
+//var t:Vector.<Number> = new Vector.<Number>( 3, true );
+//
+//// SVD routine
+//var svd:SVD = new SVD();
+//
+//// input homography[9] - 3x3 Matrix
+//// please note that homography should be computed
+//// using centered object/reference points coordinates
+//// for example coords from [0, 0], [320, 0], [320, 240], [0, 240]
+//// should be converted to [-160, -120], [160, -120], [160, 120], [-160, 120]
+//function computePose(homography:Vector.<Number>):Boolean
+//{
+//	var h1:Vector.<Number> = Vector.<Number>([homography[0], homography[3], homography[6]]);
+//	var h2:Vector.<Number> = Vector.<Number>([homography[1], homography[4], homography[7]]);
+//	var h3:Vector.<Number> = Vector.<Number>([homography[2], homography[5], homography[8]]);
+//	var invH1:Vector.<Number> = new Vector.<Number>(3, true);
+//	var invC:Vector.<Number>;
+//	var r1:Vector.<Number> = new Vector.<Number>(3, true);
+//	var r2:Vector.<Number> = new Vector.<Number>(3, true);
+//	var r3:Vector.<Number> = new Vector.<Number>(3, true);
+//	var vT:Vector.<Number> = new Vector.<Number>(9, true);
+//	//
+//	invC = intrinsicInverse.concat();
+//	// matrix multiplication [src1, src2, dst]
+//	multMat(invC, h1, invH1);
+//    
+//	var v0:Number = invH1[0];
+//	var v1:Number = invH1[1];
+//	var v2:Number = invH1[2];
+//	var lambda:Number = Math.sqrt( v0 * v0 + v1 * v1 + v2 * v2 );
+//    
+//	if (lambda == 0) return false;
+//    
+//	lambda = 1.0 / lambda;
+//	invC[0] *= lambda;
+//	invC[1] *= lambda;
+//	invC[2] *= lambda;
+//	invC[3] *= lambda;
+//	invC[4] *= lambda;
+//	invC[5] *= lambda;
+//	invC[6] *= lambda;
+//	invC[7] *= lambda;
+//	invC[8] *= lambda;
+//    
+//	// Create normalized R1 & R2:
+//	multMat(invC, h1, r1);
+//	multMat(invC, h2, r2);
+//    
+//	// Get R3 orthonormal to R1 and R2:
+//	r3[0] = r1[1] * r2[2] - r1[2] * r2[1];
+//	r3[1] = r1[2] * r2[0] - r1[0] * r2[2];
+//	r3[2] = r1[0] * r2[1] - r1[1] * r2[0];
+//    
+//	// Put the rotation column vectors in the rotation matrix:
+//	// u can play with flip sign of rows here depending on how u apply 3D matrix
+//	R[0] = r1[0];
+//	R[1] = r2[0];
+//	R[2] = r3[0];
+//	R[3] = r1[1];
+//	R[4] = r2[1];
+//	R[5] = r3[1];
+//	R[6] = r1[2];
+//	R[7] = r2[2];
+//	R[8] = r3[2];
+//    
+//	// Calculate Translation Vector T:
+//	multMat(invC, h3, t);
+//    
+//	// Transformation of R into - in Frobenius sense - next orthonormal matrix:
+//	svd.decompose( R, 3, 3 );
+//	transposeMat( svd.V, vT );
+//	multMat( svd.U, vT, R );
+//    
+//	return true;
+//}
+//
+//function setIntrinsicParams(fx:Number, fy:Number, cx:Number, cy:Number):void
+//{
+//	intrinsic[0] = fx;
+//	intrinsic[4] = fy;
+//	intrinsic[2] = cx;
+//	intrinsic[5] = cy;
+//	intrinsic[8] = 1.0;
+//	//
+//	// Create inverse calibration matrix:
+//	var tau:Number = fx / fy;
+//	intrinsicInverse[0] = 1.0 / (tau*fy);
+//	intrinsicInverse[1] = 0.0;
+//	intrinsicInverse[2] = -cx / (tau*fy);
+//	intrinsicInverse[3] = 0.0;
+//	intrinsicInverse[4] = 1.0 / fy;
+//	intrinsicInverse[5] = -cy / fy;
+//	intrinsicInverse[6] = 0.0;
+//	intrinsicInverse[7] = 0.0;
+//	intrinsicInverse[8] = 1.0;
+//}

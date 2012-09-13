@@ -212,7 +212,6 @@
 {
     __block CVPixelBufferRef retainedBuffer = CVPixelBufferRetain(pixelBuffer);
     dispatch_async(dispatch_get_main_queue(), ^{
-        //UIImage* image = [UIImage imageFromPixelBuffer:retainedBuffer];
         self.arViewController.background = retainedBuffer;
         CVPixelBufferRelease(retainedBuffer);
     });
@@ -238,7 +237,7 @@
         if ([trackerLib trackingDebugImage:&debugImage WithObjectRect:YES FilteredPoints:YES AllPoints:YES SearchWindow:NO]) {
             [self.debugViewTracking setImage:debugImage];
         }
-        self.textView.text = [[ObjectTrackerLibrary instance] frameDebugInfoString];
+        self.textView.text = [trackerLib frameDebugInfoString];
     });
     //NSLog(@"\n%@", [[ObjectTrackerLibrary instance] frameDebugInfoString]);
 }

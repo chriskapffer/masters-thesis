@@ -31,6 +31,12 @@
 		4C798062160207C0009693C0 /* passThrough.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 4C7980501601F30D009693C0 /* passThrough.vsh */; };
 		4C798063160207E5009693C0 /* passThrough.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 4C79804F1601F30D009693C0 /* passThrough.fsh */; };
 		4C798064160207E5009693C0 /* passThrough.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 4C7980501601F30D009693C0 /* passThrough.vsh */; };
+		4C7980651602264A009693C0 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C85111C1600B313002AEB77 /* OpenGLES.framework */; };
+		4C7980661602264D009693C0 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C85111B1600B313002AEB77 /* GLKit.framework */; };
+		4C79806916022AE1009693C0 /* ShaderUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C79806816022AE1009693C0 /* ShaderUtils.m */; };
+		4C79806A16022AE1009693C0 /* ShaderUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C79806816022AE1009693C0 /* ShaderUtils.m */; };
+		4C79807116023502009693C0 /* BackgroundTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C79807016023502009693C0 /* BackgroundTexture.m */; };
+		4C79807216023502009693C0 /* BackgroundTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C79807016023502009693C0 /* BackgroundTexture.m */; };
 		4C7F441115FB52FC00869927 /* UIImage+Transform.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7F441015FB52FC00869927 /* UIImage+Transform.m */; };
 		4C7F441215FB52FC00869927 /* UIImage+Transform.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7F441015FB52FC00869927 /* UIImage+Transform.m */; };
 		4C7F441615FB834100869927 /* StartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7F441515FB834100869927 /* StartViewController.m */; };
@@ -120,6 +126,10 @@
 		4C79804F1601F30D009693C0 /* passThrough.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = passThrough.fsh; sourceTree = "<group>"; };
 		4C7980501601F30D009693C0 /* passThrough.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = passThrough.vsh; sourceTree = "<group>"; };
 		4C7980521601F30D009693C0 /* tile_floor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tile_floor.png; sourceTree = "<group>"; };
+		4C79806716022AE1009693C0 /* ShaderUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderUtils.h; sourceTree = "<group>"; };
+		4C79806816022AE1009693C0 /* ShaderUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShaderUtils.m; sourceTree = "<group>"; };
+		4C79806F16023502009693C0 /* BackgroundTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackgroundTexture.h; sourceTree = "<group>"; };
+		4C79807016023502009693C0 /* BackgroundTexture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackgroundTexture.m; sourceTree = "<group>"; };
 		4C7F440F15FB52FC00869927 /* UIImage+Transform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Transform.h"; sourceTree = "<group>"; };
 		4C7F441015FB52FC00869927 /* UIImage+Transform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Transform.m"; sourceTree = "<group>"; };
 		4C7F441415FB834100869927 /* StartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartViewController.h; sourceTree = "<group>"; };
@@ -215,6 +225,8 @@
 				4CE1865115F9E5D2004C3372 /* QuartzCore.framework in Frameworks */,
 				4C23D20C15FE3A5600A1AC55 /* opencv2fast.framework in Frameworks */,
 				4C4E0DE615DE4076002BE9A4 /* libCKObjectTrackerPhone.a in Frameworks */,
+				4C7980651602264A009693C0 /* OpenGLES.framework in Frameworks */,
+				4C7980661602264D009693C0 /* GLKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -389,6 +401,8 @@
 				4C85113D16013120002AEB77 /* Assets */,
 				4C8511451601319E002AEB77 /* DrawableObject.h */,
 				4C8511461601319E002AEB77 /* DrawableObject.m */,
+				4C79806F16023502009693C0 /* BackgroundTexture.h */,
+				4C79807016023502009693C0 /* BackgroundTexture.m */,
 			);
 			path = Drawables;
 			sourceTree = "<group>";
@@ -475,6 +489,8 @@
 				4CE1864315F9E2EF004C3372 /* FPSCalcSummerhill.m */,
 				4CE1864415F9E2EF004C3372 /* FPSCalculator.h */,
 				4CE1864515F9E2EF004C3372 /* FPSCalculator.m */,
+				4C79806716022AE1009693C0 /* ShaderUtils.h */,
+				4C79806816022AE1009693C0 /* ShaderUtils.m */,
 				4CE1863C15F9E147004C3372 /* CVImageConverter.h */,
 				4CE1863D15F9E147004C3372 /* CVImageConverter.mm */,
 			);
@@ -610,6 +626,8 @@
 				4CCC7D0815FCF980007DFC92 /* UIImage+PixelBuffer.m in Sources */,
 				4C8511441601315C002AEB77 /* ARViewController.m in Sources */,
 				4C8511481601319E002AEB77 /* DrawableObject.m in Sources */,
+				4C79806A16022AE1009693C0 /* ShaderUtils.m in Sources */,
+				4C79807216023502009693C0 /* BackgroundTexture.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -639,6 +657,8 @@
 				4CCC7D0715FCF980007DFC92 /* UIImage+PixelBuffer.m in Sources */,
 				4C8511431601315C002AEB77 /* ARViewController.m in Sources */,
 				4C8511471601319E002AEB77 /* DrawableObject.m in Sources */,
+				4C79806916022AE1009693C0 /* ShaderUtils.m in Sources */,
+				4C79807116023502009693C0 /* BackgroundTexture.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

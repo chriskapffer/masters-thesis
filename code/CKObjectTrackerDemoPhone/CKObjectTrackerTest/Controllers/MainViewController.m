@@ -9,6 +9,7 @@
 #import "MainViewController.h"
 #import "SettingsViewController.h"
 #import "ResourceViewController.h"
+#import "ARViewController.h"
 
 #import "ObjectTrackerLibrary.h"
 #import "VideoReader.h"
@@ -23,9 +24,9 @@
 
 @property (nonatomic, strong) SettingsViewController* settingsController;
 @property (nonatomic, strong) ResourceViewController* resourceController;
+@property (nonatomic, strong) ARViewController* arViewController;
 @property (nonatomic, strong) VideoReader* videoReader;
 
-@property (nonatomic, strong) UIImageView* resultView;
 @property (nonatomic, strong) UIImageView* debugViewTracking;
 @property (nonatomic, strong) UIImageView* debugViewValidation;
 @property (nonatomic, strong) UIImageView* debugViewDetection;
@@ -48,9 +49,9 @@
 
 @synthesize settingsController = _settingsController;
 @synthesize resourceController = _resourceController;
+@synthesize arViewController = _arViewController;
 @synthesize videoReader = _videoReader;
 
-@synthesize resultView = _resultView;
 @synthesize debugViewTracking = _debugViewTracking;
 @synthesize debugViewValidation = _debugViewValidation;
 @synthesize debugViewDetection = _debugViewDetection;
@@ -64,12 +65,18 @@
     [super viewDidLoad];
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:NO];
     
+    self.arViewController = [[ARViewController alloc] init];
+    self.arViewController.view.frame = self.scrollView.frame;
+    [self.arViewController.view setTransform:CGAffineTransformMakeRotation(M_PI)];
+    
+    [self.scrollView addSubview:self.arViewController.view];
+    
     self.imageViewNames = [NSArray arrayWithObjects:
-                           @"Object Image", @"Statistics", @"Raw Data", @"Tracking View", @"Validation View", @"Detection View", nil];
+                           @"Object Image", @"Statistics", @"Result", @"Tracking View", @"Validation View", @"Detection View", nil];
     
     self.debugViewObject = [self registeredImageViewWithIndex:0];
     [self.textView setFrameOrigin:CGPointMake(self.scrollView.bounds.size.width, 0)]; // <-- index 1
-    self.resultView = [self registeredImageViewWithIndex:2];
+    [self.arViewController.view setFrameOrigin:CGPointMake(self.scrollView.bounds.size.width * 2, 0)]; // <-- index 2
     self.debugViewTracking = [self registeredImageViewWithIndex:3];
     self.debugViewValidation = [self registeredImageViewWithIndex:4];
     self.debugViewDetection = [self registeredImageViewWithIndex:5];
@@ -98,6 +105,9 @@
     
     if (self.resourceController != nil)
         self.resourceController = nil;
+    
+    if (self.arViewController != nil)
+        self.arViewController = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -197,9 +207,7 @@
 {
     __block CVPixelBufferRef retainedBuffer = CVPixelBufferRetain(pixelBuffer);
     dispatch_async(dispatch_get_main_queue(), ^{
-        // TODO: draw transformed rect
-        UIImage* image = [UIImage imageFromPixelBuffer:retainedBuffer];
-        [self.resultView setImage:[image rotatedImageWithAngle:M_PI_2]];
+        self.arViewController.background = retainedBuffer;
         CVPixelBufferRelease(retainedBuffer);
     });
     [[ObjectTrackerLibrary instance] trackObjectInVideoWithBuffer:pixelBuffer];
@@ -211,16 +219,20 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         UIImage* debugImage;
-        if ([[ObjectTrackerLibrary instance] detectionDebugImage:&debugImage WithSearchWindow:YES]) {
+        ObjectTrackerLibrary* trackerLib = [ObjectTrackerLibrary instance];
+        if (trackerLib.foundObject) {
+            self.arViewController.homography = [self matrixFromHomography:trackerLib.homography];
+        }
+        if ([trackerLib detectionDebugImage:&debugImage WithSearchWindow:YES]) {
             [self.debugViewDetection setImage:debugImage];
         }
-        if ([[ObjectTrackerLibrary instance] validationDebugImage:&debugImage WithObjectRect:YES ObjectKeyPoints:YES SceneKeyPoints:YES FilteredMatches:YES AllMatches:YES]) {
+        if ([trackerLib validationDebugImage:&debugImage WithObjectRect:YES ObjectKeyPoints:YES SceneKeyPoints:YES FilteredMatches:YES AllMatches:YES]) {
             [self.debugViewValidation setImage:debugImage];
         }
-        if ([[ObjectTrackerLibrary instance] trackingDebugImage:&debugImage WithObjectRect:YES FilteredPoints:YES AllPoints:YES SearchWindow:NO]) {
+        if ([trackerLib trackingDebugImage:&debugImage WithObjectRect:YES FilteredPoints:YES AllPoints:YES SearchWindow:NO]) {
             [self.debugViewTracking setImage:debugImage];
         }
-        self.textView.text = [[ObjectTrackerLibrary instance] frameDebugInfoString];
+        self.textView.text = [trackerLib frameDebugInfoString];
     });
     //NSLog(@"\n%@", [[ObjectTrackerLibrary instance] frameDebugInfoString]);
 }
@@ -265,6 +277,21 @@
     [[ObjectTrackerLibrary instance] clearVideoDebugInfo];
     
     [self.debugViewObject setImage:[objectImage rotatedImageWithAngle:M_PI_2]];
+}
+
+- (GLKMatrix3)matrixFromHomography:(Homography)homography
+{
+    GLKMatrix3 result;
+    result.m00 = homography.m00;
+    result.m01 = homography.m01;
+    result.m02 = homography.m02;
+    result.m10 = homography.m10;
+    result.m11 = homography.m11;
+    result.m12 = homography.m12;
+    result.m20 = homography.m20;
+    result.m21 = homography.m21;
+    result.m22 = homography.m22;
+    return result;
 }
 
 @end
