@@ -16,6 +16,11 @@
 using namespace ck;
 using namespace cv;
 
+static inline double atD(const Mat& m, int row, int col)
+{
+    return m.at<double>(row, col);
+}
+
 @interface ObjectTrackerLibrary ()
 {
     Mat _objectImage;
@@ -31,7 +36,8 @@ using namespace cv;
 
 - (void)handleTrackingInVideoResult;
 - (void)handleTrackingInImageResult;
-- (Homography)homographyWithMatrix:(Mat&)matrix;
+- (Matrix3x3)homographyWithMatrix:(const Mat&)matrix;
+- (Matrix4x4)modelViewWithHomography:(const Mat&)homography;
 - (void)showError:(NSError*)error;
 
 @end
@@ -50,10 +56,16 @@ using namespace cv;
     return [self parameterCollectionFromSettings:_tracker->getSettings()];
 }
 
-- (Homography)homography
+- (Matrix3x3)homography
 {
     return [self homographyWithMatrix:_output.homography];
 }
+
+- (Matrix4x4)modelView
+{
+    return [self modelViewWithHomography:_output.homography];
+}
+
 - (BOOL)foundObject
 {
     return _output.isObjectPresent;
@@ -351,18 +363,41 @@ using namespace cv;
     }
 }
 
-- (Homography)homographyWithMatrix:(Mat&)matrix
+- (Matrix3x3)homographyWithMatrix:(const Mat&)matrix
 {
-    Homography result;
-    result.m00 = matrix.at<double>(0,0);
-    result.m01 = matrix.at<double>(0,1);
-    result.m02 = matrix.at<double>(0,2);
-    result.m10 = matrix.at<double>(1,0);
-    result.m11 = matrix.at<double>(1,1);
-    result.m12 = matrix.at<double>(1,2);
-    result.m20 = matrix.at<double>(2,0);
-    result.m21 = matrix.at<double>(2,1);
-    result.m22 = matrix.at<double>(2,2);
+    Matrix3x3 result;
+    result.m00 = atD(matrix, 0, 0);
+    result.m01 = atD(matrix, 0, 1);
+    result.m02 = atD(matrix, 0, 2);
+    result.m10 = atD(matrix, 1, 0);
+    result.m11 = atD(matrix, 1, 1);
+    result.m12 = atD(matrix, 1, 2);
+    result.m20 = atD(matrix, 2, 0);
+    result.m21 = atD(matrix, 2, 1);
+    result.m22 = atD(matrix, 2, 2);
+    return result;
+}
+
+- (Matrix4x4)modelViewWithHomography:(const Mat&)homography
+{
+    Mat modelView = [self modelviewMatrixFromHomography:homography];
+    Matrix4x4 result;
+    result.m00 = atD(modelView, 0, 0);
+    result.m01 = atD(modelView, 0, 1);
+    result.m02 = atD(modelView, 0, 2);
+    result.m03 = atD(modelView, 0, 3);
+    result.m10 = atD(modelView, 1, 0);
+    result.m11 = atD(modelView, 1, 1);
+    result.m12 = atD(modelView, 1, 2);
+    result.m13 = atD(modelView, 1, 3);
+    result.m20 = atD(modelView, 2, 0);
+    result.m21 = atD(modelView, 2, 1);
+    result.m22 = atD(modelView, 2, 2);
+    result.m23 = atD(modelView, 2, 3);
+    result.m30 = atD(modelView, 3, 0);
+    result.m31 = atD(modelView, 3, 1);
+    result.m32 = atD(modelView, 3, 2);
+    result.m33 = atD(modelView, 3, 3);
     return result;
 }
 
@@ -489,6 +524,101 @@ using namespace cv;
     [collection setSubCollections:subCollections];
     [collection setParameters:parameters];
     return collection;
+}
+
+void setIntrinsicParams(double fx, double fy, double cx, double cy, Mat& intrinsic, Mat& inverse)
+{
+    intrinsic = Mat::zeros(3, 3, CV_64FC1);
+    inverse   = Mat::zeros(3, 3, CV_64FC1);
+    
+	intrinsic.at<double>(0,0) = fx;
+	intrinsic.at<double>(1,1) = fy;
+	intrinsic.at<double>(0,2) = cx;
+	intrinsic.at<double>(1,2) = cy;
+	intrinsic.at<double>(2,2) = 1.0;
+    
+	// Create inverse calibration matrix:
+	double tau = fx / fy;
+    inverse.at<double>(0,0) = 1.0 / (tau * fy);
+    inverse.at<double>(0,1) = 0.0;
+    inverse.at<double>(0,2) = -cx / (tau * fy);
+    inverse.at<double>(1,0) = 0.0;
+    inverse.at<double>(1,1) = 1.0 / fy;
+    inverse.at<double>(1,2) = -cy / fy;
+    inverse.at<double>(2,0) = 0.0;
+    inverse.at<double>(2,1) = 0.0;
+    inverse.at<double>(2,2) = 1.0;
+}
+
+- (Mat)modelviewMatrixFromHomography:(const Mat&)homography
+{
+    // Camera parameters
+    double fx = 786.42938232; // Focal length in x axis
+    double fy = 786.42938232; // Focal length in y axis (usually the same?)
+    double cx = 217.01358032; // Camera primary point x
+    double cy = 311.25384521; // Camera primary point y
+    
+    // Decompose the Homography into translation and rotation vectors
+    // Based on: https://gist.github.com/740979/97f54a63eb5f61f8f2eb578d60eb44839556ff3f
+    Mat intrinsics, invIntrinsics;
+    setIntrinsicParams(fx, fy, cx, cy, intrinsics, invIntrinsics);
+    
+    // Column vectors of homography
+    Mat h1 = (Mat_<double>(3,1) << atD(homography, 0,0), atD(homography, 1,0), atD(homography, 2,0));
+    Mat h2 = (Mat_<double>(3,1) << atD(homography, 0,1), atD(homography, 1,1), atD(homography, 2,1));
+    Mat h3 = (Mat_<double>(3,1) << atD(homography, 0,2), atD(homography, 1,2), atD(homography, 2,2));
+    
+    Mat inverseH1 = invIntrinsics * h1;
+    // Calculate a length, for normalizing
+    double lambda = sqrt(atD(h1,0,0) * atD(h1,0,0) +
+                         atD(h1,1,0) * atD(h1,1,0) +
+                         atD(h1,2,0) * atD(h1,2,0));
+    
+    Mat rotationMatrix;
+    
+    if(lambda != 0) {
+        lambda = 1/lambda;
+        // Normalize inverseCameraMatrix
+        invIntrinsics.at<double>(0,0) *= lambda;
+        invIntrinsics.at<double>(1,0) *= lambda;
+        invIntrinsics.at<double>(2,0) *= lambda;
+        invIntrinsics.at<double>(0,1) *= lambda;
+        invIntrinsics.at<double>(1,1) *= lambda;
+        invIntrinsics.at<double>(2,1) *= lambda;
+        invIntrinsics.at<double>(0,2) *= lambda;
+        invIntrinsics.at<double>(1,2) *= lambda;
+        invIntrinsics.at<double>(2,2) *= lambda;
+        
+        // Column vectors of rotation matrix
+        Mat r1 = invIntrinsics * h1;
+        Mat r2 = invIntrinsics * h2;
+        Mat r3 = r1.cross(r2);    // Orthogonal to r1 and r2
+        
+        // Put rotation columns into rotation matrix... with some unexplained sign changes
+        rotationMatrix = (Mat_<double>(3,3) <<
+                           atD(r1,0,0), -atD(r2,0,0), -atD(r3,0,0),
+                          -atD(r1,1,0),  atD(r2,1,0),  atD(r3,1,0),
+                          -atD(r1,2,0),  atD(r2,2,0),  atD(r3,2,0));
+        
+        // Translation vector T
+        Mat translationVector;
+        translationVector = invIntrinsics * h3;
+        translationVector.at<double>(0,0) *= 1;
+        translationVector.at<double>(1,0) *= -1;
+        translationVector.at<double>(2,0) *= -1;
+        
+        SVD decomposed(rotationMatrix); // I don't really know what this does. But it works.
+        rotationMatrix = decomposed.u * decomposed.vt;
+        
+        Mat modelviewMatrix = (Mat_<double>(4,4) <<
+            atD(rotationMatrix,0,0), atD(rotationMatrix,0,1), atD(rotationMatrix,0,2), atD(translationVector,0,0),
+            atD(rotationMatrix,1,0), atD(rotationMatrix,1,1), atD(rotationMatrix,1,2), atD(translationVector,1,0),
+            atD(rotationMatrix,2,0), atD(rotationMatrix,2,1), atD(rotationMatrix,2,2), atD(translationVector,2,0),
+                                  0,                       0,                       0,                         1);
+        return modelviewMatrix;
+    }
+    printf("Lambda was 0...\n");
+    return Mat::eye(4, 4, CV_64FC1);
 }
 
 @end

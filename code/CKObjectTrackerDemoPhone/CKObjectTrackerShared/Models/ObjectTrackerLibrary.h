@@ -14,12 +14,19 @@ typedef struct {
     CGFloat m00, m01, m02;
     CGFloat m10, m11, m12;
     CGFloat m20, m21, m22;
-} Homography;
+} Matrix3x3;
+
+typedef struct {
+    CGFloat m00, m01, m02, m03;
+    CGFloat m10, m11, m12, m13;
+    CGFloat m20, m21, m22, m23;
+    CGFloat m30, m31, m32, m33;
+} Matrix4x4;
 
 @protocol ObjectTrackerLibraryDelegate <NSObject>
 
 @optional
-- (void)trackedObjectWithHomography:(Homography)homography;
+- (void)trackedObjectWithHomography:(Matrix3x3)homography;
 - (void)reachedDebugInfoRecordingLimit:(NSString*)debugInfo;
 - (void)failedToTrackObjectInImage;
 - (void)trackerLibraryDidProcessFrame;
@@ -35,7 +42,8 @@ typedef struct {
 @property (nonatomic, weak) id<ObjectTrackerLibraryDelegate> delegate;
 @property (nonatomic, strong, readonly) ObjectTrackerParameterCollection* parameters;
 
-@property (atomic, assign, readonly) Homography homography;
+@property (atomic, assign, readonly) Matrix3x3 homography;
+@property (atomic, assign, readonly) Matrix4x4 modelView;
 @property (atomic, assign, readonly) BOOL foundObject;
 @property (atomic, copy, readonly) NSString* frameDebugInfoString;
 @property (atomic, copy, readonly) NSString* videoDebugInfoString;

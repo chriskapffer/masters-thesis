@@ -96,8 +96,8 @@
     self.settingsController = nil;
     self.activityIndicator.hidden = YES;
     self.objectImageIsSet = NO;
+    self.objectImageIsSet = YES;
     self.captureIsReady = YES;
-    
     self.imageViewNames = [NSArray arrayWithObjects:
                            @"Object Image", @"Statistics", @"Augmented Reality", @"Tracking View", @"Validation View", @"Detection View", nil];
 }
@@ -275,7 +275,7 @@
         UIImage* debugImage;
         ObjectTrackerLibrary* trackerLib = [ObjectTrackerLibrary instance];
         if (trackerLib.foundObject) {
-            self.arViewController.homography = [self matrixFromHomography:trackerLib.homography];
+            self.arViewController.modelView = [self matrixFromModelView:trackerLib.modelView];
         }
         if ([trackerLib detectionDebugImage:&debugImage WithSearchWindow:YES]) {
             [self.debugViewDetection setImage:debugImage];
@@ -307,18 +307,25 @@
     [self.navBarItem setTitle:[self.imageViewNames objectAtIndex:self.pageControl.currentPage]];
 }
 
-- (GLKMatrix3)matrixFromHomography:(Homography)homography
+- (GLKMatrix4)matrixFromModelView:(Matrix4x4)modelView
 {
-    GLKMatrix3 result;
-    result.m00 = homography.m00;
-    result.m01 = homography.m01;
-    result.m02 = homography.m02;
-    result.m10 = homography.m10;
-    result.m11 = homography.m11;
-    result.m12 = homography.m12;
-    result.m20 = homography.m20;
-    result.m21 = homography.m21;
-    result.m22 = homography.m22;
+    GLKMatrix4 result;
+    result.m00 = modelView.m00;
+    result.m01 = modelView.m01;
+    result.m02 = modelView.m02;
+    result.m03 = modelView.m03;
+    result.m10 = modelView.m10;
+    result.m11 = modelView.m11;
+    result.m12 = modelView.m12;
+    result.m13 = modelView.m13;
+    result.m20 = modelView.m20;
+    result.m21 = modelView.m21;
+    result.m22 = modelView.m22;
+    result.m23 = modelView.m23;
+    result.m30 = modelView.m30;
+    result.m31 = modelView.m31;
+    result.m32 = modelView.m32;
+    result.m33 = modelView.m33;
     return result;
 }
 

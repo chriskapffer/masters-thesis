@@ -29,7 +29,7 @@
 
 #pragma mark - properties
 
-@synthesize homography = _homography;
+@synthesize modelView = _modelView;
 @synthesize background = _background;
 
 @synthesize context = _context;
@@ -85,6 +85,7 @@
     // init objects
     self.backgroundTexture = [[BackgroundTexture alloc] initWithContext:self.context];
     self.drawableObject = [[DrawableObject alloc] init];
+    self.modelView = GLKMatrix4Identity;
     
     [self setViewPortSize:self.view.bounds.size];
     [self setPreferredFramesPerSecond:30];
@@ -156,15 +157,19 @@
     
     self.baseEffect.transform.projectionMatrix = _projectionMatrix;
     
-    GLKMatrix4 baseModelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, -4.0f);
-    baseModelViewMatrix = GLKMatrix4Rotate(baseModelViewMatrix, 0, 0.0f, 1.0f, 0.0f);
+    GLKMatrix4 baseModelViewMatrix;
+    baseModelViewMatrix = GLKMatrix4MakeLookAt(0, 5, 0, // pos
+                                               0, 0, 0, // dst
+                                               0, 0, 1); // up
     
-    // Compute the model view matrix for the object rendered with GLKit
-    GLKMatrix4 modelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, -1.5f);
-    modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, 45, 1.0f, 1.0f, 1.0f);
-    modelViewMatrix = GLKMatrix4Multiply(baseModelViewMatrix, modelViewMatrix);
+    //baseModelViewMatrix = GLKMatrix4Rotate(baseModelViewMatrix, 90, 1.0f, 0.0f, 0.0f);
+//
+//    // Compute the model view matrix for the object rendered with GLKit
+//    GLKMatrix4 modelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, -1.5f);
+//    modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, 45, 1.0f, 1.0f, 1.0f);
+//    modelViewMatrix = GLKMatrix4Multiply(baseModelViewMatrix, modelViewMatrix);
     
-    self.baseEffect.transform.modelviewMatrix = modelViewMatrix;
+    self.baseEffect.transform.modelviewMatrix = GLKMatrix4Multiply(baseModelViewMatrix, self.modelView);
 }
 
 #pragma mark - helper methods
@@ -206,110 +211,13 @@
 }
 
 @end
+
 // http://urbanar.blogspot.de/2011/04/from-homography-to-opengl-modelview.html
 // http://urbanar.blogspot.de/2011/04/offline-camera-calibration-for.html
 
 // http://computer-vision-talks.com/2011/11/pose-estimation-problem/
 
-
-// code from https://gist.github.com/740979/97f54a63eb5f61f8f2eb578d60eb44839556ff3f
-//var intrinsic:Vector.<Number> = new Vector.<Number>(9, true);
-//var intrinsicInverse:Vector.<Number> = new Vector.<Number>(9, true);
-//
-//var R:Vector.<Number> = new Vector.<Number>( 9, true );
-//var t:Vector.<Number> = new Vector.<Number>( 3, true );
-//
-//// SVD routine
-//var svd:SVD = new SVD();
-//
-//// input homography[9] - 3x3 Matrix
-//// please note that homography should be computed
-//// using centered object/reference points coordinates
-//// for example coords from [0, 0], [320, 0], [320, 240], [0, 240]
-//// should be converted to [-160, -120], [160, -120], [160, 120], [-160, 120]
-//function computePose(homography:Vector.<Number>):Boolean
-//{
-//	var h1:Vector.<Number> = Vector.<Number>([homography[0], homography[3], homography[6]]);
-//	var h2:Vector.<Number> = Vector.<Number>([homography[1], homography[4], homography[7]]);
-//	var h3:Vector.<Number> = Vector.<Number>([homography[2], homography[5], homography[8]]);
-//	var invH1:Vector.<Number> = new Vector.<Number>(3, true);
-//	var invC:Vector.<Number>;
-//	var r1:Vector.<Number> = new Vector.<Number>(3, true);
-//	var r2:Vector.<Number> = new Vector.<Number>(3, true);
-//	var r3:Vector.<Number> = new Vector.<Number>(3, true);
-//	var vT:Vector.<Number> = new Vector.<Number>(9, true);
-//	//
-//	invC = intrinsicInverse.concat();
-//	// matrix multiplication [src1, src2, dst]
-//	multMat(invC, h1, invH1);
-//    
-//	var v0:Number = invH1[0];
-//	var v1:Number = invH1[1];
-//	var v2:Number = invH1[2];
-//	var lambda:Number = Math.sqrt( v0 * v0 + v1 * v1 + v2 * v2 );
-//    
-//	if (lambda == 0) return false;
-//    
-//	lambda = 1.0 / lambda;
-//	invC[0] *= lambda;
-//	invC[1] *= lambda;
-//	invC[2] *= lambda;
-//	invC[3] *= lambda;
-//	invC[4] *= lambda;
-//	invC[5] *= lambda;
-//	invC[6] *= lambda;
-//	invC[7] *= lambda;
-//	invC[8] *= lambda;
-//    
-//	// Create normalized R1 & R2:
-//	multMat(invC, h1, r1);
-//	multMat(invC, h2, r2);
-//    
-//	// Get R3 orthonormal to R1 and R2:
-//	r3[0] = r1[1] * r2[2] - r1[2] * r2[1];
-//	r3[1] = r1[2] * r2[0] - r1[0] * r2[2];
-//	r3[2] = r1[0] * r2[1] - r1[1] * r2[0];
-//    
-//	// Put the rotation column vectors in the rotation matrix:
-//	// u can play with flip sign of rows here depending on how u apply 3D matrix
-//	R[0] = r1[0];
-//	R[1] = r2[0];
-//	R[2] = r3[0];
-//	R[3] = r1[1];
-//	R[4] = r2[1];
-//	R[5] = r3[1];
-//	R[6] = r1[2];
-//	R[7] = r2[2];
-//	R[8] = r3[2];
-//    
-//	// Calculate Translation Vector T:
-//	multMat(invC, h3, t);
-//    
-//	// Transformation of R into - in Frobenius sense - next orthonormal matrix:
-//	svd.decompose( R, 3, 3 );
-//	transposeMat( svd.V, vT );
-//	multMat( svd.U, vT, R );
-//    
-//	return true;
-//}
-//
-//function setIntrinsicParams(fx:Number, fy:Number, cx:Number, cy:Number):void
-//{
-//	intrinsic[0] = fx;
-//	intrinsic[4] = fy;
-//	intrinsic[2] = cx;
-//	intrinsic[5] = cy;
-//	intrinsic[8] = 1.0;
-//	//
-//	// Create inverse calibration matrix:
-//	var tau:Number = fx / fy;
-//	intrinsicInverse[0] = 1.0 / (tau*fy);
-//	intrinsicInverse[1] = 0.0;
-//	intrinsicInverse[2] = -cx / (tau*fy);
-//	intrinsicInverse[3] = 0.0;
-//	intrinsicInverse[4] = 1.0 / fy;
-//	intrinsicInverse[5] = -cy / fy;
-//	intrinsicInverse[6] = 0.0;
-//	intrinsicInverse[7] = 0.0;
-//	intrinsicInverse[8] = 1.0;
-//}
+// http://en.wikipedia.org/wiki/Camera_resectioning
+// http://www.cse.unr.edu/~bebis/CS791E/Notes/CameraParameters.pdf
+// http://dsp.stackexchange.com/questions/2736/step-by-step-camera-pose-estimation-for-visual-tracking-and-planar-markers
+// http://docs.opencv.org/doc/tutorials/calib3d/camera_calibration/camera_calibration.html#cameracalibrationopencv
