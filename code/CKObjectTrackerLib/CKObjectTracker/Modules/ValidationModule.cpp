@@ -41,10 +41,12 @@ void ValidationModule::setDetector(const string& value)
         _detector = new GoodFeaturesToTrackDetector(_maxFeatures);
     } else if (value == "SIFT") {
         _detector = new SiftFeatureDetector(_maxFeatures);
+        if (getAlgorithmName(*_extractor) == "ORB") { setExtractor("SIFT"); } // can't mix them
     } else if (value == "SURF") {
         _detector = new SurfFeatureDetector(_hessianThreshold, 4, 2, false);
     } else if (value == "ORB") {
         _detector = new OrbFeatureDetector(_maxFeatures);
+        if (getAlgorithmName(*_extractor) == "SIFT") { setExtractor("ORB"); } // can't mix them
     } else {
         throw "Extractor not supported.";
     }
@@ -63,15 +65,16 @@ void ValidationModule::setExtractor(const string &value)
     
 void ValidationModule::setExtractor(const string& value, bool updateMatcher)
 {
-    // TODO: change _detector appropriately
     if (value == "SIFT") {
         _extractor = new SiftDescriptorExtractor(_maxFeatures);
+        if (getAlgorithmName(*_detector) == "ORB") { setDetector("SIFT"); } // can't mix them
         if (updateMatcher) { _matcher = new BFMatcher(NORM_L2); }
     } else if (value == "SURF") {
         _extractor = new SurfDescriptorExtractor(_hessianThreshold, 4, 2, false);
         if (updateMatcher) { _matcher = new BFMatcher(NORM_L2); }
     } else if (value == "ORB") {
         _extractor = new OrbDescriptorExtractor(_maxFeatures);
+        if (getAlgorithmName(*_detector) == "SIFT") { setDetector("ORB"); } // can't mix them
         if (updateMatcher) { _matcher = new BFMatcher(NORM_HAMMING); }
     } else if (value == "FREAK") {
         _extractor = new FREAK();
@@ -246,8 +249,6 @@ void ValidationModule::initWithObjectImage(const cv::Mat &objectImage) // TODO: 
     } else {
         objectImage.copyTo(_objectImage);
     }
-    
-    cout << _detector.obj->name() << ", " << _extractor.obj->name() << endl;
     
     profiler->startTimer(TIMER_DETECT);
     _detector->detect(_objectImage, _objectKeyPoints);

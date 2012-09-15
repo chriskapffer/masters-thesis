@@ -46,6 +46,7 @@ typedef struct {
 - (UIImage*)objectHistogram;
 - (void)setObjectImageWithImage:(UIImage *)objectImage;
 - (void)setObjectImageWithBuffer:(CVPixelBufferRef)objectImage;
+- (void)reInitializeObjectImage;
 
 - (void)setBoolParameterWithName:(NSString*)name Value:(BOOL)value;
 - (void)setintParameterWithName:(NSString*)name Value:(int)value;

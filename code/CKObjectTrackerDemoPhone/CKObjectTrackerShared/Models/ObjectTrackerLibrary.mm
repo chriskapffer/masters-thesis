@@ -134,6 +134,8 @@ using namespace cv;
 
 - (void)setObjectImageAsync
 {
+    if (_objectImage.empty()) { return; }
+    
     static int queueCnt = 0;
     queueCnt++;
     dispatch_async(self.setObjectImageQueue, ^{
@@ -177,6 +179,11 @@ using namespace cv;
     } else {
         [self showError:error];
     }
+}
+
+- (void)reInitializeObjectImage
+{
+    [self setObjectImageAsync];
 }
 
 #pragma mark - parameter related methods

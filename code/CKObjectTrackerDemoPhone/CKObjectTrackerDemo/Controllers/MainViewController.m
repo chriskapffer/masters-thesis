@@ -225,12 +225,12 @@
 
 - (void)settingsControllerFinishedWithCriticalParameterChange:(BOOL)changedCriticalParameter
 {
-    if (changedCriticalParameter) {
+    ObjectTrackerLibrary* objectTrackerLibrary = [ObjectTrackerLibrary instance];
+    if (changedCriticalParameter && objectTrackerLibrary.objectImage != nil) {
         self.objectImageIsSet = NO;
         [self.activityIndicator startAnimating];
         [self.activityIndicator setHidden:NO];
-        ObjectTrackerLibrary* objectTrackerLibrary = [ObjectTrackerLibrary instance];
-        [objectTrackerLibrary setObjectImageWithImage:objectTrackerLibrary.objectImage];
+        [objectTrackerLibrary reInitializeObjectImage];
     }
     [self dismissViewControllerAnimated:YES completion:nil];
 }

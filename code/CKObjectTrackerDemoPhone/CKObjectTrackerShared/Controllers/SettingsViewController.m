@@ -191,6 +191,17 @@
     }
     if (cell.critical) {
         self.changedCriticalParameter = YES;
+        if ([cell.superview isKindOfClass:[UITableView class]]) {
+            // TODO: think of something better, because this takes too long
+            UITableView* tableView = (UITableView*)cell.superview;
+            NSIndexPath* indexPath = [tableView indexPathForCell:cell];
+            int rowsInSection = [tableView.dataSource tableView:tableView numberOfRowsInSection:indexPath.section];
+            NSMutableArray* indexPaths = [NSMutableArray arrayWithCapacity:rowsInSection];
+            for (int i = 0; i < rowsInSection; i++) {
+                [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:indexPath.section]];
+            };
+            [tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+        }
     }
 }
 
