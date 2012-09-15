@@ -8,16 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-typedef struct {
-    float Position[3];
-    float Normal[3];
-    float Color[4];
-    float TexCoord[2];
-} Vertex;
-
 @interface DrawableObject : NSObject
-
-@property (nonatomic, assign) GLuint textureName;
 
 - (void)draw;
 

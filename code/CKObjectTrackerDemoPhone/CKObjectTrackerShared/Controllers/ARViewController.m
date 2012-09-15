@@ -15,17 +15,12 @@
 #define FAR_PLAN 20.0f
 
 @interface ARViewController ()
-{
-
-    
-
-    
-    BackgroundTexture* _backgroundObj;
-}
 
 @property (nonatomic, strong) EAGLContext* context;
 @property (nonatomic, strong) GLKBaseEffect* baseEffect;
 @property (nonatomic, assign) GLKMatrix4 projectionMatrix;
+@property (nonatomic, strong) BackgroundTexture* backgroundTexture;
+@property (nonatomic, strong) DrawableObject* drawableObject;
 @property (nonatomic, assign) CGSize viewPortSize;
 
 @end
@@ -40,13 +35,14 @@
 @synthesize context = _context;
 @synthesize baseEffect = _baseEffect;
 @synthesize projectionMatrix = _projectionMatrix;
+@synthesize backgroundTexture = _backgroundTexture;
+@synthesize drawableObject = _drawableObject;
+@synthesize viewPortSize = _viewPortSize;
 
 - (void)setBackground:(CVPixelBufferRef)background
 {
     [self updateBackground:background];
 }
-
-@synthesize viewPortSize = _viewPortSize;
 
 - (void)setViewPortSize:(CGSize)viewPortSize
 {
@@ -84,12 +80,11 @@
     //view.drawableDepthFormat = GLKViewDrawableDepthFormat16; // or GLKViewDrawableDepthFormat24
     view.drawableMultisample = GLKViewDrawableMultisample4X;
     
-
-    
     [self setupOpenGL];
     
-    _backgroundObj = [[BackgroundTexture alloc] initWithContext:self.context];
-    [_backgroundObj loadShaders];
+    // init objects
+    self.backgroundTexture = [[BackgroundTexture alloc] initWithContext:self.context];
+    self.drawableObject = [[DrawableObject alloc] init];
     
     [self setViewPortSize:self.view.bounds.size];
     [self setPreferredFramesPerSecond:30];
@@ -99,11 +94,10 @@
 {
     [super viewDidUnload];
  
-    _backgroundObj = nil;
+    self.backgroundTexture = nil;
+    self.drawableObject = nil;
     
     [self tearDownOpenGL];
-    
-    
     
     if ([EAGLContext currentContext] == self.context)
         [EAGLContext setCurrentContext:nil];
@@ -144,11 +138,13 @@
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    //[self.baseEffect prepareToDraw];
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    [self.backgroundTexture draw];
+    
+    [self.baseEffect prepareToDraw];
+    
+    [self.drawableObject draw];
 }
 
 #pragma mark glkit view controller delegate
@@ -156,22 +152,18 @@
 - (void)update
 {
     [self setViewPortSize:self.view.bounds.size];
-    _backgroundObj.viewPortSize = self.viewPortSize;
+    self.backgroundTexture.viewPortSize = self.viewPortSize;
     
-    self.baseEffect.transform.projectionMatrix = self.projectionMatrix;
+    self.baseEffect.transform.projectionMatrix = _projectionMatrix;
     
-    self.baseEffect.colorMaterialEnabled = GL_TRUE;
+    GLKMatrix4 baseModelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, -4.0f);
+    baseModelViewMatrix = GLKMatrix4Rotate(baseModelViewMatrix, 0, 0.0f, 1.0f, 0.0f);
     
-    self.baseEffect.light0.enabled = GL_TRUE;
-    self.baseEffect.light0.diffuseColor = GLKVector4Make(1.0f, 0.8f, 0.6f, 1.0f);
-    self.baseEffect.light0.ambientColor = GLKVector4Make(0.8f, 0.6f, 0.4f, 1.0f);
-    self.baseEffect.light0.position = GLKVector4Make(3, 7, -7, 0);
-    self.baseEffect.light0.specularColor = GLKVector4Make(1.0f, 0.8f, 0.6f, 1.0f);
-    self.baseEffect.lightingType = GLKLightingTypePerPixel;
+    // Compute the model view matrix for the object rendered with GLKit
+    GLKMatrix4 modelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, -1.5f);
+    modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, 45, 1.0f, 1.0f, 1.0f);
+    modelViewMatrix = GLKMatrix4Multiply(baseModelViewMatrix, modelViewMatrix);
     
-    GLKMatrix4 modelViewMatrix = GLKMatrix4MakeTranslation(0.0f, -1.0f, -6.0f);
-    //modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, GLKMathDegreesToRadians(25), 1, 0, 0);
-    modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, GLKMathDegreesToRadians(45), 0, 1, 0);
     self.baseEffect.transform.modelviewMatrix = modelViewMatrix;
 }
 
@@ -186,10 +178,10 @@
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
-    // init shader
+    // init base effect (mimics fixed function pipeline)
     self.baseEffect = [[GLKBaseEffect alloc] init];
-    
-
+    self.baseEffect.light0.diffuseColor = GLKVector4Make(1.0f, 0.4f, 0.4f, 1.0f);
+    self.baseEffect.light0.enabled = GL_TRUE;
 }
 
 - (void)tearDownOpenGL
@@ -197,14 +189,14 @@
     // make our context current if neccessary
     if ([EAGLContext currentContext] != self.context)
         [EAGLContext setCurrentContext:self.context];
-            
-    // clear shader
+
+    // clear base effect
     self.baseEffect = nil;
 }
 
 - (void)updateBackground:(CVPixelBufferRef)pixelBuffer
 {
-    [_backgroundObj updateContent:pixelBuffer];
+    [self.backgroundTexture updateContent:pixelBuffer];
 }
 
 - (void)updateProjectionMatrixWithAspect:(float)aspect
@@ -212,7 +204,6 @@
     float fovRad = GLKMathDegreesToRadians(FIELD_OF_VIEW_DEG);
     _projectionMatrix = GLKMatrix4MakePerspective(fovRad, aspect, NEAR_PLANE, FAR_PLAN);
 }
-
 
 @end
 // http://urbanar.blogspot.de/2011/04/from-homography-to-opengl-modelview.html

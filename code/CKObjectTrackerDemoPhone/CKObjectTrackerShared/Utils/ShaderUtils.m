@@ -11,8 +11,6 @@
 
 @implementation ShaderUtils
 
-// all code taken from: http://developer.apple.com/library/ios/#samplecode/GLCameraRipple/Listings/GLCameraRipple_RippleViewController_m.html#//apple_ref/doc/uid/DTS40011222-GLCameraRipple_RippleViewController_m-DontLinkElementID_8
-
 + (BOOL)createProgram:(GLuint*)program WithVertexShaderPath:(NSString*)vertexShaderPath FragmentShaderPath:(NSString*)fragmentShaderPath Attributes:(NSDictionary*)attributes
 {
     GLuint vertShader, fragShader;

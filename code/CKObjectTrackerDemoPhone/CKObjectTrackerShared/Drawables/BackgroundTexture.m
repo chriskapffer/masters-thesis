@@ -9,6 +9,8 @@
 #import "BackgroundTexture.h"
 #import "ShaderUtils.h"
 
+#define VERTEX_COUNT 8
+
 // Uniform index.
 enum
 {
@@ -23,21 +25,24 @@ enum {
     NUM_ATTRIBUTES
 };
 
-static const GLfloat squareVertices[] = {
+static const GLfloat gQuadVertices[VERTEX_COUNT] = {
     -1.0f, -1.0f,
     1.0f, -1.0f,
     -1.0f,  1.0f,
     1.0f,  1.0f,
 };
 
+
+
 @interface BackgroundTexture ()
 {
     GLint uniforms[NUM_UNIFORMS];
-    GLfloat textureVertices[8];
+    GLfloat _textureVertices[VERTEX_COUNT];
     GLuint _program;
     
+    GLuint _vertexArray;
     GLuint _positionVBO;
-    GLuint _indexVBO;
+    GLuint _texcoordVBO;
     
     CVOpenGLESTextureRef _backgroundTexture;
     CVOpenGLESTextureCacheRef _videoTextureCache;
@@ -54,6 +59,16 @@ static const GLfloat squareVertices[] = {
 
 @synthesize viewPortSize = _viewPortSize;
 
+- (void)setViewPortSize:(CGSize)viewPortSize
+{
+    if (viewPortSize.width == _viewPortSize.width && viewPortSize.height == _viewPortSize.height)
+        return;
+    
+    _viewPortSize.width = viewPortSize.width;
+    _viewPortSize.height = viewPortSize.height;
+
+    [self updateTextureVertices];
+}
 
 - (void)setTextureSize:(CGSize)textureSize
 {
@@ -63,23 +78,12 @@ static const GLfloat squareVertices[] = {
     _textureWidth = textureSize.width;
     _textureHeight = textureSize.height;
         
-        CGRect textureSamplingRect = [self textureSamplingRectForCroppingTextureWithAspectRatio:textureSize toAspectRatio:self.viewPortSize];
-        GLfloat tmp[] = {
-            CGRectGetMaxX(textureSamplingRect), CGRectGetMaxY(textureSamplingRect), // 3
-            CGRectGetMaxX(textureSamplingRect), CGRectGetMinY(textureSamplingRect), // 1
-            CGRectGetMinX(textureSamplingRect), CGRectGetMaxY(textureSamplingRect), // 2
-            CGRectGetMinX(textureSamplingRect), CGRectGetMinY(textureSamplingRect), // 0
-        };
-        memcpy(textureVertices, tmp, sizeof(tmp));
-        [self initBuffers];
-}
-
-- (void)setContent:(CVPixelBufferRef)content
-{
-
+    [self updateTextureVertices];
 }
 
 #pragma mark
+
+
 
 - (id)initWithContext:(EAGLContext*)context
 {
@@ -88,90 +92,48 @@ static const GLfloat squareVertices[] = {
         _textureWidth = -1;
         _textureHeight = -1;
         
-        CVReturn err = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault, NULL, (__bridge void *)context, NULL, &_videoTextureCache);
-        if (err)
-        {
-            NSLog(@"Error at CVOpenGLESTextureCacheCreate %d", err);
+        CVReturn error;
+        error = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault, NULL, (__bridge void *)context, NULL, &_videoTextureCache);
+        if (error) {
+            NSLog(@"Error at CVOpenGLESTextureCacheCreate %d", error);
             return nil;
         }
+        
+        [self loadShaders];
+
+        glUseProgram(_program);
+        glUniform1i(uniforms[UNIFORM_VIDEO_FRAME], 0);
+        
+        glGenBuffers(1, &_positionVBO);
+        glGenBuffers(1, &_texcoordVBO);
+        
+//        glGenVertexArraysOES(1, &_vertexArray);
+//        glBindVertexArrayOES(_vertexArray);
+//        
+//        glGenBuffers(1, &_positionVBO);
+//        glBindBuffer(GL_ARRAY_BUFFER, _positionVBO);
+//        glBufferData(GL_ARRAY_BUFFER, sizeof(gQuadVertices), gQuadVertices, GL_DYNAMIC_DRAW);
+//
+//        glBindVertexArrayOES(0);
     }
     return self;
 }
 
 - (void)dealloc
 {
-    
     glDeleteBuffers(1, &_positionVBO);
-    glDeleteBuffers(1, &_indexVBO);
+    glDeleteBuffers(1, &_texcoordVBO);
+    
+    glDeleteVertexArraysOES(1, &_vertexArray);
     
     [self cleanUpTextures];
+    
     CFRelease(_videoTextureCache);
     
     if (_program) {
         glDeleteProgram(_program);
         _program = 0;
     }
-}
-
-- (void)initBuffers
-{
-    glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_FLOAT, 0, 0, squareVertices);
-	glEnableVertexAttribArray(ATTRIB_VERTEX);
-	glVertexAttribPointer(ATTRIB_TEXCOORD, 2, GL_FLOAT, 0, 0, textureVertices);
-	glEnableVertexAttribArray(ATTRIB_TEXCOORD);
-}
-
-- (void)cleanUpTextures
-{
-    if (_backgroundTexture)
-    {
-        CFRelease(_backgroundTexture);
-        _backgroundTexture = NULL;
-    }
-    // Periodic texture cache flush every frame
-    CVOpenGLESTextureCacheFlush(_videoTextureCache, 0);
-}
-
-
-- (void)updateContent:(CVPixelBufferRef)pixelBuffer
-{
-    CVReturn error;
-    size_t width = CVPixelBufferGetWidth(pixelBuffer);
-    size_t height = CVPixelBufferGetHeight(pixelBuffer);
-    
-    if (!_videoTextureCache)
-    {
-        NSLog(@"No video texture cache");
-        return;
-    }
-    
-    self.viewPortSize = self.viewPortSize;
-    self.textureSize = CGSizeMake(width, height);
-    
-    
-    [self cleanUpTextures];
-    
-    glActiveTexture(GL_TEXTURE0);
-    error = CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault,
-                                                         _videoTextureCache,
-                                                         pixelBuffer,
-                                                         NULL,
-                                                         GL_TEXTURE_2D,
-                                                         GL_RGBA,
-                                                         width,
-                                                         height,
-                                                         GL_BGRA,
-                                                         GL_UNSIGNED_BYTE,
-                                                         0,
-                                                         &_backgroundTexture);
-    if (error)
-    {
-        NSLog(@"Error at CVOpenGLESTextureCacheCreateTextureFromImage %d", error);
-    }
-    
-    glBindTexture(CVOpenGLESTextureGetTarget(_backgroundTexture), CVOpenGLESTextureGetName(_backgroundTexture));
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
 - (void)loadShaders
@@ -186,19 +148,109 @@ static const GLfloat squareVertices[] = {
         return;
     }
     
-    
-    
     // Get uniform locations.
     uniforms[0] = glGetUniformLocation(_program, "Videoframe");
-    
-    
-    
-    
-    glUseProgram(_program);
-    
-    glUniform1i(uniforms[UNIFORM_VIDEO_FRAME], 0);
 }
 
+- (void)initBuffers
+{    
+    glBindBuffer(GL_ARRAY_BUFFER, _positionVBO);
+    glBufferData(GL_ARRAY_BUFFER, VERTEX_COUNT * sizeof(GLfloat), gQuadVertices, GL_STATIC_DRAW);
+    
+    glEnableVertexAttribArray(ATTRIB_VERTEX);
+    glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, _texcoordVBO);
+    glBufferData(GL_ARRAY_BUFFER, VERTEX_COUNT * sizeof(GLfloat), _textureVertices, GL_STATIC_DRAW); // dyn draw
+    
+    glEnableVertexAttribArray(ATTRIB_TEXCOORD);
+    glVertexAttribPointer(ATTRIB_TEXCOORD, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
+}
+
+- (void)cleanUpTextures
+{
+    if (_backgroundTexture)
+    {
+        CFRelease(_backgroundTexture);
+        _backgroundTexture = NULL;
+    }
+    // Periodic texture cache flush every time content changes
+    CVOpenGLESTextureCacheFlush(_videoTextureCache, 0);
+}
+
+- (void)draw
+{
+//    glBindVertexArrayOES(_vertexArray);
+//
+//    glUseProgram(_program);
+//    glUniform1i(uniforms[UNIFORM_VIDEO_FRAME], 0);
+//    
+    //[self initBuffers];
+
+    
+    
+
+    
+    glUseProgram(_program);
+    glUniform1i(uniforms[UNIFORM_VIDEO_FRAME], 0);
+    
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    
+//    glBindVertexArrayOES(0);
+}
+
+- (void)updateContent:(CVPixelBufferRef)pixelBuffer
+{
+    if (!_videoTextureCache) {
+        NSLog(@"No video texture cache");
+        return;
+    }
+    
+    CVReturn error;
+    size_t width = CVPixelBufferGetWidth(pixelBuffer);
+    size_t height = CVPixelBufferGetHeight(pixelBuffer);
+    
+    self.textureSize = CGSizeMake(width, height);
+    
+    [self cleanUpTextures];
+    glActiveTexture(GL_TEXTURE0);
+    error = CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault,
+                                                         _videoTextureCache,
+                                                         pixelBuffer,
+                                                         NULL,
+                                                         GL_TEXTURE_2D,
+                                                         GL_RGBA,
+                                                         width,
+                                                         height,
+                                                         GL_BGRA,
+                                                         GL_UNSIGNED_BYTE,
+                                                         0,
+                                                         &_backgroundTexture);
+    if (error) {
+        NSLog(@"Error at CVOpenGLESTextureCacheCreateTextureFromImage %d", error);
+    }
+    
+    glBindTexture(CVOpenGLESTextureGetTarget(_backgroundTexture), CVOpenGLESTextureGetName(_backgroundTexture));
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+}
+
+- (void)updateTextureVertices
+{
+    CGSize textureSize = CGSizeMake(_textureWidth, _textureHeight);
+    CGRect textureSamplingRect = [self textureSamplingRectForCroppingTextureWithAspectRatio:textureSize
+                                                                              toAspectRatio:self.viewPortSize];
+    GLfloat tmp[VERTEX_COUNT] = {
+        CGRectGetMaxX(textureSamplingRect), CGRectGetMaxY(textureSamplingRect), // 3
+        CGRectGetMaxX(textureSamplingRect), CGRectGetMinY(textureSamplingRect), // 1
+        CGRectGetMinX(textureSamplingRect), CGRectGetMaxY(textureSamplingRect), // 2
+        CGRectGetMinX(textureSamplingRect), CGRectGetMinY(textureSamplingRect), // 0
+    };
+    memcpy(_textureVertices, tmp, sizeof(tmp));
+    [self initBuffers];
+}
+
+// code from: https://developer.apple.com/library/ios/samplecode/RosyWriter/Listings/Classes_RosyWriterPreviewView_m.html#//apple_ref/doc/uid/DTS40011110-Classes_RosyWriterPreviewView_m-DontLinkElementID_6
 - (CGRect)textureSamplingRectForCroppingTextureWithAspectRatio:(CGSize)textureAspectRatio toAspectRatio:(CGSize)croppingAspectRatio
 {
 	CGRect normalizedSamplingRect = CGRectZero;

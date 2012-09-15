@@ -13,8 +13,7 @@
 @property (nonatomic, assign) CGSize viewPortSize;
 
 - (id)initWithContext:(EAGLContext*)context;
-
-- (void)loadShaders;
 - (void)updateContent:(CVPixelBufferRef)content;
+- (void)draw;
 
 @end
