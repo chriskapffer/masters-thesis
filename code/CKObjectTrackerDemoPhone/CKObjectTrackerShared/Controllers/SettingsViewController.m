@@ -25,6 +25,7 @@
 
 @interface SettingsViewController () <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, ParameterCellDelegate>
 
+@property (nonatomic, assign) BOOL changedCriticalParameter;
 @property (nonatomic, strong) NSMutableArray* tableViews;
 @property (nonatomic, strong, readonly) ObjectTrackerParameterCollection* parameters;
 
@@ -37,7 +38,9 @@
 @synthesize scrollView = _scrollView;
 @synthesize pageControl = _pageControl;
 @synthesize navBarItem = _navBarItem;
+@synthesize activityIndicator = _activityIndicator;
 
+@synthesize changedCriticalParameter = _changedCriticalParameter;
 @synthesize parameters = _parameters;
 @synthesize delegate = _delegate;
 
@@ -50,14 +53,6 @@
 
 #pragma mark - view lifecycle
 
-- (id)init
-{
-    self = [super init];
-    if (self) {
-        self.tableViews = [NSMutableArray array];
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
@@ -73,14 +68,23 @@
     self.scrollView = nil;
     self.pageControl = nil;
     self.navBarItem = nil;
+    self.activityIndicator = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    [self.activityIndicator setHidden:NO];
+    [self.activityIndicator startAnimating];
+    [self setChangedCriticalParameter:NO];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
     [self recreateTableViewsWithCount:self.parameters.subCollections.count];
     [self updateNavBarItem];
+    [self.activityIndicator stopAnimating];
+    [self.activityIndicator setHidden:YES];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -144,8 +148,8 @@
 
 - (IBAction)doneButtonClicked:(id)sender
 {
-    if ([self.delegate respondsToSelector:@selector(settingsControllerFinished)]) {
-        [self.delegate settingsControllerFinished];
+    if ([self.delegate respondsToSelector:@selector(settingsControllerFinishedWithCriticalParameterChange:)]) {
+        [self.delegate settingsControllerFinishedWithCriticalParameterChange:self.changedCriticalParameter];
     }
 }
 
@@ -185,10 +189,9 @@
             [objectTrackerLibrary setFloatParameterWithName:cell.name Value:sliderCell.value];
         }
     }
-    if (cell.critical && [self.delegate respondsToSelector:@selector(criticalParameterHasChanged:)]) {
-        [self.delegate criticalParameterHasChanged];
+    if (cell.critical) {
+        self.changedCriticalParameter = YES;
     }
-    
 }
 
 #pragma mark - parameter related methods

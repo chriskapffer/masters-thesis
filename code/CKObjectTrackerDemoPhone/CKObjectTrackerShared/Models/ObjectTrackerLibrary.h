@@ -23,6 +23,7 @@ typedef struct {
 - (void)reachedDebugInfoRecordingLimit:(NSString*)debugInfo;
 - (void)failedToTrackObjectInImage;
 - (void)trackerLibraryDidProcessFrame;
+- (void)finishedObjectImageInitialization;
 
 @end
 

@@ -19,6 +19,10 @@
 
 @interface MainViewController () <CaptureManagerDelegate, ObjectTrackerLibraryDelegate, SettingsViewControllerDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate>
 
+@property (nonatomic, assign) BOOL captureIsReady;
+@property (nonatomic, assign) BOOL objectImageIsSet;
+
+@property (nonatomic, strong) UIImagePickerController* imagePickerController;
 @property (nonatomic, strong) SettingsViewController* settingsController;
 @property (nonatomic, strong) ARViewController* arViewController;
 
@@ -38,7 +42,12 @@
 @synthesize scrollView = _scrollView;
 @synthesize pageControl = _pageControl;
 @synthesize navBarItem = _navBarItem;
+@synthesize activityIndicator = _activityIndicator;
 
+@synthesize objectImageIsSet = _objectImageIsSet;
+@synthesize captureIsReady = _captureIsReady;
+
+@synthesize imagePickerController = _imagePickerController;
 @synthesize settingsController = _settingsController;
 @synthesize arViewController = _arViewController;
 
@@ -54,10 +63,11 @@
 {
     [super viewDidLoad];
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:NO];
-    
+        
     [[CaptureManager instance] setPixelFormat:kCVPixelFormatType_32BGRA];
     [[CaptureManager instance] setSessionPreset:AVCaptureSessionPreset352x288];
-    [[CaptureManager instance] setDelegate:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(captureSessionDidStartRunning) name:AVCaptureSessionDidStartRunningNotification object:nil];
+    
     [[ObjectTrackerLibrary instance] setDelegate:self];
     [[ObjectTrackerLibrary instance] setRecordDebugInfo:NO];
     
@@ -65,8 +75,11 @@
     self.arViewController.view.frame = self.scrollView.frame;
     [self.scrollView addSubview:self.arViewController.view];
     
-    self.imageViewNames = [NSArray arrayWithObjects:
-                           @"Object Image", @"Statistics", @"Augmented Reality", @"Tracking View", @"Validation View", @"Detection View", nil];
+    self.imagePickerController = [[UIImagePickerController alloc] init];
+    self.imagePickerController.allowsEditing = YES;
+    self.imagePickerController.delegate = (id)self;
+    self.imagePickerController.modalPresentationStyle = UIModalPresentationFullScreen;
+    self.imagePickerController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     
     self.debugViewObject = [self registeredImageViewWithIndex:0];
     [self.textView setFrameOrigin:CGPointMake(self.scrollView.bounds.size.width* 1, 0)]; // <-- index 1
@@ -81,7 +94,12 @@
     self.textView.text = @"";
     
     self.settingsController = nil;
-
+    self.activityIndicator.hidden = YES;
+    self.objectImageIsSet = NO;
+    self.captureIsReady = YES;
+    
+    self.imageViewNames = [NSArray arrayWithObjects:
+                           @"Object Image", @"Statistics", @"Augmented Reality", @"Tracking View", @"Validation View", @"Detection View", nil];
 }
 
 - (void)viewDidUnload
@@ -92,25 +110,29 @@
     self.scrollView = nil;
     self.pageControl = nil;
     self.navBarItem = nil;
+    self.activityIndicator = nil;
     
+    if (self.imagePickerController != nil)
+        self.imagePickerController = nil;
     if (self.settingsController != nil)
         self.settingsController = nil;
     if (self.arViewController != nil)
         self.arViewController = nil;
+
+    [[CaptureManager instance] stopAndShutDownCaptureSession];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVCaptureSessionDidStartRunningNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
-    //[[ObjectTrackerLibrary instance] setDelegate:self];
+    [[CaptureManager instance] setDelegate:self];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    
-    //[[ObjectTrackerLibrary instance] setDelegate:nil];
+    [[CaptureManager instance] setDelegate:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -153,57 +175,64 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    [[CaptureManager instance] stopAndShutDownCaptureSession];
-    
-    UIImagePickerController* imagePicker = [[UIImagePickerController alloc] init];
-    if (buttonIndex == 0) {
-        imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
-        imagePicker.cameraCaptureMode = UIImagePickerControllerCameraCaptureModePhoto;
-    } else {
-        imagePicker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+    if (buttonIndex == actionSheet.cancelButtonIndex) {
+        return;
     }
-    imagePicker.allowsEditing = YES;
-    imagePicker.delegate = (id)self;
-    imagePicker.modalPresentationStyle = UIModalPresentationFullScreen;
-    imagePicker.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-    [self presentViewController:imagePicker animated:YES completion:nil];
+        
+    if (buttonIndex == 0) {
+        self.imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+        self.imagePickerController.cameraCaptureMode = UIImagePickerControllerCameraCaptureModePhoto;
+    } else {
+        self.imagePickerController.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+    }
+    [self presentViewController:self.imagePickerController animated:YES completion:^{
+        [[CaptureManager instance] stopAndShutDownCaptureSession];
+        self.arViewController.view.hidden = YES;
+        self.captureIsReady = NO;
+    }];
 }
 
 #pragma mark - image picker controller delegate
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    [[CaptureManager instance] setUpAndStartCaptureSession];
-    
-    CaptureManager* captureManager = [CaptureManager instance];
-    CGSize targetSize = [captureManager videoResolutionForSessionPreset:captureManager.sessionPreset];
-    NSLog(@"size: %d, %d", (int)targetSize.width, (int)targetSize.height);
-    UIImage* image = [[info objectForKey:UIImagePickerControllerEditedImage] rotatedImageWithAngle:-M_PI_2];
-    if (!image) { image = [info objectForKey:UIImagePickerControllerOriginalImage]; }
-    
-    [[ObjectTrackerLibrary instance] setObjectImageWithImage:[image scaledImageWithSize:targetSize]];
-    [self.debugViewObject setImage:[image rotatedImageWithAngle:M_PI_2]];
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
+    self.objectImageIsSet = NO;
+    [self.activityIndicator startAnimating];
+    [self.activityIndicator setHidden:NO];
+    [self dismissViewControllerAnimated:YES completion:^{
+        CaptureManager* captureManager = [CaptureManager instance];
+        [captureManager setUpAndStartCaptureSession];
+        
+        CGSize targetSize = [captureManager videoResolutionForSessionPreset:captureManager.sessionPreset];
+        UIImage* image = [[info objectForKey:UIImagePickerControllerEditedImage] rotatedImageWithAngle:-M_PI_2];
+        if (!image) { image = [info objectForKey:UIImagePickerControllerOriginalImage]; }
+        
+        [[ObjectTrackerLibrary instance] setObjectImageWithImage:[image scaledImageWithSize:targetSize]];
+        [self.debugViewObject setImage:[image rotatedImageWithAngle:M_PI_2]];
+    }];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.activityIndicator startAnimating];
+    [self.activityIndicator setHidden:NO];
+    [self dismissViewControllerAnimated:YES completion:^{
+        [[CaptureManager instance] setUpAndStartCaptureSession];
+    }];
 }
 
 #pragma mark - settings view controller delegate
 
-- (void)settingsControllerFinished
+- (void)settingsControllerFinishedWithCriticalParameterChange:(BOOL)changedCriticalParameter
 {
+    if (changedCriticalParameter) {
+        self.objectImageIsSet = NO;
+        [self.activityIndicator startAnimating];
+        [self.activityIndicator setHidden:NO];
+        ObjectTrackerLibrary* objectTrackerLibrary = [ObjectTrackerLibrary instance];
+        [objectTrackerLibrary setObjectImageWithImage:objectTrackerLibrary.objectImage];
+    }
     [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)criticalParameterHasChanged
-{
-    // re-init object image
-    ObjectTrackerLibrary* objectTrackerLibrary = [ObjectTrackerLibrary instance];
-    [objectTrackerLibrary setObjectImageWithImage:objectTrackerLibrary.objectImage];
 }
 
 #pragma mark - capture manager delegate
@@ -218,7 +247,27 @@
     [[ObjectTrackerLibrary instance] trackObjectInVideoWithBuffer:pixelBuffer];
 }
 
+- (void)captureSessionDidStartRunning
+{
+    self.captureIsReady = YES;
+    if (self.objectImageIsSet && self.captureIsReady) {
+        [self.activityIndicator setHidden:YES];
+        [self.activityIndicator stopAnimating];
+        self.arViewController.view.hidden = NO;
+    }
+}
+
 #pragma mark - object tracker library delegate
+
+- (void)finishedObjectImageInitialization
+{
+    self.objectImageIsSet = YES;
+    if (self.objectImageIsSet && self.captureIsReady) {
+        [self.activityIndicator setHidden:YES];
+        [self.activityIndicator stopAnimating];
+        self.arViewController.view.hidden = NO;
+    }
+}
 
 - (void)trackerLibraryDidProcessFrame
 {

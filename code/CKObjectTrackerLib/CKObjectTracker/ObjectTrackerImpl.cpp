@@ -9,17 +9,17 @@
 #include "ObjectTrackerImpl.h"
 #include "ObjectTrackerCreator.h"
 
-#if defined(__has_include)
-    #if __has_include(<future>) && __has_feature(cxx_lambdas)
-        #define __NECESSARY_CPP11_FEATURES_AVAILABLE__
-        #include <future>
-    #endif
-
-    #if !defined(__NECESSARY_CPP11_FEATURES_PRESENT__) && __has_include(<dispatch/dispatch.h>)
-        #define __NECESSARY_APPLE_FEATURES_AVAILABLE__
-        #include <dispatch/dispatch.h>
-    #endif
-#endif
+//#if defined(__has_include)
+//    #if __has_include(<future>) && __has_feature(cxx_lambdas)
+//        #define __NECESSARY_CPP11_FEATURES_AVAILABLE__
+//        #include <future>
+//    #endif
+//
+//    #if !defined(__NECESSARY_CPP11_FEATURES_PRESENT__) && __has_include(<dispatch/dispatch.h>)
+//        #define __NECESSARY_APPLE_FEATURES_AVAILABLE__
+//        #include <dispatch/dispatch.h>
+//    #endif
+//#endif
 
 using namespace std;
 using namespace cv;
@@ -74,31 +74,33 @@ void ObjectTracker::Implementation::setObject(const Mat& objectImage)
 {
     _currentModule = _allModules[MODULE_TYPE_EMPTY];
     _moduleParams.successor = MODULE_TYPE_EMPTY;
-
-#if defined(__NECESSARY_CPP11_FEATURES_AVAILABLE__)
-    // use C++11 features for concurrency
-    auto function = [] (CKObjectTracker::Impl& tracker, const cv::Mat &objectImage) {
-        tracker.initModules(objectImage);
-    };
-    // not tested yet, as openCV ver. 2.4.2 doesn't support C++11
-    async(launch::async, function, ref(*this), objectImage);
-#elif defined(__NECESSARY_APPLE_FEATURES_AVAILABLE__)
-    // use apple features for concurrency
-    static int counter = 0;
-    counter++;
-    __block Mat retainedImage = objectImage;
-    dispatch_async(queue, ^{
-        if (counter > 1) {
-            counter--;
-            return;
-        }
-        this->initModules(retainedImage);
-        counter--;
-    });
-#else
-    // no concurrency, no nothing
+    
     this->initModules(objectImage);
-#endif
+    
+//#if defined(__NECESSARY_CPP11_FEATURES_AVAILABLE__)
+//    // use C++11 features for concurrency
+//    auto function = [] (CKObjectTracker::Impl& tracker, const cv::Mat &objectImage) {
+//        tracker.initModules(objectImage);
+//    };
+//    // not tested yet, as openCV ver. 2.4.2 doesn't support C++11
+//    async(launch::async, function, ref(*this), objectImage);
+//#elif defined(__NECESSARY_APPLE_FEATURES_AVAILABLE__)
+//    // use apple features for concurrency
+//    static int counter = 0;
+//    counter++;
+//    __block Mat retainedImage = objectImage;
+//    dispatch_async(queue, ^{
+//        if (counter > 1) {
+//            counter--;
+//            return;
+//        }
+//        this->initModules(retainedImage);
+//        counter--;
+//    });
+//#else
+//    // no concurrency, no nothing
+//    this->initModules(objectImage);
+//#endif
 }
 
 void ObjectTracker::Implementation::trackObjectInStillImage(const Mat& image, vector<TrackerOutput>& output, vector<TrackerDebugInfo>& debugInfo)

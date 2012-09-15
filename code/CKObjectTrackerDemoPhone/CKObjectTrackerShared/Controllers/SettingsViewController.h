@@ -10,8 +10,7 @@
 
 @protocol SettingsViewControllerDelegate <NSObject>
 
-- (void)settingsControllerFinished;
-- (void)criticalParameterHasChanged;
+- (void)settingsControllerFinishedWithCriticalParameterChange:(BOOL)changedCriticalParameter;
 
 @end
 
@@ -22,6 +21,7 @@
 @property (nonatomic, strong) IBOutlet UIScrollView* scrollView;
 @property (nonatomic, strong) IBOutlet UIPageControl* pageControl;
 @property (nonatomic, strong) IBOutlet UINavigationItem* navBarItem;
+@property (nonatomic, strong) IBOutlet UIActivityIndicatorView* activityIndicator;
 @property (nonatomic, weak) id<SettingsViewControllerDelegate> delegate;
 
 - (IBAction)doneButtonClicked:(id)sender;

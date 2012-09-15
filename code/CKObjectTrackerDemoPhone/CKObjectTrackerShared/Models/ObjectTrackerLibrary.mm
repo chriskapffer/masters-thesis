@@ -26,7 +26,8 @@ using namespace cv;
     vector<TrackerDebugInfoStripped> _videoDebugInfo;
 }
 
-@property (nonatomic, assign) dispatch_queue_t stillImageTrackerQueue;
+@property (nonatomic, assign) dispatch_queue_t trackStillImageQueue;
+@property (nonatomic, assign) dispatch_queue_t setObjectImageQueue;
 
 - (void)handleTrackingInVideoResult;
 - (void)handleTrackingInImageResult;
@@ -41,7 +42,8 @@ using namespace cv;
 
 @synthesize delegate = _delegate;
 @synthesize recordDebugInfo = _recordDebugInfo;
-@synthesize stillImageTrackerQueue = _stillImageTrackerQueue;
+@synthesize trackStillImageQueue = _trackStillImageQueue;
+@synthesize setObjectImageQueue = _setObjectImageQueue;
 
 - (ObjectTrackerParameterCollection*) parameters
 {
@@ -87,7 +89,8 @@ using namespace cv;
         _objectImage = Mat();
         _tracker = new ObjectTracker();
         _videoDebugInfo = vector<TrackerDebugInfoStripped>();
-        _stillImageTrackerQueue = dispatch_queue_create("ck.objecttracker.trackerlibrary.stillimage", DISPATCH_QUEUE_SERIAL);
+        _trackStillImageQueue = dispatch_queue_create("ck.objecttracker.trackerlibrary.trackstillimage", DISPATCH_QUEUE_SERIAL);
+        _setObjectImageQueue = dispatch_queue_create("ck.objecttracker.trackerlibrary.setobjectimage", DISPATCH_QUEUE_SERIAL);
         _recordDebugInfo = YES;
     }
     return self;
@@ -98,13 +101,16 @@ using namespace cv;
     delete _tracker;
     _tracker = 0;
     
-    dispatch_release(_stillImageTrackerQueue);
+    dispatch_release(_trackStillImageQueue);
+    dispatch_release(_setObjectImageQueue);
 }
 
 #pragma mark - object related methods
 
 - (UIImage*)objectImage
 {
+    if (_objectImage.empty()) { return nil; }
+    
     UIImage* image;
     NSError* error = NULL;
     image = [CVImageConverter UIImageFromCVMat:_objectImage error:&error];
@@ -126,14 +132,35 @@ using namespace cv;
     return histogram;
 }
 
+- (void)setObjectImageAsync
+{
+    static int queueCnt = 0;
+    queueCnt++;
+    dispatch_async(self.setObjectImageQueue, ^{
+        if (queueCnt > 1) {
+            queueCnt--;
+            return;
+        }
+        _tracker->setObject(_objectImage);
+        queueCnt--;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.delegate respondsToSelector:@selector(finishedObjectImageInitialization)]) {
+                [self.delegate finishedObjectImageInitialization];
+            }
+        });
+    });
+}
+
 - (void)setObjectImageWithImage:(UIImage *)objectImage
 {
+    if (objectImage == nil) { return; }
+    
+    Mat tmpImage;
     NSError* error = NULL;
-    UIImage* test = objectImage;
-    Mat test2;
-    [CVImageConverter CVMat:test2 FromUIImage:test error:&error];
+    [CVImageConverter CVMat:tmpImage FromUIImage:objectImage error:&error];
     if (error == NULL) {
-        _tracker->setObject(test2);
+        tmpImage.copyTo(_objectImage);
+        [self setObjectImageAsync];
     } else {
         [self showError:error];
     }
@@ -141,10 +168,12 @@ using namespace cv;
 
 - (void)setObjectImageWithBuffer:(CVPixelBufferRef)objectImage
 {
+    Mat tmpImage;
     NSError* error = NULL;
-    [CVImageConverter CVMat:_objectImage FromCVPixelBuffer:objectImage error:&error];
+    [CVImageConverter CVMat:tmpImage FromCVPixelBuffer:objectImage error:&error];
     if (error == NULL) {
-        _tracker->setObject(_objectImage);
+        tmpImage.copyTo(_objectImage);
+        [self setObjectImageAsync];
     } else {
         [self showError:error];
     }
@@ -177,7 +206,7 @@ using namespace cv;
 - (void)trackObjectInImageWithImage:(UIImage*)image
 {
     __block UIImage* retainedImage = [image copy];
-    dispatch_async(self.stillImageTrackerQueue, ^{
+    dispatch_async(self.trackStillImageQueue, ^{
         Mat frame;
         NSError* error = NULL;
         [CVImageConverter CVMat:frame FromUIImage:retainedImage error:&error];

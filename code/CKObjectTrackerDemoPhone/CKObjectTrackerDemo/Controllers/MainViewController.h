@@ -14,6 +14,7 @@
 @property (nonatomic, strong) IBOutlet UIScrollView* scrollView;
 @property (nonatomic, strong) IBOutlet UIPageControl* pageControl;
 @property (nonatomic, strong) IBOutlet UINavigationItem* navBarItem;
+@property (nonatomic, strong) IBOutlet UIActivityIndicatorView* activityIndicator;
 
 - (IBAction)showSettingsButtonClicked:(id)sender;
 - (IBAction)objectImagePickerButtonClicked:(id)sender;

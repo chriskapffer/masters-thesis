@@ -31,6 +31,7 @@ namespace ck {
             if ((*iter).name == name) {
                 parameter.setter = (*iter).setter->clone();
                 parameter.getter = (*iter).getter->clone();
+                parameter.critical = (*iter).critical;
                 parameter.values = (*iter).values;
                 parameter.name = (*iter).name;
                 parameter.min = (*iter).min;

@@ -108,10 +108,13 @@
 
 - (void)stopReading
 {
+    BOOL wasPaused = self.paused;
+    // unpause to finish
     self.paused = NO;
     self.stopRequested = YES;
     dispatch_sync(self.readerQueue, ^{ });
     self.stopRequested = NO;
+    self.paused = wasPaused;
 }
 
 - (void)startProcessingWithCompletion:(void (^)(void))completion

@@ -34,7 +34,7 @@ static string getAlgorithmName(const Algorithm& algorithm)
     
 void ValidationModule::setDetector(const string& value)
 {
-    _busy = true; // TODO: change _extractor appropriately
+    // TODO: change _extractor appropriately
     if (value == "FAST") {
         _detector = new FastFeatureDetector(_fastThreshold);
     } else if (value == "GFTT") {
@@ -48,7 +48,7 @@ void ValidationModule::setDetector(const string& value)
     } else {
         throw "Extractor not supported.";
     }
-    _busy = false;
+    _isDirty = true;
 }
 
 std::string ValidationModule::getDetector() const
@@ -63,7 +63,7 @@ void ValidationModule::setExtractor(const string &value)
     
 void ValidationModule::setExtractor(const string& value, bool updateMatcher)
 {
-    _busy = true; // TODO: change _detector appropriately
+    // TODO: change _detector appropriately
     if (value == "SIFT") {
         _extractor = new SiftDescriptorExtractor(_maxFeatures);
         if (updateMatcher) { _matcher = new BFMatcher(NORM_L2); }
@@ -79,7 +79,7 @@ void ValidationModule::setExtractor(const string& value, bool updateMatcher)
     } else {
         throw "Extractor not supported.";
     }
-    _busy = false;
+    _isDirty = true;
 }
 
 std::string ValidationModule::getExtractor() const
@@ -227,7 +227,7 @@ ValidationModule::ValidationModule(const vector<FilterFlag>& filterFlags, int es
     _extractor = new OrbDescriptorExtractor(_maxFeatures);
     _matcher = new BFMatcher(NORM_HAMMING);
     
-    _busy = false;
+    _isDirty = false;
 }
 
 ValidationModule::~ValidationModule()
@@ -247,8 +247,7 @@ void ValidationModule::initWithObjectImage(const cv::Mat &objectImage) // TODO: 
         objectImage.copyTo(_objectImage);
     }
     
-    // wait if detector or extractor is being changed
-    while (_busy) { }
+    cout << _detector.obj->name() << ", " << _extractor.obj->name() << endl;
     
     profiler->startTimer(TIMER_DETECT);
     _detector->detect(_objectImage, _objectKeyPoints);
@@ -262,10 +261,17 @@ void ValidationModule::initWithObjectImage(const cv::Mat &objectImage) // TODO: 
     _objectCorners[1] = cvPoint(_objectImage.cols,                 0); // top right
     _objectCorners[2] = cvPoint(_objectImage.cols, _objectImage.rows); // bottom right
     _objectCorners[3] = cvPoint(                0, _objectImage.rows); // bottom left
+    
+    if (_isDirty) { _isDirty = false; }
 }
 
 bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& debugInfo)
 {
+    if (_isDirty) {
+        cout << "Outdated object image!" << endl;
+        return false;
+    }
+    
     // declaration
     Profiler* profiler;
     Mat homography;
@@ -300,9 +306,6 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
         ColorConvert::bgrOrBgra2Gray(sceneImagePart, sceneImagePart);
         profiler->stopTimer(TIMER_CONVERT);
     }
-
-    // wait if detector or extractor is being changed
-    while (_busy) { }
     
     // detect keypoints and extract features (part scene image space)
     profiler->startTimer(TIMER_DETECT);
@@ -318,8 +321,6 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     debugInfo.sceneImagePart = sceneImagePart;
     debugInfo.sceneKeyPoints = sceneKeyPoints;
     debugInfo.imageOffset = searchRect.tl();
-    // wait if matcher is being changed
-    while (_busy) { }
     
     // match and filter descriptors (uses internal profiling) (partial scene image space)
     MatcherFilterer::getFilteredMatches(*_matcher, _objectDescriptors, sceneDescriptors, matches, _filterFlags, _sortMatches, _ratio, _nBestMatches, debugInfo.namedMatches);

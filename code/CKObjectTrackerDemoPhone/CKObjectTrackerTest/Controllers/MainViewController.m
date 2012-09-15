@@ -46,6 +46,7 @@
 @synthesize scrollView = _scrollView;
 @synthesize pageControl = _pageControl;
 @synthesize navBarItem = _navBarItem;
+@synthesize activityIndicator = _activityIndicator;
 
 @synthesize settingsController = _settingsController;
 @synthesize resourceController = _resourceController;
@@ -64,15 +65,17 @@
 {
     [super viewDidLoad];
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:NO];
+    [[ObjectTrackerLibrary instance] setDelegate:self];
+    
+    self.settingsController = nil;
+    self.resourceController = nil;
+    self.videoReader = [[VideoReader alloc] init];
+    self.videoReader.delegate = self;
     
     self.arViewController = [[ARViewController alloc] init];
     self.arViewController.view.frame = self.scrollView.frame;
     [self.arViewController.view setTransform:CGAffineTransformMakeRotation(M_PI)];
-    
     [self.scrollView addSubview:self.arViewController.view];
-    
-    self.imageViewNames = [NSArray arrayWithObjects:
-                           @"Object Image", @"Statistics", @"Result", @"Tracking View", @"Validation View", @"Detection View", nil];
     
     self.debugViewObject = [self registeredImageViewWithIndex:0];
     [self.textView setFrameOrigin:CGPointMake(self.scrollView.bounds.size.width, 0)]; // <-- index 1
@@ -84,11 +87,12 @@
     self.scrollView.contentOffset = CGPointMake(self.scrollView.bounds.size.width * 2, 0);
     self.pageControl.numberOfPages = 6;
     self.pageControl.currentPage = 2;
+    self.activityIndicator.hidden = YES;
     self.textView.text = @"";
     
-    self.settingsController = nil;
-    self.resourceController = nil;
-    self.videoReader = [[VideoReader alloc] init];
+    self.imageViewNames = [NSArray arrayWithObjects:
+                           @"Object Image", @"Statistics", @"Result", @"Tracking View", @"Validation View", @"Detection View", nil];
+    [self updateNavBarItem];
 }
 
 - (void)viewDidUnload
@@ -99,6 +103,7 @@
     self.scrollView = nil;
     self.pageControl = nil;
     self.navBarItem = nil;
+    self.activityIndicator = nil;
     
     if (self.settingsController != nil)
         self.settingsController = nil;
@@ -108,26 +113,6 @@
     
     if (self.arViewController != nil)
         self.arViewController = nil;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    [self updateNavBarItem];
-    
-    [[ObjectTrackerLibrary instance] setDelegate:self];
-    self.videoReader.delegate = self;
-    self.videoReader.paused = NO;
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-
-    self.videoReader.paused = YES;
-    self.videoReader.delegate = nil;
-    [[ObjectTrackerLibrary instance] setDelegate:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -145,6 +130,7 @@
         self.settingsController.delegate = self;
     }
     
+    [self.videoReader setPaused:YES];
     [self presentViewController:self.settingsController animated:YES completion:nil];
 }
 
@@ -157,6 +143,7 @@
         self.resourceController.delegate = self;
     }
     
+    [self.videoReader setPaused:YES];
     [self presentViewController:self.resourceController animated:YES completion:nil];
 }
 
@@ -174,31 +161,37 @@
 
 #pragma mark - settings view controller delegate
 
-- (void)settingsControllerFinished
+- (void)settingsControllerFinishedWithCriticalParameterChange:(BOOL)changedCriticalParameter
 {
+    if (changedCriticalParameter) {
+        [self.activityIndicator startAnimating];
+        [self.activityIndicator setHidden:NO];
+        ObjectTrackerLibrary* objectTrackerLibrary = [ObjectTrackerLibrary instance];
+        [objectTrackerLibrary setObjectImageWithImage:objectTrackerLibrary.objectImage];
+    } else {
+        [self.videoReader setPaused:NO];
+    }
+    
     [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)criticalParameterHasChanged
-{
-    // re-init object image
-    ObjectTrackerLibrary* objectTrackerLibrary = [ObjectTrackerLibrary instance];
-    [objectTrackerLibrary setObjectImageWithImage:objectTrackerLibrary.objectImage];
 }
 
 #pragma mark - resource view controller delegate
 
 - (void)resourceControllerCanceled:(ResourceViewController*)resourceController
 {
+    [self.videoReader setPaused:NO];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)resourceController:(ResourceViewController*)resourceController SelectedImage:(NSString*)imageName Video:(NSString*)videoName
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
     [self.videoReader stopReading];
-    [self setNewObjectImage:imageName];
-    [self startNewVideoSession:videoName];
+    [self.activityIndicator startAnimating];
+    [self.activityIndicator setHidden:NO];
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self setNewObjectImage:imageName];
+        [self startNewVideoSession:videoName];
+    }];
 }
 
 #pragma mark - video reader delegate
@@ -214,6 +207,13 @@
 }
 
 #pragma mark - object tracker library delegate
+
+- (void)finishedObjectImageInitialization
+{
+    [self.activityIndicator setHidden:YES];
+    [self.activityIndicator stopAnimating];
+    [self.videoReader setPaused:NO];
+}
 
 - (void)trackerLibraryDidProcessFrame
 {
@@ -263,19 +263,22 @@
     [[ObjectTrackerLibrary instance] clearVideoDebugInfo];
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     [self.videoReader readVideoWithURL:url Completion:^{
-        NSLog(@"\nDONE\n\n%@", [[ObjectTrackerLibrary instance] videoDebugInfoString]);
-        self.textView.text = [[ObjectTrackerLibrary instance] videoDebugInfoString];
+        NSString* debugString = [[ObjectTrackerLibrary instance] videoDebugInfoString];
+        NSLog(@"\nDONE\n\n%@", debugString);
+        self.textView.text = debugString;
         [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
     }];
 }
 
 - (void)setNewObjectImage:(NSString*)imageName
-{
+{    
     NSString* fullImageName = [NSString stringWithFormat:@"%@/%@", RESOURCE_FOLDER_NAME, imageName];
     UIImage* objectImage = [UIImage imageNamed:fullImageName];
-    [[ObjectTrackerLibrary instance] setObjectImageWithImage:objectImage];
+
+    [self.videoReader setPaused:YES];
     [[ObjectTrackerLibrary instance] clearVideoDebugInfo];
-    
+    [[ObjectTrackerLibrary instance] setObjectImageWithImage:objectImage];
+
     [self.debugViewObject setImage:[objectImage rotatedImageWithAngle:M_PI_2]];
 }
 

@@ -112,7 +112,7 @@ private:
     std::vector<cv::KeyPoint> _objectKeyPoints;
     cv::Mat _objectDescriptors;
     cv::Mat _objectImage;
-    bool _busy;
+    bool _isDirty;
 };
     
 } // end of namespace
