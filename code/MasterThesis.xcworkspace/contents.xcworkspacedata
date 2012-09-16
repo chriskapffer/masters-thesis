@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:CameraCalibration/CameraCalibration.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:CKObjectTrackerLib/CKObjectTrackerLib.xcodeproj">
    </FileRef>
    <FileRef
