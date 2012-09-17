@@ -104,7 +104,7 @@
 {
     ObjectTrackerParameterCollection* collection = [self topLevelCollectionFromTableView:tableView];
     if (section == 0) { return EMPTY_TITLE_HEADER; }
-    return [[collection.subCollections objectAtIndex:section - 1] name];
+    return [(ObjectTrackerParameterCollection*)[collection.subCollections objectAtIndex:section - 1] name];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -323,7 +323,7 @@
 
 - (void)updateNavBarItem
 {
-    [self.navBarItem setTitle:[[self.parameters.subCollections objectAtIndex:self.pageControl.currentPage] name]];
+    [self.navBarItem setTitle:[(ObjectTrackerParameterCollection*)[self.parameters.subCollections objectAtIndex:self.pageControl.currentPage] name]];
 }
 
 - (ObjectTrackerParameterCollection*)topLevelCollectionFromTableView:(UITableView *)tableView

@@ -61,10 +61,10 @@ static inline double atD(const Mat& m, int row, int col)
     return [self homographyWithMatrix:_output.homography];
 }
 
-- (Matrix4x4)modelView
-{
-    return [self modelViewWithHomography:_output.homography];
-}
+//- (Matrix4x4)modelView
+//{
+//    return [self modelViewWithHomography:_output.homography];
+//}
 
 - (BOOL)foundObject
 {
@@ -537,6 +537,7 @@ void setIntrinsicParams(double fx, double fy, double cx, double cy, Mat& intrins
 	intrinsic.at<double>(1,2) = cy;
 	intrinsic.at<double>(2,2) = 1.0;
     
+    // TODO: do we need this?
 	// Create inverse calibration matrix:
 	double tau = fx / fy;
     inverse.at<double>(0,0) = 1.0 / (tau * fy);
@@ -550,74 +551,394 @@ void setIntrinsicParams(double fx, double fy, double cx, double cy, Mat& intrins
     inverse.at<double>(2,2) = 1.0;
 }
 
-- (Mat)modelviewMatrixFromHomography:(const Mat&)homography
+// 352x288
+//
+//camera_matrix:
+//    [3.2027001927961197e+02, 0., 1.2603930656676752e+02,
+//     0., 7.8648529713443349e+02, 1.1084370236165464e+02,
+//     0., 0., 1.]
+//distortion_coefficients:
+//    [-5.9372932410157073e+00,
+//     6.3533343369070671e+01,
+//     1.5611331766918132e-01,
+//     1.2319019895336342e-01,
+//     -2.5601747164123583e+02]
+
+// 360x480
+//
+//camera_matrix:
+//    [4.5364281643752662e+02, 0., 1.8255762334310054e+02,
+//     0., 4.5678289063460659e+02, 2.2296548937969234e+02,
+//     0., 0., 1.]
+//distortion_coefficients:
+//    [1.7537012227055074e-01,
+//     4.3771881528128653e-01,
+//     -2.5877934632447315e-02,
+//     -8.5821219930251223e-04,
+//     -4.9797434723229541e+00]
+
+// 480x640
+//
+//camera_matrix:
+//    [6.0838107806767721e+02, 0., 3.1060831055443424e+02,
+//     0., 6.0862299514288236e+02, 2.3708121051002607e+02,
+//     0., 0., 1.]
+//distortion_coefficients:
+//    [2.1889391539941197e-01,
+//     -8.7606275768088160e-02,
+//     1.5094562330422090e-03,
+//     -8.4665365018427967e-03,
+//     -2.4701006071163234e+00]
+
+- (GLKMatrix4)projection
 {
-    // Camera parameters
-    double fx = 786.42938232; // Focal length in x axis
-    double fy = 786.42938232; // Focal length in y axis (usually the same?)
-    double cx = 217.01358032; // Camera primary point x
-    double cy = 311.25384521; // Camera primary point y
+    // 480x640
+    double fx = 604.18678406; // Focal length in x axis
+    double fy = 604.43273831; // Focal length in y axis
+    double cx = 320.00000000; // Camera primary point x
+    double cy = 240.00000000; // Camera primary point y
+    double width = 480;
+    double height = 640;
+    double offsetX = (480 - 320) / 2;//width / 2.;
+    double offsetY = (640 - 240) / 2;//height / 2.;
     
+    // calibrated camera matrix
+    Mat intrinsic = Mat::zeros(3, 3, CV_64FC1);
+	intrinsic.at<double>(0,0) = fx;
+	intrinsic.at<double>(1,1) = fy;
+	intrinsic.at<double>(0,2) = cx;
+	intrinsic.at<double>(1,2) = cy;
+	intrinsic.at<double>(2,2) = 1.0;
+    std::cout << "intrinsics\n" << intrinsic << std::endl;
+    
+    double left = 0 + offsetX;
+    double right = width + offsetX;
+    double top = height + offsetY; // flip y
+    double bottom = 0 + offsetY;
+    double near = .1; // near clipping distance
+    double far = 100; // far clipping distance
+    
+    // orthogonal matrix
+    Mat ortho = Mat::zeros(4, 4, CV_64FC1);
+    ortho.at<double>(0,0) = 2 / (right - left);
+    ortho.at<double>(1,1) = 2 / (top - bottom);
+    ortho.at<double>(2,2) = -(2 / (far - near));
+    ortho.at<double>(0,3) = -((right + left) / (right - left));
+    ortho.at<double>(1,3) = -((top + bottom) / (top - bottom));
+    ortho.at<double>(2,3) = -((far + near) / (far - near));
+    ortho.at<double>(3,3) = 1;
+    std::cout << "ortho\n" << ortho << std::endl;
+    
+    // camera matrix
+    Mat frustum = Mat::zeros(4, 4, CV_64FC1);
+	frustum.at<double>(0,0) = fx;
+	frustum.at<double>(1,1) = fy;
+    frustum.at<double>(0,1) = 0; // skew
+	frustum.at<double>(0,2) = -cx; // negative z
+	frustum.at<double>(1,2) = -cy; // negative z
+	frustum.at<double>(2,2) = near + far;
+	frustum.at<double>(2,3) = near * far;
+    frustum.at<double>(3,2) = -1; // negative z
+    std::cout << "frustum\n" << frustum << std::endl;
+    
+    // projection matrix
+    Mat projection = Mat::zeros(4, 4, CV_64FC1);
+    projection = ortho * frustum;
+    projection = projection.t();
+    std::cout << "projection\n" << projection << std::endl;
+    
+    GLKMatrix4 result;
+    result.m00 = projection.at<double>(0,0);
+    result.m10 = projection.at<double>(1,0);
+    result.m20 = projection.at<double>(2,0);
+    result.m30 = projection.at<double>(3,0);
+    result.m01 = projection.at<double>(0,1);
+    result.m11 = projection.at<double>(1,1);
+    result.m21 = projection.at<double>(2,1);
+    result.m31 = projection.at<double>(3,1);
+    result.m02 = projection.at<double>(0,2);
+    result.m12 = projection.at<double>(1,2);
+    result.m22 = projection.at<double>(2,2);
+    result.m32 = projection.at<double>(3,2);
+    result.m03 = projection.at<double>(0,3);
+    result.m13 = projection.at<double>(1,3);
+    result.m23 = projection.at<double>(2,3);
+    result.m33 = projection.at<double>(3,3);
+    
+    return result;
+}
+
+- (GLKMatrix4)modelView
+{
     // Decompose the Homography into translation and rotation vectors
-    // Based on: https://gist.github.com/740979/97f54a63eb5f61f8f2eb578d60eb44839556ff3f
-    Mat intrinsics, invIntrinsics;
-    setIntrinsicParams(fx, fy, cx, cy, intrinsics, invIntrinsics);
+    // Based on: https://gist.github.com/740979
+    
+    double fx = 604.18678406; // Focal length in x axis
+    double fy = 604.43273831; // Focal length in y axis
+    double cx = 320.00000000; // Camera primary point x
+    double cy = 240.00000000; // Camera primary point y
+    
+    Mat cameraMatrix = Mat::zeros(3, 3, CV_64FC1);
+	cameraMatrix.at<double>(0,0) = fx;
+	cameraMatrix.at<double>(1,1) = fy;
+	cameraMatrix.at<double>(0,2) = cx;
+	cameraMatrix.at<double>(1,2) = cy;
+	cameraMatrix.at<double>(2,2) = 1.0;
+
+    Mat inverseCamera = Mat::zeros(3, 3, CV_64FC1);
+    inverseCamera.at<double>(0,0) = 1 / fx;
+    inverseCamera.at<double>(0,2) = -cx / fx;
+    inverseCamera.at<double>(1,1) = 1 / fy;
+    inverseCamera.at<double>(1,2) = -cy / fy;
+    inverseCamera.at<double>(2,2) = 1;
+    
+    Mat H_matrix = _output.homography;
     
     // Column vectors of homography
-    Mat h1 = (Mat_<double>(3,1) << atD(homography, 0,0), atD(homography, 1,0), atD(homography, 2,0));
-    Mat h2 = (Mat_<double>(3,1) << atD(homography, 0,1), atD(homography, 1,1), atD(homography, 2,1));
-    Mat h3 = (Mat_<double>(3,1) << atD(homography, 0,2), atD(homography, 1,2), atD(homography, 2,2));
+    Mat h1 = H_matrix.col(0);
+    Mat h2 = H_matrix.col(1);
+    Mat h3 = H_matrix.col(2);
     
-    Mat inverseH1 = invIntrinsics * h1;
+    Mat inverseH1 = inverseCamera * h1;
     // Calculate a length, for normalizing
-    double lambda = sqrt(atD(h1,0,0) * atD(h1,0,0) +
-                         atD(h1,1,0) * atD(h1,1,0) +
-                         atD(h1,2,0) * atD(h1,2,0));
-    
-    Mat rotationMatrix;
-    
+    double lambda = sqrt(inverseH1.at<double>(0,0)*inverseH1.at<double>(0,0) +
+                         inverseH1.at<double>(1,0)*inverseH1.at<double>(1,0) +
+                         inverseH1.at<double>(2,0)*inverseH1.at<double>(2,0));
+
     if(lambda != 0) {
         lambda = 1/lambda;
         // Normalize inverseCameraMatrix
-        invIntrinsics.at<double>(0,0) *= lambda;
-        invIntrinsics.at<double>(1,0) *= lambda;
-        invIntrinsics.at<double>(2,0) *= lambda;
-        invIntrinsics.at<double>(0,1) *= lambda;
-        invIntrinsics.at<double>(1,1) *= lambda;
-        invIntrinsics.at<double>(2,1) *= lambda;
-        invIntrinsics.at<double>(0,2) *= lambda;
-        invIntrinsics.at<double>(1,2) *= lambda;
-        invIntrinsics.at<double>(2,2) *= lambda;
-        
-        // Column vectors of rotation matrix
-        Mat r1 = invIntrinsics * h1;
-        Mat r2 = invIntrinsics * h2;
-        Mat r3 = r1.cross(r2);    // Orthogonal to r1 and r2
-        
-        // Put rotation columns into rotation matrix... with some unexplained sign changes
-        rotationMatrix = (Mat_<double>(3,3) <<
-                           atD(r1,0,0), -atD(r2,0,0), -atD(r3,0,0),
-                          -atD(r1,1,0),  atD(r2,1,0),  atD(r3,1,0),
-                          -atD(r1,2,0),  atD(r2,2,0),  atD(r3,2,0));
-        
-        // Translation vector T
-        Mat translationVector;
-        translationVector = invIntrinsics * h3;
-        translationVector.at<double>(0,0) *= 1;
-        translationVector.at<double>(1,0) *= -1;
-        translationVector.at<double>(2,0) *= -1;
-        
-        SVD decomposed(rotationMatrix); // I don't really know what this does. But it works.
-        rotationMatrix = decomposed.u * decomposed.vt;
-        
-        Mat modelviewMatrix = (Mat_<double>(4,4) <<
-            atD(rotationMatrix,0,0), atD(rotationMatrix,0,1), atD(rotationMatrix,0,2), atD(translationVector,0,0),
-            atD(rotationMatrix,1,0), atD(rotationMatrix,1,1), atD(rotationMatrix,1,2), atD(translationVector,1,0),
-            atD(rotationMatrix,2,0), atD(rotationMatrix,2,1), atD(rotationMatrix,2,2), atD(translationVector,2,0),
-                                  0,                       0,                       0,                         1);
-        return modelviewMatrix;
+        inverseCamera *= lambda;
     }
-    printf("Lambda was 0...\n");
+    else {
+        printf("Lambda was 0...\n");
+    }
+    
+    // Column vectors of rotation matrix
+    Mat r1 = inverseCamera * h1;
+    Mat r2 = inverseCamera * h2;
+    Mat r3 = r1.cross(r2);    // Orthogonal to r1 and r2
+    
+    // Put rotation columns into rotation matrix... with some unexplained sign changes
+    Mat rotationMatrix = (Mat_<double>(3,3) <<
+                          r1.at<double>(0,0), r2.at<double>(0,0), r3.at<double>(0,0),
+                          r1.at<double>(1,0), r2.at<double>(1,0), r3.at<double>(1,0),
+                          r1.at<double>(2,0), r2.at<double>(2,0), r3.at<double>(2,0));
+    
+    //SVD decomposed(rotationMatrix); // smooths stuff, but disables scaling // TODO: understand this
+    //rotationMatrix = decomposed.u * decomposed.vt;
+    
+    // Translation vector T
+    Mat translationVector = inverseCamera * h3;
+//    translationVector.at<double>(0,0) *=  1;
+//    translationVector.at<double>(1,0) *= -1;
+//    translationVector.at<double>(2,0) *= -1;
+    
+    Mat modelView = (Mat_<double>(4,4) <<
+                       rotationMatrix.at<double>(0,0), rotationMatrix.at<double>(0,1), rotationMatrix.at<double>(0,2), 0,
+                       rotationMatrix.at<double>(1,0), rotationMatrix.at<double>(1,1), rotationMatrix.at<double>(1,2), 0,
+                       rotationMatrix.at<double>(2,0), rotationMatrix.at<double>(2,1), rotationMatrix.at<double>(2,2), 0,
+                       -translationVector.at<double>(1,0) / 240, -translationVector.at<double>(0,0) / 320, 0, 1);
+    //modelView = modelView.t();
+    
+    
+//    double fx = 604.18678406; // Focal length in x axis
+//    double fy = 604.43273831; // Focal length in y axis
+//    double cx = 320.00000000; // Camera primary point x
+//    double cy = 240.00000000; // Camera primary point y
+//    
+//    Mat cameraMatrix = (Mat_<double>(3,3) <<
+//                        fx,  0, cx,
+//                        0, fy, cy,
+//                        0,  0,  1);
+//    
+//    Mat inverseCameraMatrix = (Mat_<double>(3,3) <<
+//                               1/cameraMatrix.at<double>(0,0) , 0 , -cameraMatrix.at<double>(0,2)/cameraMatrix.at<double>(0,0) ,
+//                               0 , 1/cameraMatrix.at<double>(1,1) , -cameraMatrix.at<double>(1,2)/cameraMatrix.at<double>(1,1) ,
+//                               0 , 0 , 1);
+//    
+//    Mat H_matrix = _output.homography;
+//    
+//    // Column vectors of homography
+//    Mat h1 = H_matrix.col(0);
+//    Mat h2 = H_matrix.col(1);
+//    Mat h3 = H_matrix.col(2);
+//    
+//    Mat inverseH1 = inverseCameraMatrix * h1;
+//    // Calculate a length, for normalizing
+//    double lambda = sqrt(inverseH1.at<double>(0,0)*inverseH1.at<double>(0,0) +
+//                         inverseH1.at<double>(1,0)*inverseH1.at<double>(1,0) +
+//                         inverseH1.at<double>(2,0)*inverseH1.at<double>(2,0));
+//    
+//    if(lambda != 0) {
+//        lambda = 1/lambda;
+//        // Normalize inverseCameraMatrix
+//        inverseCameraMatrix.at<double>(0,0) *= lambda;
+//        inverseCameraMatrix.at<double>(1,0) *= lambda;
+//        inverseCameraMatrix.at<double>(2,0) *= lambda;
+//        inverseCameraMatrix.at<double>(0,1) *= lambda;
+//        inverseCameraMatrix.at<double>(1,1) *= lambda;
+//        inverseCameraMatrix.at<double>(2,1) *= lambda;
+//        inverseCameraMatrix.at<double>(0,2) *= lambda;
+//        inverseCameraMatrix.at<double>(1,2) *= lambda;
+//        inverseCameraMatrix.at<double>(2,2) *= lambda;
+//    }
+//    else {
+//        printf("Lambda was 0...\n");
+//    }
+//    
+//    // Column vectors of rotation matrix
+//    Mat r1 = h1;
+//    Mat r2 = h2;
+//    Mat r3 = r1.cross(r2);    // Orthogonal to r1 and r2
+//    
+//    // Put rotation columns into rotation matrix... with some unexplained sign changes
+//    Mat rotationMatrix = (Mat_<double>(3,3) <<
+//                          r1.at<double>(0,0), r2.at<double>(0,0), r3.at<double>(0,0),
+//                          r1.at<double>(1,0), r2.at<double>(1,0), r3.at<double>(1,0),
+//                          r1.at<double>(2,0), r2.at<double>(2,0), r3.at<double>(2,0));
+//    
+//    //SVD decomposed(rotationMatrix); // smooths stuff, but disables scaling // TODO: understand this
+//    //rotationMatrix = decomposed.u * decomposed.vt;
+//    
+//    // Translation vector T
+//    Mat translationVector = h3;//inverseCameraMatrix * h3;
+//    translationVector.at<double>(0,0) *=  1;
+//    translationVector.at<double>(1,0) *= -1;
+//    translationVector.at<double>(2,0) *= -1;
+//    
+//    Mat modelView = (Mat_<double>(4,4) <<
+//                     rotationMatrix.at<double>(0,0), rotationMatrix.at<double>(0,1), rotationMatrix.at<double>(0,2), 0,//translationVector.at<double>(0,0),
+//                     rotationMatrix.at<double>(1,0), rotationMatrix.at<double>(1,1), rotationMatrix.at<double>(1,2), 0,//translationVector.at<double>(1,0),
+//                     rotationMatrix.at<double>(2,0), rotationMatrix.at<double>(2,1), rotationMatrix.at<double>(2,2), 1,//translationVector.at<double>(2,0),
+//                     0,0,0,1);
+//    //modelView = modelView.t();
+//
+    GLKMatrix4 result;
+    result.m00 = modelView.at<double>(0,0);
+    result.m10 = modelView.at<double>(1,0);
+    result.m20 = modelView.at<double>(2,0);
+    result.m30 = modelView.at<double>(3,0);
+    result.m01 = modelView.at<double>(0,1);
+    result.m11 = modelView.at<double>(1,1);
+    result.m21 = modelView.at<double>(2,1);
+    result.m31 = modelView.at<double>(3,1);
+    result.m02 = modelView.at<double>(0,2);
+    result.m12 = modelView.at<double>(1,2);
+    result.m22 = modelView.at<double>(2,2);
+    result.m32 = modelView.at<double>(3,2);
+    result.m03 = modelView.at<double>(0,3);
+    result.m13 = modelView.at<double>(1,3);
+    result.m23 = modelView.at<double>(2,3);
+    result.m33 = modelView.at<double>(3,3);
+    return result;
+}
+
+- (Mat)modelviewMatrixFromHomography:(const Mat&)homography
+{
+    // Camera parameters
+    
+    // from http://urbanar.blogspot.de/2011/04/from-homography-to-opengl-modelview.html
+//    double fx = 786.42938232; // Focal length in x axis
+//    double fy = 786.42938232; // Focal length in y axis
+//    double cx = 217.01358032; // Camera primary point x
+//    double cy = 311.25384521; // Camera primary point y
+    
+//    // 352x288
+//    double fx = 320.27001927; // Focal length in x axis
+//    double fy = 320.27001927; // Focal length in y axis
+//    double cx = 352 * 0.5f; // Camera primary point x
+//    double cy = 288 * 0.5f; // Camera primary point y
+//
+//    // 360x480
+//    double fx = 453.64281643; // Focal length in x axis
+//    double fy = 456.78289063; // Focal length in y axis
+//    double cx = 182.55762334; // Camera primary point x
+//    double cy = 222.96548937; // Camera primary point y
+    
+    // 480x640
+    double fx = 604.18678406 * 0.5; // Focal length in x axis
+    double fy = 604.43273831 * 0.5; // Focal length in y axis
+    double cx = 319.50000000 * 0.5; // Camera primary point x
+    double cy = 239.50000000 * 0.5; // Camera primary point y
+    double width = 480 * 0.5;
+    double height = 640 * 0.5;
+    
+    // calibrated camera matrix
+    Mat intrinsic = Mat::zeros(3, 3, CV_64FC1);
+	intrinsic.at<double>(0,0) = fx;
+	intrinsic.at<double>(1,1) = fy;
+	intrinsic.at<double>(0,2) = cx;
+	intrinsic.at<double>(1,2) = cy;
+	intrinsic.at<double>(2,2) = 1.0;
+    std::cout << "intrinsics\n" << intrinsic << std::endl;
+    
+    double left = 0;
+    double right = width;
+    double top = height; // flip y
+    double bottom = 0;
+    double near = .1; // near clipping distance
+    double far = 100; // far clipping distance
+    
+    // orthogonal matrix
+    Mat ortho = Mat::zeros(4, 4, CV_64FC1);
+    ortho.at<double>(0,0) = 2 / (right - left);
+    ortho.at<double>(1,1) = 2 / (top - bottom);
+    ortho.at<double>(2,2) = -(2 / (far - near));
+    ortho.at<double>(0,3) = -((right + left) / (right - left));
+    ortho.at<double>(1,3) = -((top + bottom) / (top - bottom));
+    ortho.at<double>(2,3) = -((far + near) / (far - near));
+    ortho.at<double>(3,3) = 1;
+    std::cout << "ortho\n" << ortho << std::endl;
+    
+    // camera matrix
+    Mat frustum = Mat::zeros(4, 4, CV_64FC1);
+	frustum.at<double>(0,0) = fx;
+	frustum.at<double>(1,1) = fy;
+    frustum.at<double>(0,1) = 0; // skew
+	frustum.at<double>(0,2) = -cx; // negative z
+	frustum.at<double>(1,2) = -cy; // negative z
+	frustum.at<double>(2,2) = near + far;
+	frustum.at<double>(2,3) = near * far;
+    frustum.at<double>(3,2) = -1; // negative z
+    std::cout << "frustum\n" << frustum << std::endl;
+    
+    // projection matrix
+    Mat projection = Mat::zeros(4, 4, CV_64FC1);
+    projection = ortho * frustum;
+    std::cout << "projection\n" << projection << std::endl;
+    
+    // homography columns
+    std::cout << "homography\n" << homography << std::endl;
+    Mat h1 = homography.col(0);
+    Mat h2 = homography.col(1);
+    Mat h3 = homography.col(2);
+    
+    // rotation matrix columns
+    Mat r1 = h1;
+    Mat r2 = h2;
+    Mat r3 = h1.cross(h2);
+    
+    // translation vector
+    Mat t = h3;
+    
+    // model view matrix
+    Mat modelView = Mat::zeros(4, 4, CV_64FC1);
+    modelView.at<double>(0,0) = r1.at<double>(0,0);
+    modelView.at<double>(1,0) = r1.at<double>(1,0);
+    modelView.at<double>(2,0) = r1.at<double>(2,0);
+    modelView.at<double>(0,1) = r2.at<double>(0,0);
+    modelView.at<double>(1,1) = r2.at<double>(1,0);
+    modelView.at<double>(2,1) = r2.at<double>(2,0);
+    modelView.at<double>(0,2) = r3.at<double>(0,0);
+    modelView.at<double>(1,2) = r3.at<double>(1,0);
+    modelView.at<double>(2,2) = r3.at<double>(2,0);
+    modelView.at<double>(0,3) = t.at<double>(0,0);
+    modelView.at<double>(1,3) = t.at<double>(1,0);
+    modelView.at<double>(2,3) = t.at<double>(2,0);
+    modelView.at<double>(3,3) = 1; // homogenous coordinate;
+    std::cout << "modelView\n" << modelView << std::endl;
+    
     return Mat::eye(4, 4, CV_64FC1);
 }
 

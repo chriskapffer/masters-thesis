@@ -12,6 +12,7 @@
 @interface ARViewController : GLKViewController
 
 @property (nonatomic, assign) GLKMatrix4 modelView;
+@property (nonatomic, assign) GLKMatrix4 projection;
 @property (nonatomic, assign) CVPixelBufferRef background;
 
 @end

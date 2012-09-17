@@ -76,6 +76,7 @@
     self.arViewController.view.frame = self.scrollView.frame;
     [self.arViewController.view setTransform:CGAffineTransformMakeRotation(M_PI)];
     [self.scrollView addSubview:self.arViewController.view];
+    self.arViewController.projection = [[ObjectTrackerLibrary instance] projection];
     
     self.debugViewObject = [self registeredImageViewWithIndex:0];
     [self.textView setFrameOrigin:CGPointMake(self.scrollView.bounds.size.width, 0)]; // <-- index 1
@@ -221,7 +222,9 @@
         UIImage* debugImage;
         ObjectTrackerLibrary* trackerLib = [ObjectTrackerLibrary instance];
         if (trackerLib.foundObject) {
-            self.arViewController.modelView = [self matrixFromModelView:trackerLib.modelView];
+            //self.arViewController.modelView = [self matrixFromModelView:trackerLib.modelView];
+            self.arViewController.modelView = trackerLib.modelView;
+            //self.arViewController.projection = trackerLib.projection;
         }
         if ([trackerLib detectionDebugImage:&debugImage WithSearchWindow:YES]) {
             [self.debugViewDetection setImage:debugImage];

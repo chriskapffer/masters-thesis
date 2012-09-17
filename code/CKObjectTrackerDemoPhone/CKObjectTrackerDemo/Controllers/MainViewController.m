@@ -74,6 +74,7 @@
     self.arViewController = [[ARViewController alloc] init];
     self.arViewController.view.frame = self.scrollView.frame;
     [self.scrollView addSubview:self.arViewController.view];
+    self.arViewController.projection = [[ObjectTrackerLibrary instance] projection];
     
     self.imagePickerController = [[UIImagePickerController alloc] init];
     self.imagePickerController.allowsEditing = YES;
@@ -275,7 +276,8 @@
         UIImage* debugImage;
         ObjectTrackerLibrary* trackerLib = [ObjectTrackerLibrary instance];
         if (trackerLib.foundObject) {
-            self.arViewController.modelView = [self matrixFromModelView:trackerLib.modelView];
+            //self.arViewController.modelView = [self matrixFromModelView:trackerLib.modelView];
+            self.arViewController.modelView = trackerLib.modelView;
         }
         if ([trackerLib detectionDebugImage:&debugImage WithSearchWindow:YES]) {
             [self.debugViewDetection setImage:debugImage];

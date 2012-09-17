@@ -36,6 +36,8 @@ typedef struct {
 
 @class ObjectTrackerParameterCollection;
 
+#import <GLKit/GLKit.h>
+
 @interface ObjectTrackerLibrary : NSObject
 
 @property (nonatomic, assign) bool recordDebugInfo;
@@ -43,7 +45,7 @@ typedef struct {
 @property (nonatomic, strong, readonly) ObjectTrackerParameterCollection* parameters;
 
 @property (atomic, assign, readonly) Matrix3x3 homography;
-@property (atomic, assign, readonly) Matrix4x4 modelView;
+//@property (atomic, assign, readonly) Matrix4x4 modelView;
 @property (atomic, assign, readonly) BOOL foundObject;
 @property (atomic, copy, readonly) NSString* frameDebugInfoString;
 @property (atomic, copy, readonly) NSString* videoDebugInfoString;
@@ -70,5 +72,8 @@ typedef struct {
 - (BOOL)detectionDebugImage:(UIImage**)image WithSearchWindow:(BOOL)searchWindow;
 - (BOOL)validationDebugImage:(UIImage**)image WithObjectRect:(BOOL)objectRect ObjectKeyPoints:(BOOL)objectKeyPoints SceneKeyPoints:(BOOL)sceneKeyPoints FilteredMatches:(BOOL)filteredMatches AllMatches:(BOOL)allmatches;
 - (BOOL)trackingDebugImage:(UIImage**)image WithObjectRect:(BOOL)objectRect FilteredPoints:(BOOL)filteredPoints AllPoints:(BOOL)allPoints SearchWindow:(BOOL)searchWindow;
+
+- (GLKMatrix4)projection;
+- (GLKMatrix4)modelView;
 
 @end
