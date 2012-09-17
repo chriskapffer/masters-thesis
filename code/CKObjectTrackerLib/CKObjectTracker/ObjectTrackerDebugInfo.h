@@ -45,6 +45,7 @@ struct TrackerDebugInfo {
     bool badHomography;
     
     TrackerDebugInfo() : totalProcessingTime(0), initialPointCount(0), transformationDelta(0), distortion(0), avgError(0), badHomography(false) {}
+    TrackerDebugInfo(const TrackerDebugInfo& other);
 };
 
 struct TrackerDebugInfoStripped

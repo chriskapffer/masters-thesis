@@ -12,6 +12,40 @@
 using namespace std;
 
 namespace ck {
+
+TrackerDebugInfo::TrackerDebugInfo(const TrackerDebugInfo& other)
+{
+    totalProcessingTime = other.totalProcessingTime;
+    subTaskProcessingTimes = other.subTaskProcessingTimes;
+    currentModuleType = other.currentModuleType;
+    
+    // detection
+    other.probabilityMap.copyTo(probabilityMap);
+    searchRect = other.searchRect;
+    searchRectValid = other.searchRectValid;
+    
+    // validation
+    namedMatches = other.namedMatches;
+    objectKeyPoints = other.objectKeyPoints;
+    sceneKeyPoints = other.sceneKeyPoints;
+    
+    other.objectImage.copyTo(objectImage);
+    other.sceneImageFull.copyTo(sceneImageFull);
+    other.sceneImagePart.copyTo(sceneImagePart);
+    imageOffset = other.imageOffset;
+    
+    // tracking
+    namedPointSets = other.namedPointSets;
+    initialPointCount = other.initialPointCount;
+    transformationDelta = other.transformationDelta;
+    distortion = other.distortion;
+    avgError = other.avgError;
+    
+    // validation and tracking
+    objectCornersTransformed = other.objectCornersTransformed;
+    other.homography.copyTo(homography);
+    badHomography = other.badHomography;
+}
     
 TrackerDebugInfoStripped::TrackerDebugInfoStripped() {
     // general

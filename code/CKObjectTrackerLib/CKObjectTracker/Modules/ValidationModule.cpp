@@ -226,9 +226,9 @@ ValidationModule::ValidationModule(const vector<FilterFlag>& filterFlags, int es
     _useAllKeyPointsForOutput = true;
     
     // detector, extractor, matcher params
-    _detector = new OrbFeatureDetector(_maxFeatures);
-    _extractor = new OrbDescriptorExtractor(_maxFeatures);
-    _matcher = new BFMatcher(NORM_HAMMING);
+    _detector = new SiftFeatureDetector(_maxFeatures);
+    _extractor = new SiftDescriptorExtractor(_maxFeatures);
+    _matcher = new BFMatcher(NORM_L2);
     
     _isDirty = false;
 }
