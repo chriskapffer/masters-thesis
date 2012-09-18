@@ -46,9 +46,6 @@ static const GLfloat gQuadVertices[VERTEX_COUNT] = {
     
     CVOpenGLESTextureRef _backgroundTexture;
     CVOpenGLESTextureCacheRef _videoTextureCache;
-    
-    size_t _textureWidth;
-    size_t _textureHeight;
 }
 
 @end
@@ -58,6 +55,7 @@ static const GLfloat gQuadVertices[VERTEX_COUNT] = {
 #pragma mark - properties
 
 @synthesize viewPortSize = _viewPortSize;
+@synthesize textureSize = _textureSize;
 
 - (void)setViewPortSize:(CGSize)viewPortSize
 {
@@ -72,11 +70,11 @@ static const GLfloat gQuadVertices[VERTEX_COUNT] = {
 
 - (void)setTextureSize:(CGSize)textureSize
 {
-    if (textureSize.width == _textureWidth && textureSize.height == _textureHeight)
+    if (textureSize.width == _textureSize.width && textureSize.height == _textureSize.height)
         return;
     
-    _textureWidth = textureSize.width;
-    _textureHeight = textureSize.height;
+    _textureSize.width = textureSize.width;
+    _textureSize.height = textureSize.height;
         
     [self updateTextureVertices];
 }
@@ -89,8 +87,7 @@ static const GLfloat gQuadVertices[VERTEX_COUNT] = {
 {
     self = [super init];
     if (self) {
-        _textureWidth = -1;
-        _textureHeight = -1;
+        _textureSize = CGSizeMake(-1, -1);
         
         CVReturn error;
         error = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault, NULL, (__bridge void *)context, NULL, &_videoTextureCache);
@@ -161,7 +158,7 @@ static const GLfloat gQuadVertices[VERTEX_COUNT] = {
     glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
 
     glBindBuffer(GL_ARRAY_BUFFER, _texcoordVBO);
-    glBufferData(GL_ARRAY_BUFFER, VERTEX_COUNT * sizeof(GLfloat), _textureVertices, GL_STATIC_DRAW); // dyn draw
+    glBufferData(GL_ARRAY_BUFFER, VERTEX_COUNT * sizeof(GLfloat), _textureVertices, GL_DYNAMIC_DRAW);
     
     glEnableVertexAttribArray(ATTRIB_TEXCOORD);
     glVertexAttribPointer(ATTRIB_TEXCOORD, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
@@ -237,7 +234,7 @@ static const GLfloat gQuadVertices[VERTEX_COUNT] = {
 
 - (void)updateTextureVertices
 {
-    CGSize textureSize = CGSizeMake(_textureWidth, _textureHeight);
+    CGSize textureSize = self.textureSize;
     CGRect textureSamplingRect = [self textureSamplingRectForCroppingTextureWithAspectRatio:textureSize
                                                                               toAspectRatio:self.viewPortSize];
     GLfloat tmp[VERTEX_COUNT] = {

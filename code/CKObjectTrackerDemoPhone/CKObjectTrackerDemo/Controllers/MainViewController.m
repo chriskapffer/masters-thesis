@@ -74,7 +74,6 @@
     self.arViewController = [[ARViewController alloc] init];
     self.arViewController.view.frame = self.scrollView.frame;
     [self.scrollView addSubview:self.arViewController.view];
-    self.arViewController.projection = [[ObjectTrackerLibrary instance] projection];
     
     self.imagePickerController = [[UIImagePickerController alloc] init];
     self.imagePickerController.allowsEditing = YES;
@@ -101,6 +100,7 @@
     self.captureIsReady = YES;
     self.imageViewNames = [NSArray arrayWithObjects:
                            @"Object Image", @"Statistics", @"Augmented Reality", @"Tracking View", @"Validation View", @"Detection View", nil];
+    [self updateNavBarItem];
 }
 
 - (void)viewDidUnload
@@ -275,9 +275,9 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         UIImage* debugImage;
         ObjectTrackerLibrary* trackerLib = [ObjectTrackerLibrary instance];
+        self.arViewController.isObjectPresent = trackerLib.foundObject;
         if (trackerLib.foundObject) {
-            //self.arViewController.modelView = [self matrixFromModelView:trackerLib.modelView];
-            self.arViewController.modelView = trackerLib.modelView;
+            self.arViewController.homography = [self matrix3x3ToGLK:trackerLib.homography];
         }
         if ([trackerLib detectionDebugImage:&debugImage WithSearchWindow:YES]) {
             [self.debugViewDetection setImage:debugImage];
@@ -309,26 +309,19 @@
     [self.navBarItem setTitle:[self.imageViewNames objectAtIndex:self.pageControl.currentPage]];
 }
 
-- (GLKMatrix4)matrixFromModelView:(Matrix4x4)modelView
+- (GLKMatrix3)matrix3x3ToGLK:(Matrix3x3)matrix
 {
-    GLKMatrix4 result;
-    result.m00 = modelView.m00;
-    result.m01 = modelView.m01;
-    result.m02 = modelView.m02;
-    result.m03 = modelView.m03;
-    result.m10 = modelView.m10;
-    result.m11 = modelView.m11;
-    result.m12 = modelView.m12;
-    result.m13 = modelView.m13;
-    result.m20 = modelView.m20;
-    result.m21 = modelView.m21;
-    result.m22 = modelView.m22;
-    result.m23 = modelView.m23;
-    result.m30 = modelView.m30;
-    result.m31 = modelView.m31;
-    result.m32 = modelView.m32;
-    result.m33 = modelView.m33;
-    return result;
+    GLKMatrix3 result;
+    result.m00 = matrix.m00;
+    result.m01 = matrix.m01;
+    result.m02 = matrix.m02;
+    result.m10 = matrix.m10;
+    result.m11 = matrix.m11;
+    result.m12 = matrix.m12;
+    result.m20 = matrix.m20;
+    result.m21 = matrix.m21;
+    result.m22 = matrix.m22;
+    return GLKMatrix3Transpose(result); // openGL is column major --> transpose!
 }
 
 @end

@@ -21,9 +21,9 @@ public:
     static std::string getDebugString(const std::vector<TrackerDebugInfoStripped>& info);
 
     static cv::Mat getHistogramImage(const cv::MatND& hist);
-    static bool getDetectionModuleDebugImage(cv::Mat& image, const TrackerDebugInfo info, bool drawSearchRect = true);
-    static bool getValidationModuleDebugImage(cv::Mat& image, const TrackerDebugInfo info, bool drawObjectRect = true, bool drawObjectKeyPoints = false, bool drawSceneKeyPoints = false, bool drawFilteredMatches = true, bool drawAllMatches = false);
-    static bool getTrackingModuleDebugImage(cv::Mat& image, const TrackerDebugInfo info, bool drawObjectRect = true, bool drawFilteredPoints = true, bool drawAllPoints = false, bool drawSearchRect = false);
+    static bool getDetectionModuleDebugImage(cv::Mat& image, const TrackerDebugInfo& info, bool drawSearchRect = true);
+    static bool getValidationModuleDebugImage(cv::Mat& image, const TrackerDebugInfo& info, bool drawObjectRect = true, bool drawObjectKeyPoints = false, bool drawSceneKeyPoints = false, bool drawFilteredMatches = true, bool drawAllMatches = false);
+    static bool getTrackingModuleDebugImage(cv::Mat& image, const TrackerDebugInfo& info, bool drawObjectRect = true, bool drawFilteredPoints = true, bool drawAllPoints = false, bool drawSearchRect = false);
     
 private:
     static std::string getDetectionModuleDebugString(const TrackerDebugInfoStripped& info);

@@ -10,18 +10,30 @@
 #import "BackgroundTexture.h"
 #import "DrawableObject.h"
 
-#define FIELD_OF_VIEW_DEG 65
+#define FIELD_OF_VIEW_DEG 60
 #define NEAR_PLANE 0.1f
 #define FAR_PLANE 1000.0f
+#define CAM_DIST 3.0f
+
+#define PREFERRED_FRAMES_PER_SECOND 30
+#define MAX_FRAMES_WITHOUT_OBJECT (PREFERRED_FRAMES_PER_SECOND * 1.0f)
 
 @interface ARViewController ()
+{
+    int _framesWithOutObject;
+}
 
 @property (nonatomic, strong) EAGLContext* context;
 @property (nonatomic, strong) GLKBaseEffect* baseEffect;
 @property (nonatomic, assign) GLKMatrix4 projectionMatrix;
+@property (nonatomic, assign) GLKMatrix4 modelMatrix;
+@property (nonatomic, assign) GLKMatrix4 viewMatrix;
+@property (nonatomic, assign) GLKMatrix3 invIntrinsics;
+@property (nonatomic, assign) CGSize viewPortSize;
+
 @property (nonatomic, strong) BackgroundTexture* backgroundTexture;
 @property (nonatomic, strong) DrawableObject* drawableObject;
-@property (nonatomic, assign) CGSize viewPortSize;
+@property (nonatomic, assign) BOOL drawObject;
 
 @end
 
@@ -29,29 +41,64 @@
 
 #pragma mark - properties
 
-@synthesize modelView = _modelView;
-@synthesize background = _background;
-
 @synthesize context = _context;
 @synthesize baseEffect = _baseEffect;
+@synthesize viewPortSize = _viewPortSize;
 @synthesize projectionMatrix = _projectionMatrix;
+@synthesize modelMatrix = _modelMatrix;
+@synthesize viewMatrix = _viewMatrix;
+
 @synthesize backgroundTexture = _backgroundTexture;
 @synthesize drawableObject = _drawableObject;
-@synthesize viewPortSize = _viewPortSize;
+
+@synthesize intrinsics = _intrinsics;
+@synthesize invIntrinsics = _invIntrinsics;
+@synthesize homography = _homography;
+@synthesize background = _background;
+@synthesize drawObject = _drawObject;
+@synthesize isObjectPresent = _isObjectPresent;
+
+- (void)setViewPortSize:(CGSize)viewPortSize
+{
+    if (viewPortSize.width == _viewPortSize.width && viewPortSize.height == _viewPortSize.height)
+        return;
+    
+    glViewport(0, 0, viewPortSize.width, viewPortSize.height);
+    [self updateProjectionMatrixWithAspect:fabsf(viewPortSize.width / viewPortSize.height)];
+    _viewPortSize = viewPortSize;
+}
+
+- (void)setIntrinsics:(GLKMatrix3)intrinsics
+{
+    _intrinsics = intrinsics;
+    bool isInvertible;
+    _invIntrinsics = GLKMatrix3Invert(intrinsics, &isInvertible);
+    if (!isInvertible) {
+        NSLog(@"Failed to invert camera matrix!");
+    }
+}
+
+- (void)setHomography:(GLKMatrix3)homography
+{
+    [self updateModelMatrixWithHomography:homography];
+    _homography = homography;
+}
 
 - (void)setBackground:(CVPixelBufferRef)background
 {
     [self updateBackground:background];
 }
 
-- (void)setViewPortSize:(CGSize)viewPortSize
+- (void)setIsObjectPresent:(BOOL)isObjectPresent
 {
-    if (viewPortSize.width == _viewPortSize.width && viewPortSize.height == _viewPortSize.height)
-        return;
-
-    glViewport(0, 0, viewPortSize.width, viewPortSize.height);
-    [self updateProjectionMatrixWithAspect:fabsf(viewPortSize.width / viewPortSize.height)];
-    _viewPortSize = viewPortSize;
+    if (isObjectPresent == _isObjectPresent) { return; }
+    
+    _isObjectPresent = isObjectPresent;
+    if (isObjectPresent) {
+        _drawObject = YES;
+    } else {
+        _framesWithOutObject = 0;
+    }
 }
 
 #pragma mark - view lifecycle
@@ -85,10 +132,24 @@
     // init objects
     self.backgroundTexture = [[BackgroundTexture alloc] initWithContext:self.context];
     self.drawableObject = [[DrawableObject alloc] init];
-    self.modelView = GLKMatrix4Identity;
+    
+    self.modelMatrix = GLKMatrix4Identity;
+    self.viewMatrix = GLKMatrix4MakeLookAt( 0, 0, -CAM_DIST, // pos
+                                            0, 0,  0, // dst
+                                           -1, 0,  0); // up
+    
+    double fx = 604.43273831; // Focal length in x axis
+    double fy = 604.18678406; // Focal length in y axis
+    double cx = 239.50000000; // Camera primary point x
+    double cy = 319.50000000; // Camera primary point y
+    self.intrinsics = GLKMatrix3MakeAndTranspose(fx,  0, cx,
+                                                  0, fy, cy,
+                                                  0,  0,  1); // openGL is column major --> transpose!
     
     [self setViewPortSize:self.view.bounds.size];
-    [self setPreferredFramesPerSecond:30];
+    [self setPreferredFramesPerSecond:PREFERRED_FRAMES_PER_SECOND];
+    [self setIsObjectPresent:NO];
+    [self setDrawObject:NO];
 }
 
 - (void)viewDidUnload
@@ -144,8 +205,9 @@
     [self.backgroundTexture draw];
     
     [self.baseEffect prepareToDraw];
-    
-    [self.drawableObject draw];
+    if (self.drawObject) {
+        [self.drawableObject draw];
+    }
 }
 
 #pragma mark glkit view controller delegate
@@ -155,26 +217,15 @@
     [self setViewPortSize:self.view.bounds.size];
     self.backgroundTexture.viewPortSize = self.viewPortSize;
     
-    self.baseEffect.transform.projectionMatrix = _projection;// [self getProjection];
+    self.baseEffect.transform.projectionMatrix = self.projectionMatrix;
+    self.baseEffect.transform.modelviewMatrix = GLKMatrix4Multiply(self.viewMatrix, self.modelMatrix);
     
-    GLKMatrix4 baseModelViewMatrix = GLKMatrix4Identity;
-    //GLKMatrix4Translate(baseModelViewMatrix, 240, 360, 0);
-    baseModelViewMatrix = GLKMatrix4MakeLookAt(0, 0, 5, // pos
-                                               0, 0, 0, // dst
-                                               0, 1, 0); // up
-    //baseModelViewMatrix = GLKMatrix4Identity;
-    //GLKMatrix4Translate(baseModelViewMatrix, 240, 360, 0);
-    
-    GLKMatrix4 rotation = self.modelView;
-    
-    //baseModelViewMatrix = GLKMatrix4Rotate(baseModelViewMatrix, 90, 1.0f, 0.0f, 0.0f);
-//
-//    // Compute the model view matrix for the object rendered with GLKit
-//    GLKMatrix4 modelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, -1.5f);
-//    modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, 45, 1.0f, 1.0f, 1.0f);
-//    modelViewMatrix = GLKMatrix4Multiply(baseModelViewMatrix, modelViewMatrix);
-    
-    self.baseEffect.transform.modelviewMatrix = GLKMatrix4Multiply(baseModelViewMatrix, self.modelView);
+    if (!self.isObjectPresent && self.drawObject) {
+        _framesWithOutObject++;
+        if (_framesWithOutObject >= MAX_FRAMES_WITHOUT_OBJECT) {
+            self.drawObject = NO;
+        }
+    }
 }
 
 #pragma mark - helper methods
@@ -212,49 +263,53 @@
 - (void)updateProjectionMatrixWithAspect:(float)aspect
 {
     float fovRad = GLKMathDegreesToRadians(FIELD_OF_VIEW_DEG);
-    _projectionMatrix = GLKMatrix4MakePerspective(fovRad, aspect, NEAR_PLANE, FAR_PLANE);
+    self.projectionMatrix = GLKMatrix4MakePerspective(fovRad, aspect, NEAR_PLANE, FAR_PLANE);
 }
 
-//// Returns calibratoin data for iPad 2
-//// Todo: Add parameters for the rest
-//return CameraCalibration(6.24860291e+02 * (640./352.), 6.24860291e+02 * (480./288.), 640 * 0.5f, 480 * 0.5f);
-
-- (GLKMatrix4)getProjection
+- (void)updateModelMatrixWithHomography:(GLKMatrix3)homography
 {
-    // Camera parameters
-    double fx = 604.18678406; // Focal length in x axis
-    double fy = 604.43273831; // Focal length in y axis
-    double cx = 319.50000000; // Camera primary point x
-    double cy = 239.50000000; // Camera primary point y
+    // Column vectors of homography
+    GLKVector3 h1 = GLKMatrix3GetColumn(homography, 0);
+    GLKVector3 h2 = GLKMatrix3GetColumn(homography, 1);
     
-    double screen_width = 480; // In pixels
-    double screen_height = 640; // In pixels
+    // inverse
+    GLKVector3 invH1 = GLKMatrix3MultiplyVector3(self.invIntrinsics, h1);
+    GLKVector3 invH2 = GLKMatrix3MultiplyVector3(self.invIntrinsics, h2);
     
-    double fovY = 1/(fx/screen_height * 2);
-    double aspectRatio = screen_width/screen_height * fy/fx;
-    double near = .1;  // Near clipping distance
-    double far = 1000;  // Far clipping distance
-    double frustum_height = near * fovY;
-    double frustum_width = frustum_height * aspectRatio;
+    // Column vectors of rotation matrix
+    GLKVector3 r1 = GLKVector3Normalize(invH1);
+    GLKVector3 r2 = GLKVector3Normalize(invH2);
+    GLKVector3 r3 = GLKVector3CrossProduct(r1, r2);
+    GLKMatrix4 rotationMatrix = GLKMatrix4MakeAndTranspose(r1.x, r2.x, r3.x, 0,
+                                                           r1.y, r2.y, r3.y, 0,
+                                                           r1.z, r2.z, r3.z, 0,
+                                                              0,    0,    0, 1); // openGL is column major --> transpose!
     
-    double offset_x = (screen_width/2 - cx)/screen_width * frustum_width * 2;
-    double offset_y = (screen_height/2 - cy)/screen_height * frustum_height * 2;
+    float scaleFactor = (homography.m00 + homography.m11) / 2.0f;
+    GLKMatrix4 scaleMatrix = GLKMatrix4MakeScale(scaleFactor, scaleFactor, scaleFactor);
+
+    float sceneWidth = self.backgroundTexture.textureSize.width;
+    float sceneHeight = self.backgroundTexture.textureSize.height;
+    float objectSize = MIN(sceneWidth, sceneHeight) * scaleFactor; // TODO: get real object width and height
+    float offsetX = (sceneWidth - objectSize) / 2.0f;
+    float offsetY = (sceneHeight - objectSize) / 2.0f;
+    GLKVector3 t = GLKVector3Make(homography.m20 - offsetX, homography.m21 - offsetY, 0); // translation from center in px
+    t.x = t.x / (sceneWidth * 0.5f); // normalized
+    t.y = t.y / (sceneHeight * 0.5f); // normalized
     
-    double left = -frustum_width - offset_x;
-    double right = frustum_width - offset_x;
-    double top = -frustum_height - offset_y;
-    double bottom = frustum_height - offset_y;
+    float aspect = fabsf(self.viewPortSize.width / self.viewPortSize.height);
+    float fovY = GLKMathDegreesToRadians(FIELD_OF_VIEW_DEG);
+    float fovX = fovY * aspect;
+    float halfWidthProjPlane = tanf(fovX / 2.0f) * CAM_DIST;
+    float halfHeightProjPlane = tanf(fovY / 2.0f) * CAM_DIST;
+
+    t.x *= halfWidthProjPlane;
+    t.y *= halfHeightProjPlane;
+    GLKMatrix4 translationMatrix = GLKMatrix4MakeTranslation(t.x, t.y, 0);
     
-    // Build and apply the projection matrix
-    GLKMatrix4 proj = {
-            (2 * near) / (right - left),                               0,                                0,  0,
-                                      0,     (2 * near) / (top - bottom),                                0,  0,
-        (right + left) / (right - left), (top + bottom) / (top - bottom),     -(far + near) / (far - near), -1,
-                                      0,                               0, -(2 * far * near) / (far - near),  0
-    };
-    
-    return proj;
+    self.modelMatrix = GLKMatrix4Multiply(GLKMatrix4Multiply(translationMatrix, rotationMatrix), scaleMatrix);
 }
+// http://stackoverflow.com/questions/5342330/how-to-augment-cube-onto-a-specific-position-using-3x3-homography
 
 @end
 

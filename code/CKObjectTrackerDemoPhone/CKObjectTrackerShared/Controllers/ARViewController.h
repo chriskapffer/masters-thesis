@@ -11,8 +11,9 @@
 
 @interface ARViewController : GLKViewController
 
-@property (nonatomic, assign) GLKMatrix4 modelView;
-@property (nonatomic, assign) GLKMatrix4 projection;
+@property (nonatomic, assign) GLKMatrix3 intrinsics;
+@property (nonatomic, assign) GLKMatrix3 homography;
 @property (nonatomic, assign) CVPixelBufferRef background;
+@property (nonatomic, assign) BOOL isObjectPresent;
 
 @end

@@ -11,6 +11,7 @@
 @interface BackgroundTexture : NSObject
 
 @property (nonatomic, assign) CGSize viewPortSize;
+@property (nonatomic, assign) CGSize textureSize;
 
 - (id)initWithContext:(EAGLContext*)context;
 - (void)updateContent:(CVPixelBufferRef)content;

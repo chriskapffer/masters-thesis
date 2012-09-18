@@ -230,7 +230,7 @@ cv::Mat ObjectTrackerDebugger::getHistogramImage(const cv::MatND& hist)
     return Mat(); // TODO: implementation
 }
 
-bool ObjectTrackerDebugger::getDetectionModuleDebugImage(cv::Mat& image, const TrackerDebugInfo info, bool drawSearchRect)
+bool ObjectTrackerDebugger::getDetectionModuleDebugImage(cv::Mat& image, const TrackerDebugInfo& info, bool drawSearchRect)
 {
     if (info.currentModuleType != ModuleType2String::convert(MODULE_TYPE_DETECTION)) { return false; }
     
@@ -243,7 +243,7 @@ bool ObjectTrackerDebugger::getDetectionModuleDebugImage(cv::Mat& image, const T
     return true;
 }
     
-bool ObjectTrackerDebugger::getValidationModuleDebugImage(cv::Mat& image, const TrackerDebugInfo info, bool drawObjectRect, bool drawObjectKeyPoints, bool drawSceneKeyPoints, bool drawFilteredMatches, bool drawAllMatches)
+bool ObjectTrackerDebugger::getValidationModuleDebugImage(cv::Mat& image, const TrackerDebugInfo& info, bool drawObjectRect, bool drawObjectKeyPoints, bool drawSceneKeyPoints, bool drawFilteredMatches, bool drawAllMatches)
 {
     if (info.currentModuleType != ModuleType2String::convert(MODULE_TYPE_VALIDATION)
         || (info.objectImage.empty() || info.sceneImagePart.empty())) { return false; }
@@ -318,7 +318,7 @@ bool ObjectTrackerDebugger::getValidationModuleDebugImage(cv::Mat& image, const 
     return true;
 }
 
-bool ObjectTrackerDebugger::getTrackingModuleDebugImage(cv::Mat& image, const TrackerDebugInfo info, bool drawObjectRect, bool drawFilteredPoints, bool drawAllPoints, bool drawSearchRect)
+bool ObjectTrackerDebugger::getTrackingModuleDebugImage(cv::Mat& image, const TrackerDebugInfo& info, bool drawObjectRect, bool drawFilteredPoints, bool drawAllPoints, bool drawSearchRect)
 {
     if (info.currentModuleType != ModuleType2String::convert(MODULE_TYPE_TRACKING)) { return false; }
     
