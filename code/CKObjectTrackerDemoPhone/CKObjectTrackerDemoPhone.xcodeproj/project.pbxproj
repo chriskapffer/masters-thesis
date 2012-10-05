@@ -72,6 +72,8 @@
 		4C962F0115F96A3500C804E5 /* testdata in Resources */ = {isa = PBXBuildFile; fileRef = 4C962F0015F96A3500C804E5 /* testdata */; };
 		4CCC7D0715FCF980007DFC92 /* UIImage+PixelBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC7D0615FCF97F007DFC92 /* UIImage+PixelBuffer.m */; };
 		4CCC7D0815FCF980007DFC92 /* UIImage+PixelBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC7D0615FCF97F007DFC92 /* UIImage+PixelBuffer.m */; };
+		4CD7FF23161DF16A00E5C5EA /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CD7FF22161DF16A00E5C5EA /* Default-568h@2x.png */; };
+		4CD7FF25161DF1CC00E5C5EA /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CD7FF22161DF16A00E5C5EA /* Default-568h@2x.png */; };
 		4CD86B8015FAA88400B1767C /* ResourceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CD86B7E15FAA88400B1767C /* ResourceViewController.xib */; };
 		4CE1863015F9E071004C3372 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1862A15F9E071004C3372 /* MainViewController.m */; };
 		4CE1863115F9E071004C3372 /* ResourceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1862C15F9E071004C3372 /* ResourceViewController.m */; };
@@ -163,6 +165,7 @@
 		4C962F0015F96A3500C804E5 /* testdata */ = {isa = PBXFileReference; lastKnownFileType = folder; name = testdata; path = ../../../testdata; sourceTree = "<group>"; };
 		4CCC7D0515FCF97F007DFC92 /* UIImage+PixelBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+PixelBuffer.h"; sourceTree = "<group>"; };
 		4CCC7D0615FCF97F007DFC92 /* UIImage+PixelBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+PixelBuffer.m"; sourceTree = "<group>"; };
+		4CD7FF22161DF16A00E5C5EA /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		4CD86B7F15FAA88400B1767C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = CKObjectTrackerTest/en.lproj/ResourceViewController.xib; sourceTree = SOURCE_ROOT; };
 		4CE1862915F9E071004C3372 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		4CE1862A15F9E071004C3372 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
@@ -236,6 +239,7 @@
 		4C4E0CE115DE3378002BE9A4 = {
 			isa = PBXGroup;
 			children = (
+				4CD7FF22161DF16A00E5C5EA /* Default-568h@2x.png */,
 				4C4E0D3415DE344C002BE9A4 /* CKObjectTrackerTest */,
 				4C4E0D1615DE33C0002BE9A4 /* CKObjectTrackerDemo */,
 				4C4E0DBA15DE3ABE002BE9A4 /* CKObjectTrackerShared */,
@@ -576,6 +580,7 @@
 				4C8620D815FC017600C72DE7 /* ParameterSliderCell.xib in Resources */,
 				4C8620DB15FC018A00C72DE7 /* ParameterSwitchCell.xib in Resources */,
 				4C7980581601F30D009693C0 /* tile_floor.png in Resources */,
+				4CD7FF23161DF16A00E5C5EA /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -594,6 +599,7 @@
 				4C8620D715FC017600C72DE7 /* ParameterSliderCell.xib in Resources */,
 				4C8620DA15FC018A00C72DE7 /* ParameterSwitchCell.xib in Resources */,
 				4C7980571601F30D009693C0 /* tile_floor.png in Resources */,
+				4CD7FF25161DF1CC00E5C5EA /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -743,6 +749,7 @@
 				LIBRARY_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "\"$(BUILT_PRODUCTS_DIR)\"/** \"$(BUILD_ROOT)/../IntermediateBuildFilesPath/UninstalledProducts\"/**";
+				VALID_ARCHS = armv7;
 			};
 			name = Debug;
 		};
@@ -766,6 +773,7 @@
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "\"$(BUILT_PRODUCTS_DIR)\"/** \"$(BUILD_ROOT)/../IntermediateBuildFilesPath/UninstalledProducts\"/**";
 				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = armv7;
 			};
 			name = Release;
 		};

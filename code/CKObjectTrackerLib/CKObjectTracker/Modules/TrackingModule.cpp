@@ -9,6 +9,7 @@
 #include "TrackingModule.h"
 
 #include "ObjectTrackerTypesProject.h"
+#include "TransformationBuilder.h"
 
 #include "PointOperations.h"
 #include "ColorConversion.h"
@@ -184,6 +185,7 @@ bool TrackingModule::internalProcess(ModuleParams& params, TrackerDebugInfo& deb
 
     // set output params
     params.sceneImageCurrent.copyTo(params.sceneImagePrevious);
+    params.objectInfo = TransformationBuilder::getTransform(homography, _objectCorners, Size2f(params.sceneImageCurrent.cols, params.sceneImageCurrent.rows));
     params.previosTransformedCorners = objectCornersTransformed;
     params.isObjectPresent = isHomographyValid;
     params.homography = homography;

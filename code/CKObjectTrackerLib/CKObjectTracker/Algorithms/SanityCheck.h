@@ -16,7 +16,7 @@ namespace ck {
         static bool validate(const cv::Mat& homography, const cv::Size& imageSize, const std::vector<cv::Point2f>& corners, std::vector<cv::Point2f>& cornersTransformed);
         static bool validate(const cv::Mat& homography, const cv::Size& imageSize, const std::vector<cv::Point2f>& corners, std::vector<cv::Point2f>& cornersTransformed, cv::Rect& boundingRect, bool cropBoundingRectToImageSize = false);
         
-        static bool checkRectangle(const std::vector<cv::Point2f>& cornersTransformed);
+        static bool checkRectangle(const std::vector<cv::Point2f>& cornersTransformed, cv::Point2f& intersectionPoint);
         static bool checkBoundaries(const std::vector<cv::Point2f>& cornersTransformed, int width, int height);
         static bool checkAngleSimilarity(const std::vector<cv::Point2f>& cornersTransformed, float maxAngleOffsetInDeg);
     };

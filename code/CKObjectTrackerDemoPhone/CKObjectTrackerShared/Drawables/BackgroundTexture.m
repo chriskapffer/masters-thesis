@@ -90,7 +90,7 @@ static const GLfloat gQuadVertices[VERTEX_COUNT] = {
         _textureSize = CGSizeMake(-1, -1);
         
         CVReturn error;
-        error = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault, NULL, (__bridge void *)context, NULL, &_videoTextureCache);
+        error = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault, NULL, context, NULL, &_videoTextureCache);
         if (error) {
             NSLog(@"Error at CVOpenGLESTextureCacheCreate %d", error);
             return nil;

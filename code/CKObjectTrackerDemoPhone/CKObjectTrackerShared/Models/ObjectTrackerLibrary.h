@@ -10,16 +10,10 @@
 
 #define MAX_RECORDED_FRAMES 10000
 
-typedef struct {
-    CGFloat m00, m01, m02;
-    CGFloat m10, m11, m12;
-    CGFloat m20, m21, m22;
-} Matrix3x3;
-
 @protocol ObjectTrackerLibraryDelegate <NSObject>
 
 @optional
-- (void)trackedObjectWithHomography:(Matrix3x3)homography;
+- (void)trackedObjectSuccessfully;
 - (void)reachedDebugInfoRecordingLimit:(NSString*)debugInfo;
 - (void)failedToTrackObjectInImage;
 - (void)trackerLibraryDidProcessFrame;
@@ -35,12 +29,17 @@ typedef struct {
 @property (nonatomic, weak) id<ObjectTrackerLibraryDelegate> delegate;
 @property (nonatomic, strong, readonly) ObjectTrackerParameterCollection* parameters;
 
-@property (atomic, assign, readonly) Matrix3x3 homography;
+@property (atomic, assign, readonly) Matrix3x3 objectRotation;
+@property (atomic, assign, readonly) CGPoint objectTranslation;
+@property (atomic, assign, readonly) CGFloat objectScale;
 @property (atomic, assign, readonly) BOOL foundObject;
 @property (atomic, copy, readonly) NSString* frameDebugInfoString;
 @property (atomic, copy, readonly) NSString* videoDebugInfoString;
 
 + (id)instance;
+
+- (void)setFocalLength:(CGPoint)focalLength;
+- (void)setPrincipalPoint:(CGPoint)principalPoint;
 
 - (UIImage*)objectImage;
 - (UIImage*)objectHistogram;

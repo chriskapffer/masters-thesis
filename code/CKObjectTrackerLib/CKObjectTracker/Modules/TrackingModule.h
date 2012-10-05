@@ -16,7 +16,7 @@ namespace ck {
 class TrackingModule : public AbstractModule {
 
 public:
-    TrackingModule(int maxPoints, int minPointsAbs = 10, float minPointsRel = 0.1f, bool useSubPixels = false, bool calcHomRelToFrame = false, bool filterDistortions = true, float distortionThreshold = 1.0f);
+    TrackingModule(int maxPoints, int minPointsAbs = 10, float minPointsRel = 0.1f, bool useSubPixels = false, bool calcHomRelToFrame = false, bool filterDistortions = false, float distortionThreshold = 1.0f);
     ~TrackingModule();
 
     void initWithObjectImage(const cv::Mat& objectImage);

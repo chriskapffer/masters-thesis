@@ -82,7 +82,7 @@ namespace ck {
             std::vector<std::string> estMethVals; estMethVals.push_back(EST_METHOD_RANSAC); estMethVals.push_back(EST_METHOD_LMEDS); estMethVals.push_back(EST_METHOD_DEFAULT);
             std::vector<std::string> detectorVals; detectorVals.push_back("FAST"); detectorVals.push_back("GFTT"); detectorVals.push_back("SIFT"); detectorVals.push_back("SURF"); detectorVals.push_back("ORB");
             std::vector<std::string> extractorVals; extractorVals.push_back("SIFT"); extractorVals.push_back("SURF"); extractorVals.push_back("ORB"); extractorVals.push_back("FREAK");
-            std::vector<int> fastThresVals; fastThresVals.push_back(5); fastThresVals.push_back(10); fastThresVals.push_back(20); fastThresVals.push_back(40); fastThresVals.push_back(80);
+            std::vector<int> fastThresVals; fastThresVals.push_back(10); fastThresVals.push_back(20); fastThresVals.push_back(40); fastThresVals.push_back(60); fastThresVals.push_back(80);
             
             Settings filterSettings = Settings("Filter Parameters");
             filterSettings.registerBool(OT_SETTING_VALID_MATCHES_SORT, module, &ValidationModule::setSortMatches, &ValidationModule::getSortMatches);
@@ -103,7 +103,7 @@ namespace ck {
             validationSettings.registerString(OT_SETTING_VALID_DETECTOR, module, &ValidationModule::setDetector, &ValidationModule::getDetector, detectorVals, true);
             validationSettings.registerString(OT_SETTING_VALID_EXTRACTOR, module, &ValidationModule::setExtractor, &ValidationModule::getExtractor, extractorVals, true);
             validationSettings.registerInt(OT_SETTING_VALID_N_FEATURES, module, &ValidationModule::setMaxFeatures, &ValidationModule::getMaxFeatures, 20, 1000);
-            validationSettings.registerFloat(OT_SETTING_VALID_HESS_THRESHLD, module, &ValidationModule::setHessianThreshold, &ValidationModule::getHessianThreshold, 300, 500);
+            validationSettings.registerInt(OT_SETTING_VALID_HESS_THRESHLD, module, &ValidationModule::setHessianThreshold, &ValidationModule::getHessianThreshold, 300, 500);
             validationSettings.registerInt(OT_SETTING_VALID_FAST_THRESHLD, module, &ValidationModule::setFastThreshold, &ValidationModule::getFastThreshold, -1, -1, fastThresVals);
             
             validationSettings.addCategory(filterSettings);

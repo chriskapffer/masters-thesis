@@ -34,6 +34,11 @@ public:
         return _settings;
     }
     
+    void setFocalLength(const cv::Point2f& focalLength);
+    cv::Point2f getFocalLength() const;
+    void setPrincipalPoint(const cv::Point2f& principalPoint);
+    cv::Point2f getPrincipalPoint() const;
+    
     void setObject(const cv::Mat& objectImage);
     void trackObjectInVideo(const cv::Mat& frame, TrackerOutput& output, TrackerDebugInfo& debugInfo);
     void trackObjectInStillImage(const cv::Mat& image, std::vector<TrackerOutput>& output, std::vector<TrackerDebugInfo>& debugInfo);

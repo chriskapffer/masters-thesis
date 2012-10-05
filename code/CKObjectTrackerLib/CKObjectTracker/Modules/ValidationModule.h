@@ -39,8 +39,8 @@ public:
     void setFastThreshold(const int& value);
     inline int getFastThreshold() const { return _fastThreshold; }
     
-    void setHessianThreshold(const float& value);
-    inline float getHessianThreshold() const { return _hessianThreshold; }
+    void setHessianThreshold(const int& value);
+    inline int getHessianThreshold() const { return (int)_hessianThreshold; }
     
     void setCropMatches(const bool& value);
     bool getCropMatches() const;

@@ -59,6 +59,14 @@
 		4CC655D315E9418E0035C072 /* EmptyModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655D115E9418E0035C072 /* EmptyModule.h */; };
 		4CC655D515E9419E0035C072 /* EmptyModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CC655D415E9419D0035C072 /* EmptyModule.cpp */; };
 		4CC655D615E9419E0035C072 /* EmptyModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CC655D415E9419D0035C072 /* EmptyModule.cpp */; };
+		4CCA4A46161EC61E005B92D9 /* TransformationBuilder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CCA4A44161EC61E005B92D9 /* TransformationBuilder.cpp */; };
+		4CCA4A47161EC61E005B92D9 /* TransformationBuilder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CCA4A44161EC61E005B92D9 /* TransformationBuilder.cpp */; };
+		4CCA4A48161EC61E005B92D9 /* TransformationBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCA4A45161EC61E005B92D9 /* TransformationBuilder.h */; settings = {ATTRIBUTES = (); }; };
+		4CCA4A49161EC61E005B92D9 /* TransformationBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCA4A45161EC61E005B92D9 /* TransformationBuilder.h */; settings = {ATTRIBUTES = (); }; };
+		4CCA4A4D161ECDDD005B92D9 /* CameraParams.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CCA4A4B161ECDDC005B92D9 /* CameraParams.cpp */; };
+		4CCA4A4E161ECDDD005B92D9 /* CameraParams.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CCA4A4B161ECDDC005B92D9 /* CameraParams.cpp */; };
+		4CCA4A4F161ECDDD005B92D9 /* CameraParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCA4A4C161ECDDD005B92D9 /* CameraParams.h */; };
+		4CCA4A50161ECDDD005B92D9 /* CameraParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCA4A4C161ECDDD005B92D9 /* CameraParams.h */; };
 		4CCBADC415EBA344005C579F /* ModuleParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCBADC315EBA343005C579F /* ModuleParams.h */; };
 		4CCBADC515EBA344005C579F /* ModuleParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCBADC315EBA343005C579F /* ModuleParams.h */; };
 		4CCBADC715EBA6FE005C579F /* DescriptorMatcherFilterer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCBADC615EBA6FE005C579F /* DescriptorMatcherFilterer.h */; };
@@ -128,6 +136,10 @@
 		4CC655C215E9331D0035C072 /* ModuleManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModuleManagement.h; sourceTree = "<group>"; };
 		4CC655D115E9418E0035C072 /* EmptyModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmptyModule.h; sourceTree = "<group>"; };
 		4CC655D415E9419D0035C072 /* EmptyModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EmptyModule.cpp; sourceTree = "<group>"; };
+		4CCA4A44161EC61E005B92D9 /* TransformationBuilder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransformationBuilder.cpp; sourceTree = "<group>"; };
+		4CCA4A45161EC61E005B92D9 /* TransformationBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformationBuilder.h; sourceTree = "<group>"; };
+		4CCA4A4B161ECDDC005B92D9 /* CameraParams.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CameraParams.cpp; sourceTree = "<group>"; };
+		4CCA4A4C161ECDDD005B92D9 /* CameraParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraParams.h; sourceTree = "<group>"; };
 		4CCBADC315EBA343005C579F /* ModuleParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModuleParams.h; sourceTree = "<group>"; };
 		4CCBADC615EBA6FE005C579F /* DescriptorMatcherFilterer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DescriptorMatcherFilterer.h; sourceTree = "<group>"; };
 		4CCBADC915EBA719005C579F /* DescriptorMatcherFilterer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DescriptorMatcherFilterer.cpp; sourceTree = "<group>"; };
@@ -209,6 +221,8 @@
 				4CD77F2215F8B8A700BBC9D8 /* ObjectTrackerDebugInfo.cpp */,
 				4CD77F1815F8B24A00BBC9D8 /* ObjectTrackerTypesPublic.h */,
 				4CD77F1C15F8B26A00BBC9D8 /* ObjectTrackerTypesProject.h */,
+				4CCA4A4C161ECDDD005B92D9 /* CameraParams.h */,
+				4CCA4A4B161ECDDC005B92D9 /* CameraParams.cpp */,
 				4C506C3315E4FB8C0087865E /* Modules */,
 				4C506C3215E4FB8C0087865E /* Algorithms */,
 				4C506C7B15E51BE20087865E /* Utils */,
@@ -238,6 +252,8 @@
 				4CD77F2B15F8D0F200BBC9D8 /* FilterAlgorithm.cpp */,
 				4CCBADC615EBA6FE005C579F /* DescriptorMatcherFilterer.h */,
 				4CCBADC915EBA719005C579F /* DescriptorMatcherFilterer.cpp */,
+				4CCA4A45161EC61E005B92D9 /* TransformationBuilder.h */,
+				4CCA4A44161EC61E005B92D9 /* TransformationBuilder.cpp */,
 			);
 			path = Algorithms;
 			sourceTree = "<group>";
@@ -312,6 +328,8 @@
 				4CD77F3515F8D2FB00BBC9D8 /* ColorConversion.h in Headers */,
 				4CD77F3815F8D40E00BBC9D8 /* Neon.h in Headers */,
 				4CD77F3E15F8D9FB00BBC9D8 /* PointOperations.h in Headers */,
+				4CCA4A48161EC61E005B92D9 /* TransformationBuilder.h in Headers */,
+				4CCA4A4F161ECDDD005B92D9 /* CameraParams.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -346,6 +364,8 @@
 				4CD77F3615F8D2FB00BBC9D8 /* ColorConversion.h in Headers */,
 				4CD77F3915F8D40E00BBC9D8 /* Neon.h in Headers */,
 				4CD77F3F15F8D9FB00BBC9D8 /* PointOperations.h in Headers */,
+				4CCA4A49161EC61E005B92D9 /* TransformationBuilder.h in Headers */,
+				4CCA4A50161ECDDD005B92D9 /* CameraParams.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -392,7 +412,7 @@
 		4C4E0D4B15DE34DD002BE9A4 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0450;
 				ORGANIZATIONNAME = "HTW Berlin";
 			};
 			buildConfigurationList = 4C4E0D4E15DE34DD002BE9A4 /* Build configuration list for PBXProject "CKObjectTrackerLib" */;
@@ -434,6 +454,8 @@
 				4CD77F2D15F8D0F200BBC9D8 /* FilterAlgorithm.cpp in Sources */,
 				4CD77F3315F8D2FB00BBC9D8 /* ColorConversion.cpp in Sources */,
 				4CD77F3C15F8D9FB00BBC9D8 /* PointOperations.cpp in Sources */,
+				4CCA4A46161EC61E005B92D9 /* TransformationBuilder.cpp in Sources */,
+				4CCA4A4D161ECDDD005B92D9 /* CameraParams.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -457,6 +479,8 @@
 				4CD77F2E15F8D0F200BBC9D8 /* FilterAlgorithm.cpp in Sources */,
 				4CD77F3415F8D2FB00BBC9D8 /* ColorConversion.cpp in Sources */,
 				4CD77F3D15F8D9FB00BBC9D8 /* PointOperations.cpp in Sources */,
+				4CCA4A47161EC61E005B92D9 /* TransformationBuilder.cpp in Sources */,
+				4CCA4A4E161ECDDD005B92D9 /* CameraParams.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -509,6 +533,7 @@
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
+				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = lib;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -538,6 +563,7 @@
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
 				CLANG_CXX_LIBRARY = "compiler-default";
+				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EXECUTABLE_PREFIX = lib;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;

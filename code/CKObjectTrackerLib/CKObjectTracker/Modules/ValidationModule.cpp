@@ -9,6 +9,7 @@
 #include "ValidationModule.h"
 
 #include "ObjectTrackerTypesProject.h"
+#include "TransformationBuilder.h"
 
 #include "PointOperations.h"
 #include "ColorConversion.h"
@@ -43,7 +44,7 @@ void ValidationModule::setDetector(const string& value)
         _detector = new SiftFeatureDetector(_maxFeatures);
         if (getAlgorithmName(*_extractor) == "ORB") { setExtractor("SIFT"); } // can't mix them
     } else if (value == "SURF") {
-        _detector = new SurfFeatureDetector(_hessianThreshold, 4, 2, false);
+        _detector = new SurfFeatureDetector(_hessianThreshold);
     } else if (value == "ORB") {
         _detector = new OrbFeatureDetector(_maxFeatures);
         if (getAlgorithmName(*_extractor) == "SIFT") { setExtractor("ORB"); } // can't mix them
@@ -70,7 +71,7 @@ void ValidationModule::setExtractor(const string& value, bool updateMatcher)
         if (getAlgorithmName(*_detector) == "ORB") { setDetector("SIFT"); } // can't mix them
         if (updateMatcher) { _matcher = new BFMatcher(NORM_L2); }
     } else if (value == "SURF") {
-        _extractor = new SurfDescriptorExtractor(_hessianThreshold, 4, 2, false);
+        _extractor = new SurfDescriptorExtractor(_hessianThreshold);
         if (updateMatcher) { _matcher = new BFMatcher(NORM_L2); }
     } else if (value == "ORB") {
         _extractor = new OrbDescriptorExtractor(_maxFeatures);
@@ -111,9 +112,9 @@ void ValidationModule::setFastThreshold(const int& value)
     }
 }
 
-void ValidationModule::setHessianThreshold(const float& value)
+void ValidationModule::setHessianThreshold(const int& value)
 {
-    _hessianThreshold = value;
+    _hessianThreshold = (float)value;
     if (getAlgorithmName(*_detector) == "SURF") {
         setDetector("SURF"); // re-init detector
     }
@@ -223,7 +224,7 @@ ValidationModule::ValidationModule(const vector<FilterFlag>& filterFlags, int es
     _estimationMethod = estimationMethod;
     _ransacThreshold = ransacThreshold;
     _refineHomography = refineHomography;
-    _useAllKeyPointsForOutput = true;
+    _useAllKeyPointsForOutput = false;
     
     // detector, extractor, matcher params
     _detector = new SiftFeatureDetector(_maxFeatures);
@@ -237,7 +238,7 @@ ValidationModule::~ValidationModule()
 {
     // nothing to do here, because we are using opencv's smart pointers
 }
-
+    
 void ValidationModule::initWithObjectImage(const cv::Mat &objectImage) // TODO: debug info
 {
     Profiler* profiler = Profiler::Instance();
@@ -252,6 +253,11 @@ void ValidationModule::initWithObjectImage(const cv::Mat &objectImage) // TODO: 
     
     profiler->startTimer(TIMER_DETECT);
     _detector->detect(_objectImage, _objectKeyPoints);
+    // only retain the best keypoints if there are more than maxFeatures
+    if (_objectKeyPoints.size() > _maxFeatures) {
+        nth_element(_objectKeyPoints.begin(), _objectKeyPoints.begin() + _maxFeatures - 1, _objectKeyPoints.end(), compareKeypoint);
+        _objectKeyPoints.erase(_objectKeyPoints.begin() + _maxFeatures, _objectKeyPoints.end());
+    }
     profiler->stopTimer(TIMER_DETECT);
     profiler->startTimer(TIMER_EXTRACT);
     _extractor->compute(_objectImage, _objectKeyPoints, _objectDescriptors);
@@ -284,7 +290,7 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     vector<Point2f> objectCoordinates;
     vector<Point2f> objectCornersTransformed;
     vector<Point2f> objectCornersTransformedPreviousFrame;
-    vector<unsigned char> mask;
+    vector<uchar> mask;
     vector<DMatch> matches;
     bool isHomographyValid;
     Rect searchRect;
@@ -311,6 +317,11 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
     // detect keypoints and extract features (part scene image space)
     profiler->startTimer(TIMER_DETECT);
     _detector->detect(sceneImagePart, sceneKeyPoints);
+    // only retain the best keypoints if there are more than maxFeatures
+    if (sceneKeyPoints.size() > _maxFeatures) {
+        nth_element(sceneKeyPoints.begin(), sceneKeyPoints.begin() + _maxFeatures - 1, sceneKeyPoints.end(), compareKeypoint);
+        sceneKeyPoints.erase(sceneKeyPoints.begin() + _maxFeatures, sceneKeyPoints.end());
+    }
     profiler->stopTimer(TIMER_DETECT);
     profiler->startTimer(TIMER_EXTRACT);
     _extractor->compute(sceneImagePart, sceneKeyPoints, sceneDescriptors);
@@ -367,6 +378,7 @@ bool ValidationModule::internalProcess(ModuleParams& params, TrackerDebugInfo& d
 
     // set output params
     params.sceneImageCurrent.copyTo(params.sceneImagePrevious);
+    params.objectInfo = TransformationBuilder::getTransform(homography, _objectCorners, Size2f(params.sceneImageCurrent.cols, params.sceneImageCurrent.rows));
     params.previosTransformedCorners = objectCornersTransformed;
     params.isObjectPresent = isHomographyValid;
     params.homography = homography;

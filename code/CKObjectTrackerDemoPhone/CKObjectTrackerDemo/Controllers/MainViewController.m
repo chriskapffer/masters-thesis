@@ -68,9 +68,16 @@
     [[CaptureManager instance] setSessionPreset:AVCaptureSessionPreset352x288];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(captureSessionDidStartRunning) name:AVCaptureSessionDidStartRunningNotification object:nil];
     
+    double fx = 604.43273831; // Focal length in x axis
+    double fy = 604.18678406; // Focal length in y axis
+    double cx = 239.50000000; // Camera primary point x
+    double cy = 319.50000000; // Camera primary point y
+    
+    [[ObjectTrackerLibrary instance] setFocalLength:CGPointMake(fx, fy)];
+    [[ObjectTrackerLibrary instance] setPrincipalPoint:CGPointMake(cx, cy)];
     [[ObjectTrackerLibrary instance] setDelegate:self];
     [[ObjectTrackerLibrary instance] setRecordDebugInfo:NO];
-    
+
     self.arViewController = [[ARViewController alloc] init];
     self.arViewController.view.frame = self.scrollView.frame;
     [self.scrollView addSubview:self.arViewController.view];
@@ -206,7 +213,7 @@
         
         CGSize targetSize = [captureManager videoResolutionForSessionPreset:captureManager.sessionPreset];
         UIImage* image = [[info objectForKey:UIImagePickerControllerEditedImage] rotatedImageWithAngle:-M_PI_2];
-        if (!image) { image = [info objectForKey:UIImagePickerControllerOriginalImage]; }
+        if (!image) { image = [[info objectForKey:UIImagePickerControllerOriginalImage] rotatedImageWithAngle:-M_PI_2]; }
         
         [[ObjectTrackerLibrary instance] setObjectImageWithImage:[image scaledImageWithSize:targetSize]];
         [self.debugViewObject setImage:[image rotatedImageWithAngle:M_PI_2]];
@@ -277,7 +284,9 @@
         ObjectTrackerLibrary* trackerLib = [ObjectTrackerLibrary instance];
         self.arViewController.isObjectPresent = trackerLib.foundObject;
         if (trackerLib.foundObject) {
-            self.arViewController.homography = [self matrix3x3ToGLK:trackerLib.homography];
+            [self.arViewController setObjectRotation:trackerLib.objectRotation];
+            [self.arViewController setObjectTranslation:trackerLib.objectTranslation];
+            [self.arViewController setObjectScale:trackerLib.objectScale];
         }
         if ([trackerLib detectionDebugImage:&debugImage WithSearchWindow:YES]) {
             [self.debugViewDetection setImage:debugImage];
@@ -307,21 +316,6 @@
 - (void)updateNavBarItem
 {
     [self.navBarItem setTitle:[self.imageViewNames objectAtIndex:self.pageControl.currentPage]];
-}
-
-- (GLKMatrix3)matrix3x3ToGLK:(Matrix3x3)matrix
-{
-    GLKMatrix3 result;
-    result.m00 = matrix.m00;
-    result.m01 = matrix.m01;
-    result.m02 = matrix.m02;
-    result.m10 = matrix.m10;
-    result.m11 = matrix.m11;
-    result.m12 = matrix.m12;
-    result.m20 = matrix.m20;
-    result.m21 = matrix.m21;
-    result.m22 = matrix.m22;
-    return GLKMatrix3Transpose(result); // openGL is column major --> transpose!
 }
 
 @end

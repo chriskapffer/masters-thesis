@@ -60,9 +60,15 @@
 #define OT_SETTING_TRACK_DIVERGE_THRESHLD "Divergence Threshold"
 
 namespace ck {
+
+    struct Transform {
+        float scale;
+        cv::Mat rotation;
+        cv::Point2f translation;
+    };
     
     struct TrackerOutput {
-        cv::Mat homography;
+        Transform objectInfo;
         bool isObjectPresent;
         bool failed;
     };

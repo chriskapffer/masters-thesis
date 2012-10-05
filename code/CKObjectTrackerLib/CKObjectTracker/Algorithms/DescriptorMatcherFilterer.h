@@ -28,7 +28,7 @@ namespace ck {
 
         static void matchAndApplyFiltersOnlyCrop(const cv::DescriptorMatcher& matcher, const cv::Mat& descriptors1, const cv::Mat& descriptors2, std::vector<cv::DMatch>& result, const std::vector<FilterFlag>& flags, bool sortMatches, int nBestMatches, std::vector<std::pair<std::string, std::vector<cv::DMatch> > >& debugger);
         
-        static void filterMatchesWithMask(const std::vector<cv::DMatch>& matches, const std::vector<unsigned char>& mask, std::vector<cv::DMatch>& result, std::vector<std::pair<std::string, std::vector<cv::DMatch> > >& debugger);
+        static void filterMatchesWithMask(const std::vector<cv::DMatch>& matches, const std::vector<uchar>& mask, std::vector<cv::DMatch>& result, std::vector<std::pair<std::string, std::vector<cv::DMatch> > >& debugger);
     };
     
 } // end of namespace

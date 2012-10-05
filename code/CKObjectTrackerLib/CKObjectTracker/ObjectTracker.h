@@ -9,8 +9,6 @@
 #ifndef CKObjectTracker_ObjectTracker_h
 #define CKObjectTracker_ObjectTracker_h
 
-// http://opencv-users.1802565.n2.nabble.com/BRISK-td7452653.html <-- TODO: read
-
 #include "ObjectTrackerTypesPublic.h"
 
 namespace ck {
@@ -22,6 +20,11 @@ public:
     ~ObjectTracker();
     
     const Settings getSettings() const;
+    
+    void setFocalLength(const cv::Point2f& focalLength);
+    cv::Point2f getFocalLength() const;
+    void setPrincipalPoint(const cv::Point2f& principalPoint);
+    cv::Point2f getPrincipalPoint() const;
     
     void setObject(const cv::Mat& objectImage);
     void trackObjectInVideo(const cv::Mat& frame, TrackerOutput& output, TrackerDebugInfo& debugInfo);

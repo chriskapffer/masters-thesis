@@ -11,9 +11,11 @@
 
 @interface ARViewController : GLKViewController
 
-@property (nonatomic, assign) GLKMatrix3 intrinsics;
-@property (nonatomic, assign) GLKMatrix3 homography;
 @property (nonatomic, assign) CVPixelBufferRef background;
 @property (nonatomic, assign) BOOL isObjectPresent;
+
+- (void)setObjectRotation:(Matrix3x3)rotation;
+- (void)setObjectTranslation:(CGPoint)translation;
+- (void)setObjectScale:(CGFloat)scale;
 
 @end

@@ -11,6 +11,11 @@
 
 namespace ck {
     
+    inline static bool compareKeypoint(cv::KeyPoint i, cv::KeyPoint j)
+    {
+        return (i.response < j.response);
+    }
+    
     struct PointOps {
         static void move(std::vector<cv::Point2f>& points, const cv::Point2f& offset);
         
@@ -21,6 +26,8 @@ namespace ck {
         static void coordinatesOfMatches(const std::vector<cv::DMatch>& matches, const std::vector<cv::KeyPoint>& keypoints1, const std::vector<cv::KeyPoint>& keypoints2, std::vector<cv::Point2f>& coordinates1, std::vector<cv::Point2f>& coordinates2, const cv::Point2f& offset1 = cv::Point2f(), const cv::Point2f& offset2 = cv::Point2f());
         
         static void cropRect(cv::Rect& rectToCrop, const cv::Rect& rectUsedforCroping);
+        
+        static std::vector<cv::Point2f> getFilteredPoints(std::vector<cv::Point2f>& points, std::vector<uchar> mask);
     };
 
 } // end of namespace

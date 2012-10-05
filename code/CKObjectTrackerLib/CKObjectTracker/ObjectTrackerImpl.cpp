@@ -8,6 +8,7 @@
 
 #include "ObjectTrackerImpl.h"
 #include "ObjectTrackerCreator.h"
+#include "CameraParams.h"
 
 //#if defined(__has_include)
 //    #if __has_include(<future>) && __has_feature(cxx_lambdas)
@@ -55,7 +56,23 @@ ObjectTracker::Implementation::~Implementation()
     Creator::finalizeTracker(*this);
     releaseQueue();
 }
+    
+void ObjectTracker::Implementation::setFocalLength(const cv::Point2f& focalLength) {
+    CameraParams::Instance()->setFocalLength(focalLength);
+}
 
+cv::Point2f ObjectTracker::Implementation::getFocalLength() const {
+    return CameraParams::Instance()->getFocalLength();
+}
+
+void ObjectTracker::Implementation::setPrincipalPoint(const cv::Point2f& principalPoint) {
+    CameraParams::Instance()->setPrincipalPoint(principalPoint);
+}
+
+cv::Point2f ObjectTracker::Implementation::getPrincipalPoint() const {
+    return CameraParams::Instance()->getPrincipalPoint();
+}
+    
 void ObjectTracker::Implementation::initModules(const cv::Mat& objectImage)
 {
     double startTime = (double)cv::getTickCount();
@@ -126,7 +143,7 @@ void ObjectTracker::Implementation::track(const Mat& frame, TrackerOutput& outpu
     _currentModule = _allModules[_moduleParams.successor];
 
     // set ouput and debug info
-    output.homography = _moduleParams.homography;
+    output.objectInfo = _moduleParams.objectInfo;
     output.isObjectPresent = _moduleParams.isObjectPresent;
     output.failed = _currentModule->getType() == MODULE_TYPE_EMPTY;
 }

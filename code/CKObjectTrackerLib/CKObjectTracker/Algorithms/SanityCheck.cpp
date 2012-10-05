@@ -26,7 +26,7 @@ struct Line2f
     Line2f(float sX, float sY, float eX, float eY) : sX(sX), sY(sY), eX(eX), eY(eY) { }
 };
 
-bool SanityCheck::checkRectangle(const vector<Point2f>& cornersTransformed)
+bool SanityCheck::checkRectangle(const vector<Point2f>& cornersTransformed, Point2f& intersectionPoint)
 {
     // The rectangle is convex and not twisted, if the lines
     // between opposing points intersect with each other.
@@ -50,7 +50,12 @@ bool SanityCheck::checkRectangle(const vector<Point2f>& cornersTransformed)
     // The fractional point will be between 0 and 1 inclusive if the lines
     // intersect. If the fractional calculation is larger than 1 or smaller
     // than 0 the lines would need to be longer to intersect.
-    return (ua != 0.0f && ub != 0.0f) && (ua >= 0.0f && ua <= 1.0f) && (ub >= 0.0f && ub <= 1.0f);
+    if ((ua != 0.0f && ub != 0.0f) && (ua >= 0.0f && ua <= 1.0f) && (ub >= 0.0f && ub <= 1.0f)) {
+        intersectionPoint.x = l1.sX + (ua * (l1.eX - l1.sX));
+        intersectionPoint.y = l1.sY + (ua * (l1.eY - l1.sY));
+        return true;
+    }
+    return false;
 }
 
 bool SanityCheck::checkBoundaries(const vector<Point2f>& cornersTransformed, int width, int height)
@@ -71,6 +76,10 @@ static float angleBetween(const Point2f& v1, const Point2f& v2)
     float dot = v1.x * v2.x + v1.y * v2.y;
     return acos(dot / (length1 * length2));
 }
+    
+    // TODO: check min Angle
+    // TODO: check Area
+    
     
 bool SanityCheck::checkAngleSimilarity(const vector<Point2f>& cornersTransformed, float maxAngleOffsetInDeg)
 {
@@ -103,10 +112,12 @@ bool SanityCheck::validate(const cv::Mat& homography, const cv::Size& imageSize,
 bool SanityCheck::validate(const cv::Mat& homography, const cv::Size& imageSize, const std::vector<cv::Point2f>& corners, std::vector<cv::Point2f>& cornersTransformed, cv::Rect& boundingRect, bool cropBoundingRectToImageSize)
 {
     perspectiveTransform(corners, cornersTransformed, homography);
+    
+    Point2f dummy;
     bool isValid = true
         //&& checkBoundaries(cornersTransformed, imageSize.width, imageSize.height)
         //&& checkAngleSimilarity(cornersTransformed, MAX_ANGLE_OFFSET_DEG)
-        && checkRectangle(cornersTransformed);
+        && checkRectangle(cornersTransformed, dummy);
 
     boundingRect = cv::boundingRect(cornersTransformed);
     if (cropBoundingRectToImageSize) {

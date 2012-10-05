@@ -24,6 +24,22 @@ ObjectTracker::~ObjectTracker()
 const Settings ObjectTracker::getSettings() const {
     return mImpl->getSettings();
 }
+
+void ObjectTracker::setFocalLength(const cv::Point2f& focalLength) {
+    mImpl->setFocalLength(focalLength);
+}
+
+cv::Point2f ObjectTracker::getFocalLength() const {
+    return mImpl->getFocalLength();
+}
+
+void ObjectTracker::setPrincipalPoint(const cv::Point2f& principalPoint) {
+    mImpl->setPrincipalPoint(principalPoint);
+}
+
+cv::Point2f ObjectTracker::getPrincipalPoint() const {
+    return mImpl->getPrincipalPoint();
+}
     
 void ObjectTracker::setObject(const cv::Mat& objectImage) {
     mImpl->setObject(objectImage);

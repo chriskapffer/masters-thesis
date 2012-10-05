@@ -28,8 +28,11 @@
 @property (nonatomic, assign) GLKMatrix4 projectionMatrix;
 @property (nonatomic, assign) GLKMatrix4 modelMatrix;
 @property (nonatomic, assign) GLKMatrix4 viewMatrix;
-@property (nonatomic, assign) GLKMatrix3 invIntrinsics;
 @property (nonatomic, assign) CGSize viewPortSize;
+
+@property (nonatomic, assign) GLKMatrix4 objectRotationMatrix;
+@property (nonatomic, assign) GLKMatrix4 objectTranslationMatrix;
+@property (nonatomic, assign) GLKMatrix4 objectScaleMatrix;
 
 @property (nonatomic, strong) BackgroundTexture* backgroundTexture;
 @property (nonatomic, strong) DrawableObject* drawableObject;
@@ -51,9 +54,10 @@
 @synthesize backgroundTexture = _backgroundTexture;
 @synthesize drawableObject = _drawableObject;
 
-@synthesize intrinsics = _intrinsics;
-@synthesize invIntrinsics = _invIntrinsics;
-@synthesize homography = _homography;
+@synthesize objectRotationMatrix = _objectRotationMatrix;
+@synthesize objectTranslationMatrix = _objectTranslationMatrix;
+@synthesize objectScaleMatrix = _objectScaleMatrix;
+
 @synthesize background = _background;
 @synthesize drawObject = _drawObject;
 @synthesize isObjectPresent = _isObjectPresent;
@@ -68,20 +72,34 @@
     _viewPortSize = viewPortSize;
 }
 
-- (void)setIntrinsics:(GLKMatrix3)intrinsics
+- (void)setObjectRotation:(Matrix3x3)rotation
 {
-    _intrinsics = intrinsics;
-    bool isInvertible;
-    _invIntrinsics = GLKMatrix3Invert(intrinsics, &isInvertible);
-    if (!isInvertible) {
-        NSLog(@"Failed to invert camera matrix!");
-    }
+    _objectRotationMatrix = GLKMatrix4MakeAndTranspose(
+                                rotation.m00, rotation.m01, rotation.m02, 0,
+                                rotation.m10, rotation.m11, rotation.m12, 0,
+                                rotation.m20, rotation.m21, rotation.m22, 0,
+                                           0,            0,            0, 1); // openGL is column major --> transpose!
 }
 
-- (void)setHomography:(GLKMatrix3)homography
+- (void)setObjectTranslation:(CGPoint)translation
 {
-    [self updateModelMatrixWithHomography:homography];
-    _homography = homography;
+    translation.x -= 0.5f; // move to center
+    translation.y -= 0.5f; // move to center
+    
+    float aspect = fabsf(self.viewPortSize.width / self.viewPortSize.height);
+    float fov = GLKMathDegreesToRadians(FIELD_OF_VIEW_DEG) * aspect;
+    float halfWidthProjPlane = tanf(fov) * CAM_DIST;
+    float halfHeightProjPlane = tanf(fov) * CAM_DIST;
+    
+    translation.x *= halfWidthProjPlane;
+    translation.y *= halfHeightProjPlane;
+
+    self.objectTranslationMatrix = GLKMatrix4MakeTranslation(translation.x, translation.y, 0);
+}
+
+- (void)setObjectScale:(CGFloat)scale
+{
+    self.objectScaleMatrix = GLKMatrix4MakeScale(scale, scale, scale);
 }
 
 - (void)setBackground:(CVPixelBufferRef)background
@@ -137,15 +155,7 @@
     self.viewMatrix = GLKMatrix4MakeLookAt( 0, 0, -CAM_DIST, // pos
                                             0, 0,  0, // dst
                                            -1, 0,  0); // up
-    
-    double fx = 604.43273831; // Focal length in x axis
-    double fy = 604.18678406; // Focal length in y axis
-    double cx = 239.50000000; // Camera primary point x
-    double cy = 319.50000000; // Camera primary point y
-    self.intrinsics = GLKMatrix3MakeAndTranspose(fx,  0, cx,
-                                                  0, fy, cy,
-                                                  0,  0,  1); // openGL is column major --> transpose!
-    
+        
     [self setViewPortSize:self.view.bounds.size];
     [self setPreferredFramesPerSecond:PREFERRED_FRAMES_PER_SECOND];
     [self setIsObjectPresent:NO];
@@ -217,6 +227,10 @@
     [self setViewPortSize:self.view.bounds.size];
     self.backgroundTexture.viewPortSize = self.viewPortSize;
     
+    self.modelMatrix = GLKMatrix4Multiply(GLKMatrix4Multiply(self.objectTranslationMatrix, self.objectRotationMatrix), self.objectScaleMatrix);
+    //self.modelMatrix = GLKMatrix4Multiply(self.objectTranslationMatrix, self.objectScaleMatrix);
+
+    
     self.baseEffect.transform.projectionMatrix = self.projectionMatrix;
     self.baseEffect.transform.modelviewMatrix = GLKMatrix4Multiply(self.viewMatrix, self.modelMatrix);
     
@@ -266,66 +280,4 @@
     self.projectionMatrix = GLKMatrix4MakePerspective(fovRad, aspect, NEAR_PLANE, FAR_PLANE);
 }
 
-- (void)updateModelMatrixWithHomography:(GLKMatrix3)homography
-{
-    // Column vectors of homography
-    GLKVector3 h1 = GLKMatrix3GetColumn(homography, 0);
-    GLKVector3 h2 = GLKMatrix3GetColumn(homography, 1);
-    
-    // inverse
-    GLKVector3 invH1 = GLKMatrix3MultiplyVector3(self.invIntrinsics, h1);
-    GLKVector3 invH2 = GLKMatrix3MultiplyVector3(self.invIntrinsics, h2);
-    
-    // Column vectors of rotation matrix
-    GLKVector3 r1 = GLKVector3Normalize(invH1);
-    GLKVector3 r2 = GLKVector3Normalize(invH2);
-    GLKVector3 r3 = GLKVector3CrossProduct(r1, r2);
-    GLKMatrix4 rotationMatrix = GLKMatrix4MakeAndTranspose(r1.x, r2.x, r3.x, 0,
-                                                           r1.y, r2.y, r3.y, 0,
-                                                           r1.z, r2.z, r3.z, 0,
-                                                              0,    0,    0, 1); // openGL is column major --> transpose!
-    
-    float scaleFactor = (homography.m00 + homography.m11) / 2.0f;
-    GLKMatrix4 scaleMatrix = GLKMatrix4MakeScale(scaleFactor, scaleFactor, scaleFactor);
-
-    float sceneWidth = self.backgroundTexture.textureSize.width;
-    float sceneHeight = self.backgroundTexture.textureSize.height;
-    float objectSize = MIN(sceneWidth, sceneHeight) * scaleFactor; // TODO: get real object width and height
-    float offsetX = (sceneWidth - objectSize) / 2.0f;
-    float offsetY = (sceneHeight - objectSize) / 2.0f;
-    GLKVector3 t = GLKVector3Make(homography.m20 - offsetX, homography.m21 - offsetY, 0); // translation from center in px
-    t.x = t.x / (sceneWidth * 0.5f); // normalized
-    t.y = t.y / (sceneHeight * 0.5f); // normalized
-    
-    float aspect = fabsf(self.viewPortSize.width / self.viewPortSize.height);
-    float fovY = GLKMathDegreesToRadians(FIELD_OF_VIEW_DEG);
-    float fovX = fovY * aspect;
-    float halfWidthProjPlane = tanf(fovX / 2.0f) * CAM_DIST;
-    float halfHeightProjPlane = tanf(fovY / 2.0f) * CAM_DIST;
-
-    t.x *= halfWidthProjPlane;
-    t.y *= halfHeightProjPlane;
-    GLKMatrix4 translationMatrix = GLKMatrix4MakeTranslation(t.x, t.y, 0);
-    
-    self.modelMatrix = GLKMatrix4Multiply(GLKMatrix4Multiply(translationMatrix, rotationMatrix), scaleMatrix);
-}
-// http://stackoverflow.com/questions/5342330/how-to-augment-cube-onto-a-specific-position-using-3x3-homography
-
 @end
-
-// http://urbanar.blogspot.de/2011/04/from-homography-to-opengl-modelview.html
-// http://en.wikipedia.org/wiki/Camera_matrix
-// http://en.wikipedia.org/wiki/Camera_resectioning
-// http://www.songho.ca/opengl/gl_projectionmatrix.html
-// http://www.songho.ca/opengl/gl_transform.html
-// 
-// http://www.cse.unr.edu/~bebis/CS791E/Notes/CameraParameters.pdf
-// http://sightations.wordpress.com/2010/08/03/simulating-calibrated-cameras-in-opengl/
-// http://www.opengl.org/discussion_boards/showthread.php/168267-Real-world-camera-parameters?p=1186938#post1186938
-// http://stackoverflow.com/questions/3712049/how-to-use-an-opencv-rotation-and-translation-vector-with-opengl-es-in-android
-// http://dsp.stackexchange.com/questions/2736/step-by-step-camera-pose-estimation-for-visual-tracking-and-planar-markers
-
-// ( http://vision.ucla.edu//MASKS/MASKS-ch5.pdf )
-
-// http://docs.opencv.org/doc/tutorials/calib3d/camera_calibration/camera_calibration.html#cameracalibrationopencv
-// http://stackoverflow.com/questions/3594199/iphone-4-camera-specifications-field-of-view-vertical-horizontal-angle

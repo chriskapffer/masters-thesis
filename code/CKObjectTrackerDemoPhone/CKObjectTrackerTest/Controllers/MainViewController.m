@@ -65,6 +65,14 @@
 {
     [super viewDidLoad];
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:NO];
+    
+    double fx = 604.43273831; // Focal length in x axis
+    double fy = 604.18678406; // Focal length in y axis
+    double cx = 239.50000000; // Camera primary point x
+    double cy = 319.50000000; // Camera primary point y
+    
+    [[ObjectTrackerLibrary instance] setFocalLength:CGPointMake(fx, fy)];
+    [[ObjectTrackerLibrary instance] setPrincipalPoint:CGPointMake(cx, cy)];
     [[ObjectTrackerLibrary instance] setDelegate:self];
     
     self.settingsController = nil;
@@ -222,7 +230,9 @@
         ObjectTrackerLibrary* trackerLib = [ObjectTrackerLibrary instance];
         self.arViewController.isObjectPresent = trackerLib.foundObject;
         if (trackerLib.foundObject) {
-            self.arViewController.homography = [self matrix3x3ToGLK:trackerLib.homography];
+            [self.arViewController setObjectRotation:trackerLib.objectRotation];
+            [self.arViewController setObjectTranslation:trackerLib.objectTranslation];
+            [self.arViewController setObjectScale:trackerLib.objectScale];
         }
         if ([trackerLib detectionDebugImage:&debugImage WithSearchWindow:YES]) {
             [self.debugViewDetection setImage:debugImage];

@@ -7,3 +7,9 @@
 //
 
 #define trace() NSLog(@"%s", __PRETTY_FUNCTION__)
+
+typedef struct {
+    CGFloat m00, m01, m02;
+    CGFloat m10, m11, m12;
+    CGFloat m20, m21, m22;
+} Matrix3x3;

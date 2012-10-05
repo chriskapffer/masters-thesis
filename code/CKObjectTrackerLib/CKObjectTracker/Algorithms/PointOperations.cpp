@@ -67,4 +67,17 @@ namespace ck {
         rectToCrop.height = MIN(rectToCrop.height, rectUsedforCroping.height - rectToCrop.y);
     }
     
+    vector<Point2f> PointOps::getFilteredPoints(vector<Point2f>& points, vector<uchar> mask)
+    {
+        vector<Point2f> result = vector<Point2f>();
+        assert(points.size() == mask.size());
+        if (!result.empty()) { result.clear(); }
+        for (int i = 0; i < mask.size(); i++) {
+            if (mask[i] == 1) {
+                result.push_back(points[i]);
+            }
+        }
+        return result;
+    }
+    
 } // end of namespace

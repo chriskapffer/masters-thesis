@@ -91,19 +91,30 @@ using namespace cv;
     return self.trackerOutput.isObjectPresent;
 }
 
-- (Matrix3x3)homography
+- (CGFloat)objectScale
 {
-    Mat homography = self.trackerOutput.homography;
+    return self.trackerOutput.objectInfo.scale;
+}
+
+- (CGPoint)objectTranslation
+{
+    Point2f position = self.trackerOutput.objectInfo.translation;
+    return CGPointMake(position.x, position.y);
+}
+
+- (Matrix3x3)objectRotation
+{
+    Mat rotation = self.trackerOutput.objectInfo.rotation;
     Matrix3x3 result;
-    result.m00 = homography.at<double>(0,0);
-    result.m10 = homography.at<double>(1,0);
-    result.m20 = homography.at<double>(2,0);
-    result.m01 = homography.at<double>(0,1);
-    result.m11 = homography.at<double>(1,1);
-    result.m21 = homography.at<double>(2,1);
-    result.m02 = homography.at<double>(0,2);
-    result.m12 = homography.at<double>(1,2);
-    result.m22 = homography.at<double>(2,2);
+    result.m00 = rotation.at<double>(0,0);
+    result.m10 = rotation.at<double>(1,0);
+    result.m20 = rotation.at<double>(2,0);
+    result.m01 = rotation.at<double>(0,1);
+    result.m11 = rotation.at<double>(1,1);
+    result.m21 = rotation.at<double>(2,1);
+    result.m02 = rotation.at<double>(0,2);
+    result.m12 = rotation.at<double>(1,2);
+    result.m22 = rotation.at<double>(2,2);
     return result;
 }
 
@@ -155,6 +166,14 @@ using namespace cv;
     dispatch_release(_setObjectImageQueue);
     _outputDataLock = nil;
     _debugDataLock = nil;
+}
+
+- (void)setFocalLength:(CGPoint)focalLength {
+    _tracker->setFocalLength(Point2f(focalLength.x, focalLength.y));
+}
+
+- (void)setPrincipalPoint:(CGPoint)principalPoint {
+    _tracker->setPrincipalPoint(Point2f(principalPoint.x, principalPoint.y));
 }
 
 #pragma mark - object related methods
@@ -378,8 +397,8 @@ using namespace cv;
         }
     }
     if (self.trackerOutput.isObjectPresent) {
-        if ([self.delegate respondsToSelector:@selector(trackedObjectWithHomography:)]) {
-            [self.delegate trackedObjectWithHomography:[self homography]];
+        if ([self.delegate respondsToSelector:@selector(trackedObjectSuccessfully)]) {
+            [self.delegate trackedObjectSuccessfully];
         }
     }
     if ([self.delegate respondsToSelector:@selector(trackerLibraryDidProcessFrame)]) {
@@ -390,8 +409,8 @@ using namespace cv;
 - (void)handleTrackingInImageResult
 {
     if (self.trackerOutput.isObjectPresent) {
-        if ([self.delegate respondsToSelector:@selector(trackedObjectWithHomography:)]) {
-            [self.delegate trackedObjectWithHomography:[self homography]];
+        if ([self.delegate respondsToSelector:@selector(trackedObjectSuccessfully)]) {
+            [self.delegate trackedObjectSuccessfully];
         }
     } else {
         if ([self.delegate respondsToSelector:@selector(failedToTrackObjectInImage)]) {

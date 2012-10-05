@@ -9,6 +9,7 @@
 #ifndef CKObjectTrackerLib_ModuleParams_h
 #define CKObjectTrackerLib_ModuleParams_h
 
+#include "TransformationBuilder.h"
 #include "ModuleTypes.h"
 
 namespace ck {
@@ -18,6 +19,7 @@ namespace ck {
         cv::Mat sceneImageCurrent;       // OUT: -                    IN: detection, validation, tracking
         cv::Rect searchRect;             // OUT:  detection, tracking IN: detection, validation
         bool isObjectPresent;            // OUT: validation, tracking IN: -
+        Transform objectInfo;            // OUT: validation, tracking IN: -
         cv::Mat homography;              // OUT: validation, tracking IN: tracking
         cv::Mat sceneImagePrevious;      // OUT: validation, tracking IN: tracking
         std::vector<cv::Point2f> points; // OUT: validation, tracking IN: tracking

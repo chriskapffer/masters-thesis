@@ -184,7 +184,7 @@ void MatcherFilterer::matchAndApplyFiltersOnlyCrop(const DescriptorMatcher& matc
     profiler->stopTimer(TIMER_FILTER);
 }
 
-void MatcherFilterer::filterMatchesWithMask(const vector<DMatch>& matches, const vector<unsigned char>& mask, vector<DMatch>& result, vector<pair<string, vector<DMatch> > >& debugger)
+void MatcherFilterer::filterMatchesWithMask(const vector<DMatch>& matches, const vector<uchar>& mask, vector<DMatch>& result, vector<pair<string, vector<DMatch> > >& debugger)
 {
     assert(matches.size() == mask.size());
     Profiler* profiler = Profiler::Instance();
