@@ -10,6 +10,7 @@
 #import "teapot.h"
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
+#define kTeapotScale 8.0f
 
 GLfloat gCubeVertexData[216] =
 {
@@ -138,7 +139,7 @@ GLfloat gCubeVertexData[216] =
     if (_isTeapot) {
         GLKMatrix4 tmp = effect.transform.modelviewMatrix;
         GLKMatrix4 rotation = GLKMatrix4MakeRotation(M_PI_2, -1, 0, 0);
-        GLKMatrix4 scale = GLKMatrix4MakeScale(10, 10, 10);
+        GLKMatrix4 scale = GLKMatrix4MakeScale(kTeapotScale, kTeapotScale, kTeapotScale);
         effect.transform.modelviewMatrix = GLKMatrix4Multiply(GLKMatrix4Multiply(tmp, rotation), scale);
         [effect prepareToDraw];
         for(int i = 0; i < num_teapot_indices; i += new_teapot_indicies[i] + 1)
