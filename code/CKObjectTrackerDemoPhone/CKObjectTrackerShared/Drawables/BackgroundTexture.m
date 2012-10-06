@@ -101,17 +101,24 @@ static const GLfloat gQuadVertices[VERTEX_COUNT] = {
         glUseProgram(_program);
         glUniform1i(uniforms[UNIFORM_VIDEO_FRAME], 0);
         
-        glGenBuffers(1, &_positionVBO);
-        glGenBuffers(1, &_texcoordVBO);
+        glGenVertexArraysOES(1, &_vertexArray);
+        glBindVertexArrayOES(_vertexArray);
         
-//        glGenVertexArraysOES(1, &_vertexArray);
-//        glBindVertexArrayOES(_vertexArray);
-//        
-//        glGenBuffers(1, &_positionVBO);
-//        glBindBuffer(GL_ARRAY_BUFFER, _positionVBO);
-//        glBufferData(GL_ARRAY_BUFFER, sizeof(gQuadVertices), gQuadVertices, GL_DYNAMIC_DRAW);
-//
-//        glBindVertexArrayOES(0);
+        glGenBuffers(1, &_positionVBO);
+        glBindBuffer(GL_ARRAY_BUFFER, _positionVBO);
+        glBufferData(GL_ARRAY_BUFFER, VERTEX_COUNT * sizeof(GLfloat), gQuadVertices, GL_STATIC_DRAW);
+        
+        glEnableVertexAttribArray(ATTRIB_VERTEX);
+        glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
+        
+        glGenBuffers(1, &_texcoordVBO);
+        glBindBuffer(GL_ARRAY_BUFFER, _texcoordVBO);
+        glBufferData(GL_ARRAY_BUFFER, VERTEX_COUNT * sizeof(GLfloat), _textureVertices, GL_DYNAMIC_DRAW);
+        
+        glEnableVertexAttribArray(ATTRIB_TEXCOORD);
+        glVertexAttribPointer(ATTRIB_TEXCOORD, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
+        
+        glBindVertexArrayOES(0);
     }
     return self;
 }
@@ -149,21 +156,6 @@ static const GLfloat gQuadVertices[VERTEX_COUNT] = {
     uniforms[0] = glGetUniformLocation(_program, "Videoframe");
 }
 
-- (void)initBuffers
-{    
-    glBindBuffer(GL_ARRAY_BUFFER, _positionVBO);
-    glBufferData(GL_ARRAY_BUFFER, VERTEX_COUNT * sizeof(GLfloat), gQuadVertices, GL_STATIC_DRAW);
-    
-    glEnableVertexAttribArray(ATTRIB_VERTEX);
-    glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, _texcoordVBO);
-    glBufferData(GL_ARRAY_BUFFER, VERTEX_COUNT * sizeof(GLfloat), _textureVertices, GL_DYNAMIC_DRAW);
-    
-    glEnableVertexAttribArray(ATTRIB_TEXCOORD);
-    glVertexAttribPointer(ATTRIB_TEXCOORD, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0);
-}
-
 - (void)cleanUpTextures
 {
     if (_backgroundTexture)
@@ -177,23 +169,17 @@ static const GLfloat gQuadVertices[VERTEX_COUNT] = {
 
 - (void)draw
 {
-//    glBindVertexArrayOES(_vertexArray);
-//
-//    glUseProgram(_program);
-//    glUniform1i(uniforms[UNIFORM_VIDEO_FRAME], 0);
-//    
-    //[self initBuffers];
+    glBindVertexArrayOES(_vertexArray);
 
-    
-    
-
+    glBindBuffer(GL_ARRAY_BUFFER, _texcoordVBO);
+    glBufferData(GL_ARRAY_BUFFER, VERTEX_COUNT * sizeof(GLfloat), _textureVertices, GL_DYNAMIC_DRAW);
     
     glUseProgram(_program);
     glUniform1i(uniforms[UNIFORM_VIDEO_FRAME], 0);
     
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     
-//    glBindVertexArrayOES(0);
+    glBindVertexArrayOES(0);
 }
 
 - (void)updateContent:(CVPixelBufferRef)pixelBuffer
@@ -244,7 +230,6 @@ static const GLfloat gQuadVertices[VERTEX_COUNT] = {
         CGRectGetMinX(textureSamplingRect), CGRectGetMinY(textureSamplingRect), // 0
     };
     memcpy(_textureVertices, tmp, sizeof(tmp));
-    [self initBuffers];
 }
 
 // code from: https://developer.apple.com/library/ios/samplecode/RosyWriter/Listings/Classes_RosyWriterPreviewView_m.html#//apple_ref/doc/uid/DTS40011110-Classes_RosyWriterPreviewView_m-DontLinkElementID_6

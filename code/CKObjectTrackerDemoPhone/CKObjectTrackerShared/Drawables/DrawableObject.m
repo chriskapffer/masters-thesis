@@ -7,7 +7,7 @@
 //
 
 #import "DrawableObject.h"
-#import <GLKit/GLKit.h>
+#import "teapot.h"
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
@@ -62,16 +62,20 @@ GLfloat gCubeVertexData[216] =
 {
     GLuint _vertexArray;
     GLuint _vertexBuffer;
+    GLuint _normalBuffer;
+    BOOL _isTeapot;
 }
 
 @end
 
 @implementation DrawableObject
 
-- (id)init
+- (id)initCube
 {
     self = [super init];
     if (self) {
+        _isTeapot = NO;
+        
         glGenVertexArraysOES(1, &_vertexArray);
         glBindVertexArrayOES(_vertexArray);
         
@@ -89,17 +93,63 @@ GLfloat gCubeVertexData[216] =
     return self;
 }
 
+- (id)initTeapot
+{
+    self = [super init];
+    if (self) {
+        _isTeapot = YES;
+        
+        glGenVertexArraysOES(1, &_vertexArray);
+        glBindVertexArrayOES(_vertexArray);
+        
+        glGenBuffers(1, &_vertexBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(teapot_vertices), teapot_vertices, GL_STATIC_DRAW);
+        
+        glEnableVertexAttribArray(GLKVertexAttribPosition);
+        glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 12, BUFFER_OFFSET(0));
+        
+        glGenBuffers(1, &_normalBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, _normalBuffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(teapot_normals), teapot_normals, GL_STATIC_DRAW);
+        
+        glEnableVertexAttribArray(GLKVertexAttribNormal);
+        glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, 12, BUFFER_OFFSET(0));
+        
+        glBindVertexArrayOES(0);
+    }
+    return self;
+}
+
 - (void)dealloc
 {
     glDeleteBuffers(1, &_vertexBuffer);
+    if (_isTeapot) {
+        glDeleteBuffers(1, &_normalBuffer);
+    }
+
     glDeleteVertexArraysOES(1, &_vertexArray);
 }
 
-- (void)draw
+- (void)drawWithEffect:(GLKBaseEffect*)effect
 {
     glBindVertexArrayOES(_vertexArray);
     
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    if (_isTeapot) {
+        GLKMatrix4 tmp = effect.transform.modelviewMatrix;
+        GLKMatrix4 rotation = GLKMatrix4MakeRotation(M_PI_2, -1, 0, 0);
+        GLKMatrix4 scale = GLKMatrix4MakeScale(10, 10, 10);
+        effect.transform.modelviewMatrix = GLKMatrix4Multiply(GLKMatrix4Multiply(tmp, rotation), scale);
+        [effect prepareToDraw];
+        for(int i = 0; i < num_teapot_indices; i += new_teapot_indicies[i] + 1)
+        {
+            glDrawElements(GL_TRIANGLE_STRIP, new_teapot_indicies[i], GL_UNSIGNED_SHORT, &new_teapot_indicies[i+1]);
+        }
+        effect.transform.modelviewMatrix = tmp;
+    } else {
+        [effect prepareToDraw];
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
     
     glBindVertexArrayOES(0);
 }

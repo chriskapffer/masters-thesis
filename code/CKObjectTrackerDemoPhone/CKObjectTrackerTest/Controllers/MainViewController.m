@@ -66,10 +66,15 @@
     [super viewDidLoad];
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:NO];
     
-    double fx = 604.43273831; // Focal length in x axis
-    double fy = 604.18678406; // Focal length in y axis
-    double cx = 239.50000000; // Camera primary point x
-    double cy = 319.50000000; // Camera primary point y
+    //    double fx = 604.43273831; // Focal length in x axis
+    //    double fy = 604.18678406; // Focal length in y axis
+    //    double cx = 239.50000000; // Camera primary point x
+    //    double cy = 319.50000000; // Camera primary point y
+    
+    double fx = 352.37493026; // Focal length in x axis
+    double fy = 352.87076710; // Focal length in y axis
+    double cx = 143.50000000; // Camera primary point x
+    double cy = 175.50000000; // Camera primary point y
     
     [[ObjectTrackerLibrary instance] setFocalLength:CGPointMake(fx, fy)];
     [[ObjectTrackerLibrary instance] setPrincipalPoint:CGPointMake(cx, cy)];

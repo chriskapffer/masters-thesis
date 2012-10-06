@@ -163,6 +163,7 @@
 		4C8620E515FC2CB400C72DE7 /* UIView+EasyFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+EasyFrame.h"; sourceTree = "<group>"; };
 		4C8620E615FC2CB400C72DE7 /* UIView+EasyFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+EasyFrame.m"; sourceTree = "<group>"; };
 		4C962F0015F96A3500C804E5 /* testdata */ = {isa = PBXFileReference; lastKnownFileType = folder; name = testdata; path = ../../../testdata; sourceTree = "<group>"; };
+		4CCA4A55161F4B67005B92D9 /* teapot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = teapot.h; sourceTree = "<group>"; };
 		4CCC7D0515FCF97F007DFC92 /* UIImage+PixelBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+PixelBuffer.h"; sourceTree = "<group>"; };
 		4CCC7D0615FCF97F007DFC92 /* UIImage+PixelBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+PixelBuffer.m"; sourceTree = "<group>"; };
 		4CD7FF22161DF16A00E5C5EA /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -407,6 +408,7 @@
 				4C8511461601319E002AEB77 /* DrawableObject.m */,
 				4C79806F16023502009693C0 /* BackgroundTexture.h */,
 				4C79807016023502009693C0 /* BackgroundTexture.m */,
+				4CCA4A55161F4B67005B92D9 /* teapot.h */,
 			);
 			path = Drawables;
 			sourceTree = "<group>";

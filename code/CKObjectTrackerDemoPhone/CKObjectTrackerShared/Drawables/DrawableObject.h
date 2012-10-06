@@ -7,9 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <GLKit/GLKit.h>
 
 @interface DrawableObject : NSObject
 
-- (void)draw;
+- (id)initCube;
+- (id)initTeapot;
+
+- (void)drawWithEffect:(GLKBaseEffect*)effect;
 
 @end

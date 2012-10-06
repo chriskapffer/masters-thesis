@@ -32,7 +32,6 @@ namespace ck {
         _intrinsics.at<double>(0,0) = _focalLength.x;
         _intrinsics.at<double>(1,1) = _focalLength.y;
         _inverseIntrinsics = _intrinsics.inv();
-        std::cout << _intrinsics << std::endl;
     }
     
     void CameraParams::setPrincipalPoint(const cv::Point2f& principalPoint)
@@ -41,7 +40,6 @@ namespace ck {
         _intrinsics.at<double>(0,2) = _principalPoint.x;
         _intrinsics.at<double>(1,2) = _principalPoint.y;
         _inverseIntrinsics = _intrinsics.inv();
-        std::cout << _intrinsics << std::endl;
     }
 }
 

@@ -12,8 +12,9 @@
 
 #define FIELD_OF_VIEW_DEG 60
 #define NEAR_PLANE 0.1f
-#define FAR_PLANE 1000.0f
+#define FAR_PLANE 100.0f
 #define CAM_DIST 3.0f
+#define SCALE_CUT_OFF 0.5f
 
 #define PREFERRED_FRAMES_PER_SECOND 30
 #define MAX_FRAMES_WITHOUT_OBJECT (PREFERRED_FRAMES_PER_SECOND * 1.0f)
@@ -87,18 +88,19 @@
     translation.y -= 0.5f; // move to center
     
     float aspect = fabsf(self.viewPortSize.width / self.viewPortSize.height);
-    float fov = GLKMathDegreesToRadians(FIELD_OF_VIEW_DEG) * aspect;
-    float halfWidthProjPlane = tanf(fov) * CAM_DIST;
-    float halfHeightProjPlane = tanf(fov) * CAM_DIST;
-    
-    translation.x *= halfWidthProjPlane;
-    translation.y *= halfHeightProjPlane;
+    float fovY = GLKMathDegreesToRadians(FIELD_OF_VIEW_DEG);
+    float fovX = fovY * aspect;
+    float halfHeightProjPlane = tanf(fovY / 2.0f) * CAM_DIST;
+    float halfWidthProjPlane = tanf(fovX / 2.0f) * CAM_DIST;
+    translation.x *= halfHeightProjPlane * 2.0f;
+    translation.y *= halfWidthProjPlane * 2.0f;
 
     self.objectTranslationMatrix = GLKMatrix4MakeTranslation(translation.x, translation.y, 0);
 }
 
 - (void)setObjectScale:(CGFloat)scale
 {
+    scale = powf(scale, SCALE_CUT_OFF);
     self.objectScaleMatrix = GLKMatrix4MakeScale(scale, scale, scale);
 }
 
@@ -142,14 +144,14 @@
     GLKView *view = (GLKView *)self.view;
     view.context = self.context;
     view.drawableColorFormat = GLKViewDrawableColorFormatRGB565; // or GLKViewDrawableColorFormatRGBA8888
-    //view.drawableDepthFormat = GLKViewDrawableDepthFormat16; // or GLKViewDrawableDepthFormat24
+    view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
     view.drawableMultisample = GLKViewDrawableMultisample4X;
     
     [self setupOpenGL];
     
     // init objects
     self.backgroundTexture = [[BackgroundTexture alloc] initWithContext:self.context];
-    self.drawableObject = [[DrawableObject alloc] init];
+    self.drawableObject = [[DrawableObject alloc] initTeapot];
     
     self.modelMatrix = GLKMatrix4Identity;
     self.viewMatrix = GLKMatrix4MakeLookAt( 0, 0, -CAM_DIST, // pos
@@ -212,11 +214,12 @@
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
+    glDisable(GL_DEPTH_TEST);
     [self.backgroundTexture draw];
     
-    [self.baseEffect prepareToDraw];
+    glEnable(GL_DEPTH_TEST);
     if (self.drawObject) {
-        [self.drawableObject draw];
+        [self.drawableObject drawWithEffect:self.baseEffect];
     }
 }
 
@@ -228,8 +231,6 @@
     self.backgroundTexture.viewPortSize = self.viewPortSize;
     
     self.modelMatrix = GLKMatrix4Multiply(GLKMatrix4Multiply(self.objectTranslationMatrix, self.objectRotationMatrix), self.objectScaleMatrix);
-    //self.modelMatrix = GLKMatrix4Multiply(self.objectTranslationMatrix, self.objectScaleMatrix);
-
     
     self.baseEffect.transform.projectionMatrix = self.projectionMatrix;
     self.baseEffect.transform.modelviewMatrix = GLKMatrix4Multiply(self.viewMatrix, self.modelMatrix);
@@ -247,16 +248,14 @@
 - (void)setupOpenGL
 {
     [EAGLContext setCurrentContext:self.context];
-    // set clear color
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    // enable culling and depth test
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-
+    
     // init base effect (mimics fixed function pipeline)
     self.baseEffect = [[GLKBaseEffect alloc] init];
     self.baseEffect.light0.diffuseColor = GLKVector4Make(1.0f, 0.4f, 0.4f, 1.0f);
     self.baseEffect.light0.enabled = GL_TRUE;
+    
+    // set clear color
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 - (void)tearDownOpenGL
