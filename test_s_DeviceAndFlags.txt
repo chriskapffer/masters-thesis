@@ -394,3 +394,35 @@ estimating:	3.669303 ms (9.07%)
 validating:	0.050000 ms (0.12%)
 other:		1.225469 ms (3.03%)
 delta transform (px): 21.692
+
+########################################################
+
+vid 640x480
+bgra to gray
+iPhone 4S
+
+############################
+
+regular openCV-build
+cv::cvtColor
+
+converting:	20.377208 ms
+
+############################
+
+NEON
+
+converting:	10.454250 ms
+
+############################
+
+NEON ASM
+
+converting:	4.628042 ms
+
+############################
+
+optimized openCV-build
+cv::cvtColor
+
+converting:	5.008917 ms
