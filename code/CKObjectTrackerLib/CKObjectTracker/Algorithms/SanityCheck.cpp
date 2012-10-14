@@ -31,7 +31,7 @@ bool SanityCheck::checkRectangle(const vector<Point2f>& cornersTransformed, Poin
     // The rectangle is convex and not twisted, if the lines
     // between opposing points intersect with each other.
     
-    // intersection test based on: http://paulbourke.net/geometry/lineline2d/
+    // intersection test based on: http://paulbourke.net/geometry/pointlineplane/
     Line2f l1 = Line2f(cornersTransformed[0].x, cornersTransformed[0].y, cornersTransformed[2].x, cornersTransformed[2].y);
     Line2f l2 = Line2f(cornersTransformed[1].x, cornersTransformed[1].y, cornersTransformed[3].x, cornersTransformed[3].y);
     
