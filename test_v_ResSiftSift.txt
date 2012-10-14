@@ -1,0 +1,291 @@
+mac mini
+regular openCV-build
+
+############################
+
+Features 500
+Gray Y
+
+Ratio 0,7
+RANSAC 3
+Refine hom Y
+
+############################
+############################
+
+rotation book 1
+
+SIFT Detector
+SIFT Descriptor
+
+############################
+
+img_204x153 vid_192x144
+
+Processed 472 frames (1 detection, 236 validation, 235 tracking)
+0 garbage homographies
+
+ValidationModule took 17.28 ms --> 57.87 FPS
+extracting:	9.139598 ms (52.89%)
+detecting:	6.079666 ms (35.18%)
+matching:	0.319925 ms (1.85%)
+objectKeyPoints: 67
+sceneKeyPoints: 45
+matches ratio: 23
+matches masked: 20
+delta transform (px): 6.461
+
+############################
+
+img_204x153 vid_352x288
+
+Processed 472 frames (1 detection, 236 validation, 235 tracking)
+0 garbage homographies
+
+ValidationModule took 48.88 ms --> 20.46 FPS
+extracting:	26.409293 ms (54.03%)
+detecting:	19.420196 ms (39.73%)
+matching:	0.696971 ms (1.43%)
+objectKeyPoints: 67
+sceneKeyPoints: 104
+matches ratio: 33
+matches masked: 27
+delta transform (px): 14.301
+
+############################
+
+img_204x153 vid_480x360
+
+Processed 472 frames (3 detection, 236 validation, 233 tracking)
+1 garbage homographies
+
+ValidationModule took 79.31 ms --> 12.61 FPS
+extracting:	42.497515 ms (53.58%)
+detecting:	33.059325 ms (41.68%)
+matching:	0.947760 ms (1.19%)
+objectKeyPoints: 67
+sceneKeyPoints: 148
+matches ratio: 33
+matches masked: 25
+delta transform (px): 18.343
+
+############################
+
+img_204x153 vid_640x480
+
+Processed 472 frames (1 detection, 236 validation, 235 tracking)
+0 garbage homographies
+
+ValidationModule took 137.73 ms --> 7.26 FPS
+extracting:	73.233875 ms (53.17%)
+detecting:	59.135822 ms (42.94%)
+matching:	1.310270 ms (0.95%)
+objectKeyPoints: 67
+sceneKeyPoints: 207
+matches ratio: 32
+matches masked: 22
+delta transform (px): 24.613
+
+############################
+
+img_408x306 vid_192x144
+
+Processed 472 frames (3 detection, 236 validation, 233 tracking)
+2 garbage homographies
+
+ValidationModule took 18.18 ms --> 55.00 FPS
+extracting:	9.207850 ms (50.64%)
+detecting:	6.012974 ms (33.07%)
+matching:	0.921185 ms (5.07%)
+objectKeyPoints: 191
+sceneKeyPoints: 45
+matches ratio: 26
+matches masked: 21
+delta transform (px): 6.499
+
+############################
+
+img_408x306 vid_352x288
+
+Processed 472 frames (3 detection, 236 validation, 233 tracking)
+2 garbage homographies
+
+ValidationModule took 50.95 ms --> 19.63 FPS
+extracting:	26.795625 ms (52.59%)
+detecting:	19.944928 ms (39.15%)
+matching:	1.915346 ms (3.76%)
+objectKeyPoints: 191
+sceneKeyPoints: 104
+matches ratio: 44
+matches masked: 38
+delta transform (px): 11.178
+
+############################
+
+img_408x306 vid_480x360
+
+Processed 472 frames (3 detection, 236 validation, 233 tracking)
+2 garbage homographies
+
+ValidationModule took 81.15 ms --> 12.32 FPS
+extracting:	42.714855 ms (52.64%)
+detecting:	33.092805 ms (40.78%)
+matching:	2.610484 ms (3.22%)
+objectKeyPoints: 191
+sceneKeyPoints: 148
+matches ratio: 52
+matches masked: 45
+delta transform (px): 14.011
+
+############################
+
+img_408x306 vid_640x480
+
+Processed 472 frames (3 detection, 236 validation, 233 tracking)
+2 garbage homographies
+
+ValidationModule took 140.79 ms --> 7.10 FPS
+extracting:	73.594354 ms (52.27%)
+detecting:	59.940189 ms (42.58%)
+matching:	3.638452 ms (2.58%)
+objectKeyPoints: 191
+sceneKeyPoints: 207
+matches ratio: 57
+matches masked: 48
+delta transform (px): 19.105
+
+############################
+
+img_816x612 vid_192x144
+
+Processed 472 frames (68 detection, 236 validation, 168 tracking)
+68 garbage homographies
+
+ValidationModule took 20.22 ms --> 49.47 FPS
+extracting:	9.275227 ms (45.88%)
+detecting:	6.017090 ms (29.76%)
+matching:	2.121090 ms (10.49%)
+objectKeyPoints: 500
+sceneKeyPoints: 45
+matches ratio: 32
+matches masked: 21
+delta transform (px): 28.393
+
+############################
+
+img_816x612 vid_352x288
+
+Processed 472 frames (3 detection, 236 validation, 233 tracking)
+2 garbage homographies
+
+ValidationModule took 53.97 ms --> 18.53 FPS
+extracting:	26.357903 ms (48.84%)
+detecting:	19.666425 ms (36.44%)
+matching:	4.865216 ms (9.01%)
+objectKeyPoints: 500
+sceneKeyPoints: 104
+matches ratio: 50
+matches masked: 37
+delta transform (px): 13.523
+
+############################
+
+img_816x612 vid_480x360
+
+Processed 472 frames (6 detection, 236 validation, 230 tracking)
+5 garbage homographies
+
+ValidationModule took 85.89 ms --> 11.64 FPS
+extracting:	42.739110 ms (49.76%)
+detecting:	32.947327 ms (38.36%)
+matching:	6.914535 ms (8.05%)
+objectKeyPoints: 500
+sceneKeyPoints: 148
+matches ratio: 59
+matches masked: 45
+delta transform (px): 20.612
+
+############################
+
+img_816x612 vid_640x480
+
+Processed 472 frames (5 detection, 236 validation, 231 tracking)
+4 garbage homographies
+
+ValidationModule took 147.60 ms --> 6.77 FPS
+extracting:	73.831960 ms (50.02%)
+detecting:	60.341965 ms (40.88%)
+matching:	9.344494 ms (6.33%)
+objectKeyPoints: 500
+sceneKeyPoints: 207
+matches ratio: 64
+matches masked: 49
+delta transform (px): 21.291
+
+############################
+
+img_1632x1224 vid_192x144
+
+Processed 472 frames (236 detection, 236 validation, 0 tracking)
+137 garbage homographies
+
+ValidationModule took 18.16 ms --> 55.06 FPS
+extracting:	9.024527 ms (49.69%)
+detecting:	5.910008 ms (32.54%)
+matching:	2.376856 ms (13.09%)
+objectKeyPoints: 500
+sceneKeyPoints: 45
+matches ratio: 8
+matches masked: 7
+delta transform (px): 0.000
+
+############################
+
+img_1632x1224 vid_352x288
+
+Processed 472 frames (235 detection, 236 validation, 1 tracking)
+143 garbage homographies
+
+ValidationModule took 52.23 ms --> 19.15 FPS
+extracting:	26.397462 ms (50.54%)
+detecting:	19.720907 ms (37.76%)
+matching:	4.924046 ms (9.43%)
+objectKeyPoints: 500
+sceneKeyPoints: 104
+matches ratio: 7
+matches masked: 6
+delta transform (px): 334.854
+
+############################
+
+img_1632x1224 vid_480x360
+
+Processed 472 frames (236 detection, 236 validation, 0 tracking)
+117 garbage homographies
+
+ValidationModule took 84.41 ms --> 11.85 FPS
+extracting:	43.262565 ms (51.25%)
+detecting:	32.864575 ms (38.94%)
+matching:	6.815602 ms (8.07%)
+objectKeyPoints: 500
+sceneKeyPoints: 148
+matches ratio: 6
+matches masked: 4
+delta transform (px): 0.000
+
+############################
+
+img_1632x1224 vid_640x480
+
+Processed 472 frames (236 detection, 236 validation, 0 tracking)
+115 garbage homographies
+
+ValidationModule took 145.53 ms --> 6.87 FPS
+extracting:	73.195176 ms (50.30%)
+detecting:	60.748976 ms (41.74%)
+matching:	9.340983 ms (6.42%)
+objectKeyPoints: 500
+sceneKeyPoints: 207
+matches ratio: 5
+matches masked: 4
+delta transform (px): 0.000

@@ -1,0 +1,396 @@
+Detection enabled N
+
+############################
+
+Gray N
+
+RANSAC 3
+Refine hom Y
+
+############################
+
+termIT 30
+termEPS 0.01
+winSizeFlow 21
+minEigen 0.0001
+maxlevel 3
+filterDistortion N
+
+minPointsAbs 1
+minPointsRel 1
+maxDelta 50
+
+############################
+
+rotation book 1
+
+############################
+
+SIFT
+
+Features 200
+Ratio 0,5
+img_408x306 vid_352x288
+maxFrames 90
+
+############################
+
+mac mini
+regular openCV-build
+
+Processed 472 frames (1 detection, 6 validation, 465 tracking)
+0 garbage homographies
+
+ValidationModule took 39.44 ms --> 25.36 FPS
+extracting:	21.252477 ms (53.89%)
+detecting:	14.690388 ms (37.25%)
+matching:	1.767700 ms (4.48%)
+estimating:	1.252736 ms (3.18%)
+filtering:	0.137076 ms (0.35%)
+validating:	0.017233 ms (0.04%)
+other:		0.318939 ms (0.81%)
+
+TrackingModule took 4.25 ms --> 235.30 FPS
+tracking:	2.877293 ms (67.70%)
+converting:	0.608321 ms (14.31%)
+estimating:	0.581902 ms (13.69%)
+validating:	0.011583 ms (0.27%)
+other:		0.170853 ms (4.02%)
+
+############################
+
+simulator
+regular openCV-build
+
+Processed 472 frames (1 detection, 6 validation, 465 tracking)
+0 garbage homographies
+
+ValidationModule took 269.90 ms --> 3.71 FPS
+extracting:	127.473796 ms (47.23%)
+detecting:	119.064977 ms (44.11%)
+matching:	17.694827 ms (6.56%)
+estimating:	4.651688 ms (1.72%)
+filtering:	0.195145 ms (0.07%)
+validating:	0.024554 ms (0.01%)
+other:		0.792680 ms (0.29%)
+
+TrackingModule took 19.34 ms --> 51.70 FPS
+tracking:	14.801525 ms (76.52%)
+converting:	2.175937 ms (11.25%)
+estimating:	2.031641 ms (10.50%)
+validating:	0.024922 ms (0.13%)
+other:		0.308749 ms (1.60%)
+
+############################
+
+iPhone 4S
+regular openCV-build
+
+Processed 472 frames (1 detection, 6 validation, 465 tracking)
+0 garbage homographies
+
+ValidationModule took 1796.82 ms --> 0.56 FPS
+extracting:	969.377502 ms (53.95%)
+detecting:	710.012461 ms (39.52%)
+matching:	87.595250 ms (4.88%)
+estimating:	26.718347 ms (1.49%)
+filtering:	1.038201 ms (0.06%)
+validating:	0.239535 ms (0.01%)
+other:		1.835475 ms (0.10%)
+
+TrackingModule took 145.73 ms --> 6.86 FPS
+tracking:	117.100588 ms (80.36%)
+converting:	16.183083 ms (11.11%)
+estimating:	11.116451 ms (7.63%)
+validating:	0.071217 ms (0.05%)
+other:		1.255417 ms (0.86%)
+
+############################
+
+iPhone 4S
+optimized openCV-build
+
+Processed 472 frames (1 detection, 6 validation, 465 tracking)
+0 garbage homographies
+
+ValidationModule took 524.70 ms --> 1.91 FPS
+extracting:	280.244723 ms (53.41%)
+detecting:	200.226143 ms (38.16%)
+matching:	31.561459 ms (6.02%)
+estimating:	9.472354 ms (1.81%)
+filtering:	1.045951 ms (0.20%)
+validating:	0.187285 ms (0.04%)
+other:		1.957169 ms (0.37%)
+
+TrackingModule took 41.66 ms --> 24.00 FPS
+tracking:	31.622391 ms (75.91%)
+converting:	4.951741 ms (11.89%)
+estimating:	3.796412 ms (9.11%)
+validating:	0.048869 ms (0.12%)
+other:		1.240452 ms (2.98%)
+
+############################
+
+ORB + Edge 21
+
+Features 500
+Ratio 0,7
+img_408x306 vid_480x360
+maxFrames 30
+
+############################
+
+mac mini
+regular openCV-build
+
+Processed 472 frames (3 detection, 17 validation, 452 tracking)
+3 garbage homographies
+
+ValidationModule took 28.03 ms --> 35.68 FPS
+matching:	11.451839 ms (40.86%)
+extracting:	7.499477 ms (26.76%)
+detecting:	5.064298 ms (18.07%)
+estimating:	3.358467 ms (11.98%)
+filtering:	0.275494 ms (0.98%)
+validating:	0.012850 ms (0.05%)
+other:		0.363251 ms (1.30%)
+
+TrackingModule took 6.93 ms --> 144.29 FPS
+tracking:	4.790782 ms (69.13%)
+converting:	1.034551 ms (14.93%)
+estimating:	0.652635 ms (9.42%)
+validating:	0.011576 ms (0.17%)
+other:		0.440928 ms (6.36%)
+
+############################
+
+simulator
+regular openCV-build
+
+Processed 472 frames (3 detection, 17 validation, 452 tracking)
+3 garbage homographies
+
+ValidationModule took 95.92 ms --> 10.43 FPS
+matching:	33.053083 ms (34.46%)
+extracting:	31.536304 ms (32.88%)
+detecting:	23.109500 ms (24.09%)
+estimating:	7.230018 ms (7.54%)
+filtering:	0.335450 ms (0.35%)
+validating:	0.019761 ms (0.02%)
+other:		0.638105 ms (0.67%)
+
+TrackingModule took 28.84 ms --> 34.67 FPS
+tracking:	22.440477 ms (77.81%)
+converting:	3.399713 ms (11.79%)
+estimating:	2.351277 ms (8.15%)
+validating:	0.024070 ms (0.08%)
+other:		0.624269 ms (2.16%)
+
+############################
+
+iPhone 4S
+regular openCV-build
+
+Processed 472 frames (3 detection, 17 validation, 452 tracking)
+3 garbage homographies
+
+ValidationModule took 697.82 ms --> 1.43 FPS
+matching:	279.001048 ms (39.98%)
+extracting:	214.602749 ms (30.75%)
+detecting:	159.345492 ms (22.83%)
+estimating:	40.376846 ms (5.79%)
+filtering:	2.071099 ms (0.30%)
+validating:	0.128229 ms (0.02%)
+other:		2.297768 ms (0.33%)
+
+TrackingModule took 218.98 ms --> 4.57 FPS
+tracking:	178.174039 ms (81.36%)
+converting:	26.962040 ms (12.31%)
+estimating:	11.977653 ms (5.47%)
+validating:	0.071425 ms (0.03%)
+other:		1.799714 ms (0.82%)
+
+############################
+
+iPhone 4S
+optimized openCV-build
+vid_480x360
+
+Processed 472 frames (3 detection, 17 validation, 452 tracking)
+3 garbage homographies
+
+ValidationModule took 203.43 ms --> 4.92 FPS
+extracting:	74.734130 ms (36.74%)
+matching:	66.239612 ms (32.56%)
+detecting:	44.313513 ms (21.78%)
+estimating:	13.629628 ms (6.70%)
+filtering:	2.057096 ms (1.01%)
+validating:	0.084169 ms (0.04%)
+other:		2.368453 ms (1.16%)
+delta transform (px): 46.377
+
+TrackingModule took 60.37 ms --> 16.56 FPS
+tracking:	46.500899 ms (77.03%)
+converting:	7.943770 ms (13.16%)
+estimating:	4.086279 ms (6.77%)
+validating:	0.047556 ms (0.08%)
+other:		1.790711 ms (2.97%)
+delta transform (px): 7.488
+
+############################
+
+iPhone 4S
+optimized openCV-build
+vid_352x288
+
+Processed 472 frames (3 detection, 17 validation, 452 tracking)
+3 garbage homographies
+
+ValidationModule took 171.74 ms --> 5.82 FPS
+matching:	65.754689 ms (38.29%)
+extracting:	57.640302 ms (33.56%)
+detecting:	32.901518 ms (19.16%)
+estimating:	11.678956 ms (6.80%)
+filtering:	1.968492 ms (1.15%)
+validating:	0.043745 ms (0.03%)
+other:		1.752233 ms (1.02%)
+delta transform (px): 36.075
+
+TrackingModule took 49.23 ms --> 20.31 FPS
+tracking:	38.898924 ms (79.01%)
+converting:	4.858901 ms (9.87%)
+estimating:	4.112041 ms (8.35%)
+validating:	0.048243 ms (0.10%)
+other:		1.313330 ms (2.67%)
+delta transform (px): 5.558
+
+########################################################
+
+SIFT
+iPhone 4S
+optimized openCV-build
+enter_exit
+detection N
+
+Processed 417 frames (73 detection, 80 validation, 264 tracking)
+11 garbage homographies
+
+ValidationModule took 428.74 ms --> 2.33 FPS
+detecting:	258.627679 ms (60.32%)
+extracting:	162.198151 ms (37.83%)
+matching:	5.875213 ms (1.37%)
+estimating:	0.983226 ms (0.23%)
+filtering:	0.349837 ms (0.08%)
+validating:	0.006482 ms (0.00%)
+other:		0.698543 ms (0.16%)
+delta transform (px): 550.280
+
+TrackingModule took 34.13 ms --> 29.30 FPS
+tracking:	24.238520 ms (71.03%)
+converting:	4.956272 ms (14.52%)
+estimating:	3.678509 ms (10.78%)
+validating:	0.049203 ms (0.14%)
+other:		1.203804 ms (3.53%)
+delta transform (px): 16.556
+
+########################################################
+
+SIFT
+iPhone 4S
+optimized openCV-build
+enter_exit
+detection Y
+
+Processed 417 frames (200 detection, 19 validation, 198 tracking)
+14 garbage homographies
+
+DetectionModule took 19.43 ms --> 51.47 FPS
+converting:	15.388329 ms (79.21%)
+tracking:	1.944186 ms (10.01%)
+validating:	0.033355 ms (0.17%)
+other:		2.061623 ms (10.61%)
+
+ValidationModule took 245.57 ms --> 4.07 FPS
+extracting:	129.465769 ms (52.72%)
+detecting:	96.023716 ms (39.10%)
+matching:	13.640899 ms (5.55%)
+estimating:	4.589750 ms (1.87%)
+filtering:	0.695542 ms (0.28%)
+validating:	0.033114 ms (0.01%)
+other:		1.117710 ms (0.46%)
+delta transform (px): 194.148
+
+TrackingModule took 28.26 ms --> 35.39 FPS
+tracking:	18.819661 ms (66.60%)
+converting:	4.676962 ms (16.55%)
+estimating:	3.530385 ms (12.49%)
+validating:	0.049121 ms (0.17%)
+other:		1.183470 ms (4.19%)
+delta transform (px): 15.860
+
+########################################################
+########################################################
+
+ORB
+iPhone 4S
+optimized openCV-build
+vid_352x288
+enter_exit
+detection N
+
+Processed 417 frames (77 detection, 88 validation, 252 tracking)
+18 garbage homographies
+
+ValidationModule took 73.19 ms --> 13.66 FPS
+detecting:	29.696404 ms (40.57%)
+extracting:	25.060324 ms (34.24%)
+matching:	13.765012 ms (18.81%)
+estimating:	2.754896 ms (3.76%)
+filtering:	0.784333 ms (1.07%)
+validating:	0.013461 ms (0.02%)
+other:		1.117266 ms (1.53%)
+delta transform (px): 760.549
+
+TrackingModule took 47.82 ms --> 20.91 FPS
+tracking:	37.700857 ms (78.83%)
+converting:	4.764850 ms (9.96%)
+estimating:	4.025278 ms (8.42%)
+validating:	0.047272 ms (0.10%)
+other:		1.285145 ms (2.69%)
+delta transform (px): 15.054
+
+########################################################
+
+ORB
+iPhone 4S
+optimized openCV-build
+vid_352x288
+enter_exit
+detection Y
+
+Processed 417 frames (213 detection, 28 validation, 176 tracking)
+21 garbage homographies
+
+DetectionModule took 19.80 ms --> 50.51 FPS
+converting:	15.506859 ms (78.33%)
+tracking:	2.291778 ms (11.58%)
+validating:	0.031187 ms (0.16%)
+other:		1.966816 ms (9.94%)
+
+ValidationModule took 78.80 ms --> 12.69 FPS
+matching:	25.005504 ms (31.73%)
+extracting:	24.331303 ms (30.88%)
+detecting:	18.146757 ms (23.03%)
+estimating:	8.175366 ms (10.37%)
+filtering:	1.512430 ms (1.92%)
+validating:	0.039856 ms (0.05%)
+other:		1.591289 ms (2.02%)
+delta transform (px): 385.528
+
+TrackingModule took 40.48 ms --> 24.71 FPS
+tracking:	30.673928 ms (75.78%)
+converting:	4.858596 ms (12.00%)
+estimating:	3.669303 ms (9.07%)
+validating:	0.050000 ms (0.12%)
+other:		1.225469 ms (3.03%)
+delta transform (px): 21.692

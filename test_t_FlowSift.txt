@@ -1,0 +1,296 @@
+mac mini
+regular openCV-build
+
+############################
+
+Features 200
+Gray N
+
+Ratio 0,5
+RANSAC 3
+Refine hom Y
+
+SIFT
+
+############################
+############################
+
+maxFrames 90
+maxDelta 100
+minPointsAbs 1
+minPointsRel 1
+
+filterDistortion N
+
+############################
+
+img_408x306_book1.jpg
+vid_352x288_rotation_book1.mov
+
+############################
+
+termIT 30
+termEPS 0.01
+
+############################
+
+winSizeFlow 11
+minEigen 0.0001
+maxlevel 3
+
+Processed 472 frames (1 detection, 30 validation, 441 tracking)
+1 garbage homographies
+
+ValidationModule took 37.16 ms --> 26.91 FPS
+delta transform (px): 17.341
+
+TrackingModule took 3.22 ms --> 310.85 FPS
+delta transform (px): 7.491
+distance range (px): 4.622
+average error: 4.752
+
+############################
+
+winSizeFlow 11
+minEigen 0.001
+maxlevel 3
+
+Processed 472 frames (1 detection, 122 validation, 349 tracking)
+1 garbage homographies
+
+ValidationModule took 43.06 ms --> 23.22 FPS
+delta transform (px): 14.498
+
+TrackingModule took 2.94 ms --> 339.60 FPS
+delta transform (px): 10.812
+distance range (px): 5.028
+average error: 4.977
+
+############################
+
+winSizeFlow 21
+minEigen 0.0001
+maxlevel 3
+
+Processed 472 frames (1 detection, 6 validation, 465 tracking)
+0 garbage homographies
+
+ValidationModule took 39.25 ms --> 25.48 FPS
+delta transform (px): 16.746
+
+TrackingModule took 4.23 ms --> 236.40 FPS
+delta transform (px): 5.698
+distance range (px): 2.931
+average error: 5.431
+
+############################
+
+winSizeFlow 21
+minEigen 0.001
+maxlevel 3
+
+Processed 472 frames (2 detection, 10 validation, 460 tracking)
+1 garbage homographies
+
+ValidationModule took 40.56 ms --> 24.65 FPS
+delta transform (px): 56.382
+
+TrackingModule took 4.36 ms --> 229.18 FPS
+delta transform (px): 5.706
+distance range (px): 2.839
+average error: 5.432
+
+############################
+
+winSizeFlow 31
+minEigen 0.0001 / 0.001
+maxlevel 3
+
+Processed 472 frames (1 detection, 6 validation, 465 tracking)
+0 garbage homographies
+
+ValidationModule took 37.43 ms --> 26.72 FPS
+delta transform (px): 18.714
+
+TrackingModule took 5.77 ms --> 173.36 FPS
+delta transform (px): 5.616
+distance range (px): 2.491
+average error: 5.426
+
+############################
+
+winSizeFlow 41
+minEigen 0.0001
+maxlevel 3
+
+Processed 472 frames (1 detection, 6 validation, 465 tracking)
+0 garbage homographies
+
+ValidationModule took 39.41 ms --> 25.37 FPS
+delta transform (px): 19.514
+
+TrackingModule took 6.38 ms --> 156.78 FPS
+delta transform (px): 5.554
+distance range (px): 2.423
+average error: 5.415
+
+############################
+
+winSizeFlow 41
+minEigen 0.001
+maxlevel 3
+
+Processed 472 frames (1 detection, 6 validation, 465 tracking)
+0 garbage homographies
+
+ValidationModule took 43.38 ms --> 23.05 FPS
+delta transform (px): 30.872
+
+TrackingModule took 6.34 ms --> 157.83 FPS
+delta transform (px): 5.431
+distance range (px): 2.259
+average error: 5.465
+
+############################
+############################
+############################
+
+winSizeFlow 21
+minEigen 0.0001
+maxlevel 3
+
+############################
+
+termIT 30
+termEPS 0.005
+
+Processed 472 frames (1 detection, 7 validation, 464 tracking)
+1 garbage homographies
+
+ValidationModule took 42.42 ms --> 23.57 FPS
+delta transform (px): 127.277
+
+TrackingModule took 4.52 ms --> 221.37 FPS
+lost after tracking: 0.228
+delta transform (px): 7.858
+distance range (px): 2.832
+average error: 5.530
+
+############################
+
+termIT 50
+termEPS 0.01
+
+Processed 472 frames (1 detection, 6 validation, 465 tracking)
+0 garbage homographies
+
+ValidationModule took 38.66 ms --> 25.87 FPS
+delta transform (px): 17.076
+
+TrackingModule took 4.28 ms --> 233.38 FPS
+lost after tracking: 0.310
+delta transform (px): 5.686
+distance range (px): 2.875
+average error: 5.418
+
+############################
+
+termIT 40
+termEPS 0.01
+
+Processed 472 frames (1 detection, 6 validation, 465 tracking)
+0 garbage homographies
+
+ValidationModule took 39.89 ms --> 25.07 FPS
+delta transform (px): 18.503
+
+TrackingModule took 4.41 ms --> 226.89 FPS
+lost after tracking: 0.325
+delta transform (px): 5.675
+distance range (px): 2.821
+average error: 5.377
+
+############################
+
+termIT 30
+termEPS 0.01
+
+Processed 472 frames (1 detection, 6 validation, 465 tracking)
+0 garbage homographies
+
+ValidationModule took 38.46 ms --> 26.00 FPS
+delta transform (px): 11.827
+
+TrackingModule took 3.96 ms --> 252.79 FPS
+lost after tracking: 0.323
+delta transform (px): 5.725
+distance range (px): 2.741
+average error: 5.413
+
+############################
+
+termIT 20
+termEPS 0.01
+
+Processed 472 frames (1 detection, 6 validation, 465 tracking)
+0 garbage homographies
+
+ValidationModule took 39.26 ms --> 25.47 FPS
+delta transform (px): 15.023
+
+TrackingModule took 4.40 ms --> 227.18 FPS
+lost after tracking: 0.344
+delta transform (px): 5.663
+distance range (px): 2.858
+average error: 5.409
+
+############################
+
+termIT 10
+termEPS 0.01
+
+Processed 472 frames (1 detection, 6 validation, 465 tracking)
+0 garbage homographies
+
+ValidationModule took 41.09 ms --> 24.34 FPS
+delta transform (px): 14.432
+
+TrackingModule took 4.35 ms --> 229.77 FPS
+lost after tracking: 0.333
+delta transform (px): 5.640
+distance range (px): 2.756
+average error: 5.360
+
+############################
+
+termIT 30
+termEPS 0.02
+
+Processed 472 frames (1 detection, 6 validation, 465 tracking)
+0 garbage homographies
+
+ValidationModule took 42.02 ms --> 23.80 FPS
+delta transform (px): 41.972
+
+TrackingModule took 4.19 ms --> 238.66 FPS
+lost after tracking: 0.325
+delta transform (px): 6.322
+distance range (px): 2.901
+average error: 5.465
+
+############################
+
+termIT 30
+termEPS 0.04
+
+Processed 472 frames (1 detection, 7 validation, 464 tracking)
+1 garbage homographie
+
+ValidationModule took 39.90 ms --> 25.06 FPS
+delta transform (px): 39.733
+
+TrackingModule took 4.08 ms --> 245.05 FPS
+lost after tracking: 0.336
+delta transform (px): 5.746
+distance range (px): 2.673
+average error: 5.439

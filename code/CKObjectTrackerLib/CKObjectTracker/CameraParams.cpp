@@ -26,6 +26,8 @@ namespace ck {
         _inverseIntrinsics = _intrinsics.inv();
     }
     
+    CameraParams::~CameraParams() { }
+    
     void CameraParams::setFocalLength(const cv::Point2f& focalLength)
     {
         _focalLength = focalLength;

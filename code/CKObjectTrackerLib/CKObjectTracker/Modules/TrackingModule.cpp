@@ -28,7 +28,7 @@ TrackingModule::TrackingModule(int maxPoints, int minPointsAbs, float minPointsR
     _enabled = true;
     
     _maxTransformationDelta = 50;
-    _maxSuccessiveFrames = -1;
+    _maxSuccessiveFrames = 120;
     _maxPointsAbsolute = maxPoints;
     _minPointsAbsolute = minPointsAbs;
     _minPointsRelative = minPointsRel;
@@ -44,7 +44,7 @@ TrackingModule::TrackingModule(int maxPoints, int minPointsAbs, float minPointsR
 
     // optical flow and sub pix params
     _terminationCriteria = TermCriteria(CV_TERMCRIT_ITER | CV_TERMCRIT_EPS, 30, 0.01); // LK/SL: 20, 0.03
-    _winSizeSubPix = Size(10, 10); // LK/SL: 10
+    _winSizeSubPix = Size(5, 5); // LK/SL: 10
     _winSizeFlow = Size(21, 21); // RM: 41 LK: 31 SL: 3-5
     _zeroZone = Size(-1, -1);
     _minEigenThreshold = 0.0001f; // LK: 0.001f

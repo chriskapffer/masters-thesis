@@ -46,7 +46,7 @@ void ValidationModule::setDetector(const string& value)
     } else if (value == "SURF") {
         _detector = new SurfFeatureDetector(_hessianThreshold);
     } else if (value == "ORB") {
-        _detector = new OrbFeatureDetector(_maxFeatures);
+        _detector = new OrbFeatureDetector(_maxFeatures, 1.2f, 8, 21);
         if (getAlgorithmName(*_extractor) == "SIFT") { setExtractor("ORB"); } // can't mix them
     } else {
         throw "Extractor not supported.";
@@ -74,7 +74,7 @@ void ValidationModule::setExtractor(const string& value, bool updateMatcher)
         _extractor = new SurfDescriptorExtractor(_hessianThreshold);
         if (updateMatcher) { _matcher = new BFMatcher(NORM_L2); }
     } else if (value == "ORB") {
-        _extractor = new OrbDescriptorExtractor(_maxFeatures);
+        _extractor = new OrbDescriptorExtractor(_maxFeatures, 1.2f, 8, 21);
         if (getAlgorithmName(*_detector) == "SIFT") { setDetector("ORB"); } // can't mix them
         if (updateMatcher) { _matcher = new BFMatcher(NORM_HAMMING); }
     } else if (value == "FREAK") {
