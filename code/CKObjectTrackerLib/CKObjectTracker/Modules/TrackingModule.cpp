@@ -278,7 +278,7 @@ void TrackingModule::filterPointsByMovingDistance(vector<Point2f>& pointsIn, vec
     for (int i = (int)pointsOut.size(); i >= 0; i--) {
         Point2f vec = pointsOut[i] - pointsIn[i];
         float distanceSquared = vec.x * vec.x + vec.y * vec.y; // moving distance (squared)
-        // remove points if their moving dinstance - average is greater than average times distortionThreshold
+        // remove points if their moving dinstance minus average is greater than average times distortionThreshold
         if (fabs(distanceSquared - averageDistanceSquared) > averageDistanceSquared * distortionThreshold) {
             initialPoints.erase(initialPoints.begin() + i);
             pointsOut.erase(pointsOut.begin() + i);
