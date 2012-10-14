@@ -211,7 +211,7 @@ ValidationModule::ValidationModule(const vector<FilterFlag>& filterFlags, int es
     _sortMatches = sortMatches;
     
     // extracting params
-    _maxFeatures = 500;
+    _maxFeatures = 200;
     _fastThreshold = 10;
     _hessianThreshold = 400;
     
@@ -227,9 +227,9 @@ ValidationModule::ValidationModule(const vector<FilterFlag>& filterFlags, int es
     _useAllKeyPointsForOutput = false;
     
     // detector, extractor, matcher params
-    _detector = new OrbFeatureDetector(_maxFeatures, 1.2f, 8, 21);
-    _extractor = new OrbDescriptorExtractor(_maxFeatures, 1.2f, 8, 21);
-    _matcher = new BFMatcher(NORM_HAMMING);
+    _detector = new SiftFeatureDetector(_maxFeatures);
+    _extractor = new SiftDescriptorExtractor(_maxFeatures);
+    _matcher = new BFMatcher(NORM_L2);
     
     _isDirty = false;
 }
