@@ -72,7 +72,7 @@ void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
             imshow("Detection", detectionImage);
         }
         //drawObjectRect, drawObjectKeyPoints, drawSceneKeyPoints, drawFilteredMatches, drawAllMatches
-        if (ObjectTrackerDebugger::getValidationModuleDebugImage(validationImage, debugInfo)) {
+        if (ObjectTrackerDebugger::getValidationModuleDebugImage(validationImage, debugInfo, true, true, true)) {
             imshow("Validation", validationImage);
         }
         if (ObjectTrackerDebugger::getTrackingModuleDebugImage(trackingImage, debugInfo)) {
@@ -80,7 +80,7 @@ void trackObjectInVideo(const Mat& objectImage, VideoCapture sceneVideo)
         }
         
         TrackerDebugInfoStripped stripped = TrackerDebugInfoStripped(debugInfo);
-        cout << ObjectTrackerDebugger::getDebugString(stripped) << endl;
+        //cout << ObjectTrackerDebugger::getDebugString(stripped) << endl;
         infoCollection.push_back(stripped);
         
         if (waitKey(1000 / sceneVideo.get(CV_CAP_PROP_FPS)) >= 0) {

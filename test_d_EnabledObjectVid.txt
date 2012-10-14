@@ -1,0 +1,514 @@
+mac mini
+regular openCV-build
+
+############################
+
+Features 200
+Gray N
+
+Ratio 0,5
+RANSAC 3
+Refine hom Y
+
+SIFT
+
+############################
+############################
+
+maxFrames 60
+maxDelta 40
+minPointsAbs 1
+minPointsRel 1
+
+filterDistortion N
+useSubPixel N
+
+termIT 30
+termEPS 0.01
+winSizeFlow 21
+minEigen 0.0001
+maxlevel 3
+
+############################
+############################
+
+img_408x306
+vid_352x288
+
+############################
+
+rotation_book1
+detection Enabled N
+
+Processed 472 frames (1 detection, 9 validation, 462 tracking)
+2 garbage homographies
+
+ValidationModule took 53.33 ms --> 18.75 FPS
+extracting:	21.946077 ms (41.15%)
+detecting:	15.470257 ms (29.01%)
+estimating:	6.966290 ms (13.06%)
+matching:	3.435421 ms (6.44%)
+objectKeyPoints: 191
+sceneKeyPoints: 100
+matches ratio: 29
+matches masked: 27
+delta transform (px): 22.662
+
+TrackingModule took 4.42 ms --> 226.37 FPS
+initial point set: 29
+lost after tracking: 0.459
+delta transform (px): 5.578
+distance range (px): 2.789
+average error: 5.328
+
+############################
+
+rotation_book1
+detection Enabled Y
+
+Processed 472 frames (8 detection, 13 validation, 451 tracking)
+4 garbage homographies
+
+DetectionModule took 6.40 ms --> 156.13 FPS
+
+ValidationModule took 25.99 ms --> 38.47 FPS
+extracting:	13.802950 ms (53.10%)
+detecting:	9.569548 ms (36.81%)
+matching:	1.288445 ms (4.96%)
+estimating:	0.937774 ms (3.61%)
+objectKeyPoints: 191
+sceneKeyPoints: 69
+matches ratio: 19
+matches masked: 17
+delta transform (px): 70.470
+
+TrackingModule took 4.08 ms --> 245.21 FPS
+initial point set: 26
+lost after tracking: 0.375
+delta transform (px): 7.257
+distance range (px): 2.687
+average error: 5.581
+
+############################
+
+enter_exit_book1
+detection Enabled N
+
+Processed 417 frames (73 detection, 88 validation, 256 tracking)
+3 garbage homographies
+
+ValidationModule took 30.44 ms --> 32.85 FPS
+detecting:	17.162707 ms (56.39%)
+extracting:	12.207815 ms (40.11%)
+matching:	0.513498 ms (1.69%)
+estimating:	0.227427 ms (0.75%)
+objectKeyPoints: 191
+sceneKeyPoints: 25
+matches total: 123
+matches ratio: 4
+matches masked: 3
+delta transform (px): 31.582
+
+TrackingModule took 3.43 ms --> 291.23 FPS
+initial point set: 14
+lost after tracking: 0.152
+delta transform (px): 8.003
+distance range (px): 0.596
+average error: 3.186
+
+############################
+
+enter_exit_book1
+detection Enabled Y
+
+Processed 417 frames (195 detection, 45 validation, 177 tracking)
+9 garbage homographies
+
+DetectionModule took 2.96 ms --> 337.39 FPS
+
+ValidationModule took 14.25 ms --> 70.18 FPS
+extracting:	7.231833 ms (50.75%)
+detecting:	5.749619 ms (40.35%)
+matching:	0.615459 ms (4.32%)
+estimating:	0.406831 ms (2.86%)
+objectKeyPoints: 191
+sceneKeyPoints: 31 <-- besser weil allg weniger validation, aber nicht hoch weil zu kleines searchRect
+matches total: 127
+matches ratio: 7
+matches masked: 6
+delta transform (px): 40.002
+
+TrackingModule took 3.75 ms --> 266.49 FPS
+initial point set: 18
+lost after tracking: 0.119
+delta transform (px): 7.070
+distance range (px): 0.642
+average error: 3.519
+
+############################
+
+clutter_book1
+detection Enabled N
+
+Processed 414 frames (1 detection, 7 validation, 406 tracking)
+0 garbage homographies
+
+ValidationModule took 29.40 ms --> 34.01 FPS
+extracting:	15.974030 ms (54.33%)
+detecting:	10.313734 ms (35.08%)
+matching:	1.700586 ms (5.78%)
+estimating:	1.025665 ms (3.49%)
+objectKeyPoints: 191
+sceneKeyPoints: 93
+matches total: 191
+matches ratio: 9
+matches masked: 9
+delta transform (px): 3.652
+
+TrackingModule took 3.25 ms --> 307.67 FPS
+initial point set: 9
+lost after tracking: 0.135
+delta transform (px): 0.961
+distance range (px): 0.168
+average error: 2.805
+
+############################
+
+clutter_book1
+detection Enabled Y
+
+Processed 414 frames (4 detection, 11 validation, 399 tracking)
+1 garbage homographies
+
+DetectionModule took 3.25 ms --> 307.77 FPS
+
+ValidationModule took 20.35 ms --> 49.13 FPS
+extracting:	10.921653 ms (53.66%)
+detecting:	7.153721 ms (35.14%)
+matching:	1.156635 ms (5.68%)
+estimating:	0.815597 ms (4.01%)
+objectKeyPoints: 191
+sceneKeyPoints: 62
+matches total: 173
+matches ratio: 6
+matches masked: 6
+delta transform (px): 46.497
+
+TrackingModule took 3.31 ms --> 302.47 FPS
+initial point set: 9
+lost after tracking: 0.140
+delta transform (px): 0.938
+distance range (px): 0.181
+average error: 2.853
+
+############################
+############################
+
+rotation_book2
+detection Enabled N
+
+Processed 342 frames (2 detection, 8 validation, 332 tracking)
+1 garbage homographies
+
+ValidationModule took 58.79 ms --> 17.01 FPS
+extracting:	34.562804 ms (58.79%)
+detecting:	20.045082 ms (34.10%)
+matching:	2.877180 ms (4.89%)
+estimating:	0.883599 ms (1.50%)
+objectKeyPoints: 200
+sceneKeyPoints: 156
+matches ratio: 17
+matches masked: 16
+delta transform (px): 34.990
+
+TrackingModule took 3.98 ms --> 251.45 FPS
+initial point set: 21
+lost after tracking: 0.271
+delta transform (px): 6.062
+distance range (px): 3.588
+average error: 7.507
+
+############################
+
+rotation_book2
+detection Enabled Y
+
+Processed 342 frames (55 detection, 19 validation, 268 tracking) <-- zu viel detection, obwohl Objekt da ist
+2 garbage homographies
+
+DetectionModule took 3.08 ms --> 324.95 FPS
+
+ValidationModule took 21.81 ms --> 45.85 FPS
+extracting:	12.158496 ms (55.75%)
+detecting:	7.702142 ms (35.32%)
+matching:	1.315713 ms (6.03%)
+estimating:	0.377226 ms (1.73%)
+objectKeyPoints: 200
+sceneKeyPoints: 68
+matches ratio: 5
+matches masked: 4
+delta transform (px): 28.843
+
+TrackingModule took 3.77 ms --> 265.06 FPS
+initial point set: 17
+lost after tracking: 0.284
+delta transform (px): 5.899
+distance range (px): 3.604
+average error: 7.385
+
+############################
+
+enter_exit_book2
+detection Enabled N
+
+Processed 321 frames (72 detection, 82 validation, 167 tracking)
+4 garbage homographies <-- sollten viel mehr sein mit besserem sanity check
+
+ValidationModule took 33.77 ms --> 29.61 FPS
+detecting:	18.145523 ms (53.73%)
+extracting:	14.520296 ms (42.99%)
+matching:	0.733577 ms (2.17%)
+estimating:	0.174331 ms (0.52%)
+objectKeyPoints: 200
+sceneKeyPoints: 36
+matches total: 141
+matches ratio: 2
+matches masked: 2
+delta transform (px): 29.120
+
+TrackingModule took 3.46 ms --> 289.38 FPS
+initial point set: 13
+lost after tracking: 0.084
+delta transform (px): 6.475
+distance range (px): 0.877
+average error: 2.783
+
+############################
+
+enter_exit_book2
+detection Enabled Y
+
+Processed 321 frames (250 detection, 45 validation, 26 tracking)
+2 garbage homographies
+
+DetectionModule took 3.01 ms --> 332.36 FPS
+
+ValidationModule took 5.51 ms --> 181.64 FPS
+extracting:	2.392448 ms (43.46%)
+detecting:	1.932131 ms (35.10%)
+matching:	0.319185 ms (5.80%)
+estimating:	0.078140 ms (1.42%)
+objectKeyPoints: 200
+sceneKeyPoints: 11 <-- viel zu wenig weil searchRect zu klein
+matches total: 155
+matches ratio: 2
+matches masked: 1
+delta transform (px): 8.983
+
+TrackingModule took 4.89 ms --> 204.46 FPS
+initial point set: 47
+lost after tracking: 0.000
+delta transform (px): 6.230
+distance range (px): 0.897
+average error: 2.885
+
+############################
+
+clutter_book2
+detection Enabled N
+
+Processed 414 frames (4 detection, 11 validation, 399 tracking)
+3 garbage homographies
+
+ValidationModule took 36.62 ms --> 27.31 FPS
+extracting:	19.760096 ms (53.97%)
+detecting:	13.392449 ms (36.58%)
+matching:	2.305414 ms (6.30%)
+estimating:	0.803325 ms (2.19%)
+objectKeyPoints: 200
+sceneKeyPoints: 124
+matches total: 200
+matches ratio: 5
+matches masked: 5
+delta transform (px): 65.809
+
+TrackingModule took 3.24 ms --> 308.62 FPS
+initial point set: 6
+lost after tracking: 0.105
+delta transform (px): 1.444
+distance range (px): 0.242
+average error: 2.603
+
+############################
+
+clutter_book2
+detection Enabled Y
+
+Processed 414 frames (6 detection, 12 validation, 396 tracking)
+2 garbage homographies
+
+DetectionModule took 3.27 ms --> 305.52 FPS
+
+ValidationModule took 16.17 ms --> 61.85 FPS
+extracting:	9.143356 ms (56.55%)
+detecting:	4.911371 ms (30.38%)
+matching:	1.132902 ms (7.01%)
+estimating:	0.577583 ms (3.57%)
+objectKeyPoints: 200
+sceneKeyPoints: 59 <-- weil searchRect nicht ganz richtig liegt
+matches total: 183
+matches ratio: 3
+matches masked: 3
+delta transform (px): 210.293
+
+TrackingModule took 2.80 ms --> 356.88 FPS
+initial point set: 4
+lost after tracking: 0.071
+delta transform (px): 2.350
+distance range (px): 0.145
+average error: 2.682
+
+############################
+############################
+
+rotation_pen
+detection Enabled N
+
+Processed 477 frames (10 detection, 27 validation, 440 tracking)
+18 garbage homographies
+
+ValidationModule took 28.46 ms --> 35.14 FPS
+extracting:	13.852927 ms (48.68%)
+detecting:	13.129291 ms (46.14%)
+estimating:	0.882519 ms (3.10%)
+matching:	0.261672 ms (0.92%)
+objectKeyPoints: 84
+sceneKeyPoints: 25
+matches ratio: 6
+matches masked: 5
+delta transform (px): 124.566
+
+TrackingModule took 3.35 ms --> 298.65 FPS
+initial point set: 9
+lost after tracking: 0.093
+delta transform (px): 11.224
+distance range (px): 1.630
+average error: 7.404
+
+############################
+
+rotation_pen
+detection Enabled Y
+
+Processed 477 frames (94 detection, 99 validation, 284 tracking)
+45 garbage homographies
+
+DetectionModule took 3.50 ms --> 285.45 FPS
+
+ValidationModule took 13.98 ms --> 71.53 FPS
+extracting:	6.670586 ms (47.71%)
+detecting:	5.832117 ms (41.72%)
+estimating:	0.434069 ms (3.10%)
+matching:	0.184516 ms (1.32%)
+objectKeyPoints: 84
+sceneKeyPoints: 16
+matches ratio: 3
+matches masked: 2
+delta transform (px): 1278.795
+
+TrackingModule took 3.27 ms --> 306.11 FPS
+initial point set: 7
+lost after tracking: 0.032
+delta transform (px): 84.100
+distance range (px): 1.352
+average error: 6.597
+
+############################
+
+enter_exit_pen
+detection Enabled N
+
+Processed 428 frames (118 detection, 123 validation, 187 tracking)
+10 garbage homographies
+
+ValidationModule took 22.11 ms --> 45.22 FPS
+detecting:	16.577211 ms (74.97%)
+extracting:	5.234816 ms (23.67%)
+estimating:	0.096998 ms (0.44%)
+matching:	0.068384 ms (0.31%)
+objectKeyPoints: 84
+sceneKeyPoints: 5
+matches ratio: 1
+matches masked: 0
+delta transform (px): 100.868
+
+TrackingModule took 3.41 ms --> 293.08 FPS
+initial point set: 10
+lost after tracking: 0.155
+delta transform (px): 7.950
+distance range (px): 0.434
+average error: 3.973
+
+############################
+
+enter_exit_pen
+detection Enabled Y
+
+Processed 428 frames (219 detection, 47 validation, 162 tracking) <-- bessere Verteilung
+7 garbage homographies
+
+DetectionModule took 3.06 ms --> 327.11 FPS
+
+ValidationModule took 8.46 ms --> 118.24 FPS
+extracting:	3.995246 ms (47.24%)
+detecting:	3.880961 ms (45.89%)
+estimating:	0.284957 ms (3.37%)
+matching:	0.134220 ms (1.59%)
+objectKeyPoints: 84
+sceneKeyPoints: 11
+matches ratio: 3
+matches masked: 2
+delta transform (px): 44.866
+
+TrackingModule took 3.46 ms --> 289.00 FPS
+initial point set: 11
+lost after tracking: 0.123
+delta transform (px): 10.198
+distance range (px): 0.432
+average error: 4.042
+
+############################
+
+clutter_pen
+detection Enabled N
+
+Processed 414 frames (207 detection, 207 validation, 0 tracking)
+0 garbage homographies
+
+ValidationModule took 59.12 ms --> 16.91 FPS
+extracting:	32.692867 ms (55.30%)
+detecting:	24.757898 ms (41.88%)
+matching:	1.539475 ms (2.60%)
+objectKeyPoints: 84
+sceneKeyPoints: 200
+matches total: 84
+matches ratio: 0
+
+############################
+
+clutter_pen
+detection Enabled Y
+
+Processed 414 frames (227 detection, 187 validation, 0 tracking) <-- detection selbst versagt zu oft
+0 garbage homographies
+
+DetectionModule took 3.46 ms --> 288.88 FPS
+
+ValidationModule took 17.43 ms --> 57.36 FPS
+extracting:	10.576612 ms (60.67%)
+detecting:	6.190564 ms (35.51%)
+matching:	0.554186 ms (3.18%)
+objectKeyPoints: 84
+sceneKeyPoints: 66
+matches total: 70
+matches ratio: 0
