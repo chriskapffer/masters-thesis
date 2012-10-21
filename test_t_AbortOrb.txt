@@ -163,20 +163,31 @@ average error: 6.186
 
 maxDelta 40
 
+1. 480x360
+2. 352x288
+
 ############################
 
 maxFrames 90
 
 Processed 472 frames (2 detection, 10 validation, 460 tracking)
+Processed 472 frames (1 detection, 8 validation, 463 tracking)
 6 garbage homographies
+4 garbage homographies
 
 ValidationModule took 25.75 ms --> 38.84 FPS
 delta transform (px): 50.687
+ValidationModule took 23.26 ms --> 42.98 FPS
+delta transform (px): 103.870
 
 TrackingModule took 6.93 ms --> 144.29 FPS
 delta transform (px): 7.486
 distance range (px): 2.589
 average error: 6.287
+TrackingModule took 5.39 ms --> 185.51 FPS
+delta transform (px): 5.945
+distance range (px): 2.189
+average error: 5.935
 
 - avg time: 7.2993 ms
 
@@ -185,15 +196,23 @@ average error: 6.287
 maxFrames 60
 
 Processed 472 frames (2 detection, 11 validation, 459 tracking)
+Processed 472 frames (1 detection, 9 validation, 462 tracking)
 6 garbage homographies
+2 garbage homographies
 
 ValidationModule took 27.66 ms --> 36.15 FPS
 delta transform (px): 46.683
+ValidationModule took 24.57 ms --> 40.70 FPS
+delta transform (px): 44.972
 
 TrackingModule took 6.76 ms --> 148.02 FPS
 delta transform (px): 7.434
 distance range (px): 2.687
 average error: 6.281
+TrackingModule took 4.89 ms --> 204.44 FPS
+delta transform (px): 6.170
+distance range (px): 2.078
+average error: 5.786
 
 - avg time: 7.2184 ms
 
@@ -202,14 +221,22 @@ average error: 6.281
 maxFrames 30
 
 Processed 472 frames (3 detection, 17 validation, 452 tracking)
+Processed 472 frames (2 detection, 17 validation, 453 tracking)
 3 garbage homographies
+2 garbage homographies
 
 ValidationModule took 26.50 ms --> 37.74 FPS
 delta transform (px): 629.932 <-- trotzdem gut
+ValidationModule took 23.54 ms --> 42.48 FPS
+delta transform (px): 21.121
 
 TrackingModule took 7.00 ms --> 142.84 FPS
 delta transform (px): 29.571
 distance range (px): 2.897
 average error: 6.186
+TrackingModule took 5.21 ms --> 192.05 FPS
+delta transform (px): 5.736
+distance range (px): 2.069
+average error: 5.834
 
 - avg time: 7.6578 ms
