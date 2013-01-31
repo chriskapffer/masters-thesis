@@ -70,7 +70,7 @@ public:
     inline float getRatio() const { return _ratio; }
     
     inline void setRansacThreshold(const int& value) { _ransacThreshold = value; }
-    inline int setRansacThreshold() const { return _ransacThreshold; }
+    inline int getRansacThreshold() const { return _ransacThreshold; }
     
     inline void setRefineHomography(const bool& value) { _refineHomography = value; }
     inline bool getRefineHomography() const { return _refineHomography; }

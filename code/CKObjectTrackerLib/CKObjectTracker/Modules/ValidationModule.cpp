@@ -35,7 +35,6 @@ static string getAlgorithmName(const Algorithm& algorithm)
     
 void ValidationModule::setDetector(const string& value)
 {
-    // TODO: change _extractor appropriately
     if (value == "FAST") {
         _detector = new FastFeatureDetector(_fastThreshold);
     } else if (value == "GFTT") {
@@ -77,9 +76,18 @@ void ValidationModule::setExtractor(const string& value, bool updateMatcher)
         _extractor = new OrbDescriptorExtractor(_maxFeatures, 1.2f, 8, 21);
         if (getAlgorithmName(*_detector) == "SIFT") { setDetector("ORB"); } // can't mix them
         if (updateMatcher) { _matcher = new BFMatcher(NORM_HAMMING); }
-    } else if (value == "FREAK") {
+    }
+#if OPENCV243
+    else if (value == "BRISK") {
+        _extractor = new BRISK();
+        if (updateMatcher) { _matcher = new BFMatcher(NORM_HAMMING); //new FlannBasedMatcher(new flann::LshIndexParams(20, 10, 2));
+        }
+    }
+#endif
+    else if (value == "FREAK") {
         _extractor = new FREAK();
-        if (updateMatcher) { _matcher = new BFMatcher(NORM_HAMMING); }
+        if (updateMatcher) { _matcher = new BFMatcher(NORM_HAMMING); //new FlannBasedMatcher(new flann::LshIndexParams(20, 10, 2));
+        }
     } else {
         throw "Extractor not supported.";
     }
@@ -229,8 +237,7 @@ ValidationModule::ValidationModule(const vector<FilterFlag>& filterFlags, int es
     // detector, extractor, matcher params
     _detector = new SiftFeatureDetector(_maxFeatures);
     _extractor = new SiftDescriptorExtractor(_maxFeatures);
-    _matcher = new BFMatcher(NORM_L2);
-    
+    _matcher = new BFMatcher(NORM_L2); 
     _isDirty = false;
 }
 

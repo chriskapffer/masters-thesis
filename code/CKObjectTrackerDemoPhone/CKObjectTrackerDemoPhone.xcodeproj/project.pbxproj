@@ -9,6 +9,52 @@
 /* Begin PBXBuildFile section */
 		4C23D20C15FE3A5600A1AC55 /* opencv2fast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C23D20B15FE3A5600A1AC55 /* opencv2fast.framework */; };
 		4C23D20D15FE3C1100A1AC55 /* opencv2fast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C23D20B15FE3A5600A1AC55 /* opencv2fast.framework */; };
+		4C48665516B93BB4008C9163 /* libCKObjectTrackerPhone243.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C48665416B93BB4008C9163 /* libCKObjectTrackerPhone243.a */; };
+		4C48665816B9411D008C9163 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4E0D1C15DE33C0002BE9A4 /* main.m */; };
+		4C48665916B9411D008C9163 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4E0D2015DE33C0002BE9A4 /* AppDelegate.m */; };
+		4C48665A16B9411D008C9163 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1863515F9E0CD004C3372 /* MainViewController.m */; };
+		4C48665B16B9411D008C9163 /* CaptureManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1863815F9E0CD004C3372 /* CaptureManager.m */; };
+		4C48665C16B9411D008C9163 /* CVImageConverter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1863D15F9E147004C3372 /* CVImageConverter.mm */; };
+		4C48665D16B9411D008C9163 /* FPSCalcApple.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1864115F9E2EF004C3372 /* FPSCalcApple.m */; };
+		4C48665E16B9411D008C9163 /* FPSCalcSummerhill.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1864315F9E2EF004C3372 /* FPSCalcSummerhill.m */; };
+		4C48665F16B9411D008C9163 /* FPSCalculator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1864515F9E2EF004C3372 /* FPSCalculator.m */; };
+		4C48666016B9411D008C9163 /* ObjectTrackerLibrary.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1865A15F9EA90004C3372 /* ObjectTrackerLibrary.mm */; };
+		4C48666116B9411D008C9163 /* CVImageConverter+PixelBuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1865E15FA3EA1004C3372 /* CVImageConverter+PixelBuffer.mm */; };
+		4C48666216B9411D008C9163 /* UIImage+Transform.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7F441015FB52FC00869927 /* UIImage+Transform.m */; };
+		4C48666316B9411D008C9163 /* StartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7F441515FB834100869927 /* StartViewController.m */; };
+		4C48666416B9411D008C9163 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620B915FBE66E00C72DE7 /* SettingsViewController.m */; };
+		4C48666516B9411D008C9163 /* ObjectTrackerParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620C015FBEC2400C72DE7 /* ObjectTrackerParameter.m */; };
+		4C48666616B9411D008C9163 /* ParameterSliderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620C815FC011C00C72DE7 /* ParameterSliderCell.m */; };
+		4C48666716B9411D008C9163 /* ParameterSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620CC15FC013200C72DE7 /* ParameterSwitchCell.m */; };
+		4C48666816B9411D008C9163 /* ParameterSegmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620D015FC014C00C72DE7 /* ParameterSegmentCell.m */; };
+		4C48666916B9411D008C9163 /* ParameterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620DD15FC181000C72DE7 /* ParameterCell.m */; };
+		4C48666A16B9411D008C9163 /* UIView+EasyFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620E615FC2CB400C72DE7 /* UIView+EasyFrame.m */; };
+		4C48666B16B9411D008C9163 /* UIImage+PixelBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC7D0615FCF97F007DFC92 /* UIImage+PixelBuffer.m */; };
+		4C48666C16B9411D008C9163 /* ARViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8511421601315C002AEB77 /* ARViewController.m */; };
+		4C48666D16B9411D008C9163 /* DrawableObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8511461601319E002AEB77 /* DrawableObject.m */; };
+		4C48666E16B9411D008C9163 /* ShaderUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C79806816022AE1009693C0 /* ShaderUtils.m */; };
+		4C48666F16B9411D008C9163 /* BackgroundTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C79807016023502009693C0 /* BackgroundTexture.m */; };
+		4C48667116B9411D008C9163 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0CF015DE3378002BE9A4 /* UIKit.framework */; };
+		4C48667216B9411D008C9163 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0CF215DE3378002BE9A4 /* Foundation.framework */; };
+		4C48667316B9411D008C9163 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0CF415DE3378002BE9A4 /* CoreGraphics.framework */; };
+		4C48667516B9411D008C9163 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE1864E15F9E5B8004C3372 /* AVFoundation.framework */; };
+		4C48667616B9411D008C9163 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE1864C15F9E5B1004C3372 /* CoreMedia.framework */; };
+		4C48667716B9411D008C9163 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE1865215F9E5E5004C3372 /* CoreVideo.framework */; };
+		4C48667816B9411D008C9163 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE1865015F9E5D2004C3372 /* QuartzCore.framework */; };
+		4C48667A16B9411D008C9163 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C85111C1600B313002AEB77 /* OpenGLES.framework */; };
+		4C48667B16B9411D008C9163 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C85111B1600B313002AEB77 /* GLKit.framework */; };
+		4C48667D16B9411D008C9163 /* passThrough.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 4C79804F1601F30D009693C0 /* passThrough.fsh */; };
+		4C48667E16B9411D008C9163 /* passThrough.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 4C7980501601F30D009693C0 /* passThrough.vsh */; };
+		4C48667F16B9411D008C9163 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E0D1915DE33C0002BE9A4 /* InfoPlist.strings */; };
+		4C48668016B9411D008C9163 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E0D2515DE33C0002BE9A4 /* MainViewController.xib */; };
+		4C48668116B9411D008C9163 /* StartViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C7F441715FB834B00869927 /* StartViewController.xib */; };
+		4C48668216B9411D008C9163 /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C8620BA15FBE66E00C72DE7 /* SettingsViewController.xib */; };
+		4C48668316B9411D008C9163 /* ParameterSegmentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C8620D315FC016400C72DE7 /* ParameterSegmentCell.xib */; };
+		4C48668416B9411D008C9163 /* ParameterSliderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C8620D615FC017600C72DE7 /* ParameterSliderCell.xib */; };
+		4C48668516B9411D008C9163 /* ParameterSwitchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C8620D915FC018A00C72DE7 /* ParameterSwitchCell.xib */; };
+		4C48668616B9411D008C9163 /* tile_floor.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C7980521601F30D009693C0 /* tile_floor.png */; };
+		4C48668716B9411D008C9163 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CD7FF22161DF16A00E5C5EA /* Default-568h@2x.png */; };
+		4C48669116B94227008C9163 /* libCKObjectTrackerPhone243.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C48665416B93BB4008C9163 /* libCKObjectTrackerPhone243.a */; };
 		4C4E0D1315DE33C0002BE9A4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0CF015DE3378002BE9A4 /* UIKit.framework */; };
 		4C4E0D1415DE33C0002BE9A4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0CF215DE3378002BE9A4 /* Foundation.framework */; };
 		4C4E0D1515DE33C0002BE9A4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0CF415DE3378002BE9A4 /* CoreGraphics.framework */; };
@@ -25,6 +71,8 @@
 		4C4E0D4515DE344C002BE9A4 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E0D4315DE344C002BE9A4 /* MainViewController.xib */; };
 		4C4E0DE615DE4076002BE9A4 /* libCKObjectTrackerPhone.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0DE415DE4034002BE9A4 /* libCKObjectTrackerPhone.a */; };
 		4C4E0DE715DE4077002BE9A4 /* libCKObjectTrackerPhone.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0DE415DE4034002BE9A4 /* libCKObjectTrackerPhone.a */; };
+		4C5F276016B9712A00AB97BA /* opencv2fast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C5F275E16B970FD00AB97BA /* opencv2fast.framework */; };
+		4C5F276116B9712B00AB97BA /* opencv2fast.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C5F275E16B970FD00AB97BA /* opencv2fast.framework */; };
 		4C7980571601F30D009693C0 /* tile_floor.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C7980521601F30D009693C0 /* tile_floor.png */; };
 		4C7980581601F30D009693C0 /* tile_floor.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C7980521601F30D009693C0 /* tile_floor.png */; };
 		4C798061160207C0009693C0 /* passThrough.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 4C79804F1601F30D009693C0 /* passThrough.fsh */; };
@@ -100,10 +148,58 @@
 		4CE1865C15F9EA90004C3372 /* ObjectTrackerLibrary.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1865A15F9EA90004C3372 /* ObjectTrackerLibrary.mm */; };
 		4CE1865F15FA3EA1004C3372 /* CVImageConverter+PixelBuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1865E15FA3EA1004C3372 /* CVImageConverter+PixelBuffer.mm */; };
 		4CE1866015FA3EA1004C3372 /* CVImageConverter+PixelBuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1865E15FA3EA1004C3372 /* CVImageConverter+PixelBuffer.mm */; };
+		4CFD46FC164964E2009265B7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4E0D3A15DE344C002BE9A4 /* main.m */; };
+		4CFD46FD164964E2009265B7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4E0D3E15DE344C002BE9A4 /* AppDelegate.m */; };
+		4CFD46FE164964E2009265B7 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1862A15F9E071004C3372 /* MainViewController.m */; };
+		4CFD46FF164964E2009265B7 /* ResourceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1862C15F9E071004C3372 /* ResourceViewController.m */; };
+		4CFD4700164964E2009265B7 /* VideoReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1862F15F9E071004C3372 /* VideoReader.m */; };
+		4CFD4701164964E2009265B7 /* CVImageConverter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1863D15F9E147004C3372 /* CVImageConverter.mm */; };
+		4CFD4702164964E2009265B7 /* FPSCalcApple.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1864115F9E2EF004C3372 /* FPSCalcApple.m */; };
+		4CFD4703164964E2009265B7 /* FPSCalcSummerhill.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1864315F9E2EF004C3372 /* FPSCalcSummerhill.m */; };
+		4CFD4704164964E2009265B7 /* FPSCalculator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1864515F9E2EF004C3372 /* FPSCalculator.m */; };
+		4CFD4705164964E2009265B7 /* ObjectTrackerLibrary.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1865A15F9EA90004C3372 /* ObjectTrackerLibrary.mm */; };
+		4CFD4706164964E2009265B7 /* CVImageConverter+PixelBuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1865E15FA3EA1004C3372 /* CVImageConverter+PixelBuffer.mm */; };
+		4CFD4707164964E2009265B7 /* UIImage+Transform.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7F441015FB52FC00869927 /* UIImage+Transform.m */; };
+		4CFD4708164964E2009265B7 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620B915FBE66E00C72DE7 /* SettingsViewController.m */; };
+		4CFD4709164964E2009265B7 /* ObjectTrackerParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620C015FBEC2400C72DE7 /* ObjectTrackerParameter.m */; };
+		4CFD470A164964E2009265B7 /* ParameterSliderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620C815FC011C00C72DE7 /* ParameterSliderCell.m */; };
+		4CFD470B164964E2009265B7 /* ParameterSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620CC15FC013200C72DE7 /* ParameterSwitchCell.m */; };
+		4CFD470C164964E2009265B7 /* ParameterSegmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620D015FC014C00C72DE7 /* ParameterSegmentCell.m */; };
+		4CFD470D164964E2009265B7 /* ParameterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620DD15FC181000C72DE7 /* ParameterCell.m */; };
+		4CFD470E164964E2009265B7 /* UIView+EasyFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8620E615FC2CB400C72DE7 /* UIView+EasyFrame.m */; };
+		4CFD470F164964E2009265B7 /* UIImage+PixelBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCC7D0615FCF97F007DFC92 /* UIImage+PixelBuffer.m */; };
+		4CFD4710164964E2009265B7 /* ARViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8511421601315C002AEB77 /* ARViewController.m */; };
+		4CFD4711164964E2009265B7 /* DrawableObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8511461601319E002AEB77 /* DrawableObject.m */; };
+		4CFD4712164964E2009265B7 /* ShaderUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C79806816022AE1009693C0 /* ShaderUtils.m */; };
+		4CFD4713164964E2009265B7 /* BackgroundTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C79807016023502009693C0 /* BackgroundTexture.m */; };
+		4CFD4715164964E2009265B7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0CF015DE3378002BE9A4 /* UIKit.framework */; };
+		4CFD4716164964E2009265B7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0CF215DE3378002BE9A4 /* Foundation.framework */; };
+		4CFD4717164964E2009265B7 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE1864E15F9E5B8004C3372 /* AVFoundation.framework */; };
+		4CFD4718164964E2009265B7 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE1864C15F9E5B1004C3372 /* CoreMedia.framework */; };
+		4CFD4719164964E2009265B7 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE1865215F9E5E5004C3372 /* CoreVideo.framework */; };
+		4CFD471A164964E2009265B7 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0CF415DE3378002BE9A4 /* CoreGraphics.framework */; };
+		4CFD471B164964E2009265B7 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE1865015F9E5D2004C3372 /* QuartzCore.framework */; };
+		4CFD471E164964E2009265B7 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C85111C1600B313002AEB77 /* OpenGLES.framework */; };
+		4CFD471F164964E2009265B7 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C85111B1600B313002AEB77 /* GLKit.framework */; };
+		4CFD4721164964E2009265B7 /* passThrough.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 4C79804F1601F30D009693C0 /* passThrough.fsh */; };
+		4CFD4722164964E2009265B7 /* passThrough.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 4C7980501601F30D009693C0 /* passThrough.vsh */; };
+		4CFD4723164964E2009265B7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E0D3715DE344C002BE9A4 /* InfoPlist.strings */; };
+		4CFD4724164964E2009265B7 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C4E0D4315DE344C002BE9A4 /* MainViewController.xib */; };
+		4CFD4725164964E2009265B7 /* testdata in Resources */ = {isa = PBXBuildFile; fileRef = 4C962F0015F96A3500C804E5 /* testdata */; };
+		4CFD4726164964E2009265B7 /* ResourceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CD86B7E15FAA88400B1767C /* ResourceViewController.xib */; };
+		4CFD4727164964E2009265B7 /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C8620BA15FBE66E00C72DE7 /* SettingsViewController.xib */; };
+		4CFD4728164964E2009265B7 /* ParameterSegmentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C8620D315FC016400C72DE7 /* ParameterSegmentCell.xib */; };
+		4CFD4729164964E2009265B7 /* ParameterSliderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C8620D615FC017600C72DE7 /* ParameterSliderCell.xib */; };
+		4CFD472A164964E2009265B7 /* ParameterSwitchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C8620D915FC018A00C72DE7 /* ParameterSwitchCell.xib */; };
+		4CFD472B164964E2009265B7 /* tile_floor.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C7980521601F30D009693C0 /* tile_floor.png */; };
+		4CFD472C164964E2009265B7 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CD7FF22161DF16A00E5C5EA /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4C23D20B15FE3A5600A1AC55 /* opencv2fast.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2fast.framework; path = ../opencv2fast.framework; sourceTree = "<group>"; };
+		4C48665416B93BB4008C9163 /* libCKObjectTrackerPhone243.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCKObjectTrackerPhone243.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C48668B16B9411D008C9163 /* CKObjectTrackerDemo243.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CKObjectTrackerDemo243.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C48668E16B941F3008C9163 /* CKObjectTrackerDemo243-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "CKObjectTrackerDemo243-Info.plist"; sourceTree = "<group>"; };
 		4C4E0CF015DE3378002BE9A4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4C4E0CF215DE3378002BE9A4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4C4E0CF415DE3378002BE9A4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -125,6 +221,7 @@
 		4C4E0D4415DE344C002BE9A4 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainViewController.xib; sourceTree = "<group>"; };
 		4C4E0DE415DE4034002BE9A4 /* libCKObjectTrackerPhone.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCKObjectTrackerPhone.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C4E0DE815DE4221002BE9A4 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = ../opencv2.framework; sourceTree = "<group>"; };
+		4C5F275E16B970FD00AB97BA /* opencv2fast.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2fast.framework; path = ../opencv2.4.3/opencv2fast.framework; sourceTree = "<group>"; };
 		4C79804F1601F30D009693C0 /* passThrough.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = passThrough.fsh; sourceTree = "<group>"; };
 		4C7980501601F30D009693C0 /* passThrough.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = passThrough.vsh; sourceTree = "<group>"; };
 		4C7980521601F30D009693C0 /* tile_floor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tile_floor.png; sourceTree = "<group>"; };
@@ -132,6 +229,8 @@
 		4C79806816022AE1009693C0 /* ShaderUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShaderUtils.m; sourceTree = "<group>"; };
 		4C79806F16023502009693C0 /* BackgroundTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackgroundTexture.h; sourceTree = "<group>"; };
 		4C79807016023502009693C0 /* BackgroundTexture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackgroundTexture.m; sourceTree = "<group>"; };
+		4C7C999416A00D7D0051BC50 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = ../opencv2.4.3/opencv2.framework; sourceTree = "<group>"; };
+		4C7C999716A00FA40051BC50 /* CKObjectTrackerTest243-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "CKObjectTrackerTest243-Info.plist"; sourceTree = "<group>"; };
 		4C7F440F15FB52FC00869927 /* UIImage+Transform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Transform.h"; sourceTree = "<group>"; };
 		4C7F441015FB52FC00869927 /* UIImage+Transform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Transform.m"; sourceTree = "<group>"; };
 		4C7F441415FB834100869927 /* StartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartViewController.h; sourceTree = "<group>"; };
@@ -195,9 +294,28 @@
 		4CE1865A15F9EA90004C3372 /* ObjectTrackerLibrary.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ObjectTrackerLibrary.mm; sourceTree = "<group>"; };
 		4CE1865D15FA3EA1004C3372 /* CVImageConverter+PixelBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CVImageConverter+PixelBuffer.h"; sourceTree = "<group>"; };
 		4CE1865E15FA3EA1004C3372 /* CVImageConverter+PixelBuffer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "CVImageConverter+PixelBuffer.mm"; sourceTree = "<group>"; };
+		4CFD4730164964E2009265B7 /* CKObjectTrackerTest243.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CKObjectTrackerTest243.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		4C48667016B9411D008C9163 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C48667116B9411D008C9163 /* UIKit.framework in Frameworks */,
+				4C48667216B9411D008C9163 /* Foundation.framework in Frameworks */,
+				4C48667316B9411D008C9163 /* CoreGraphics.framework in Frameworks */,
+				4C48667516B9411D008C9163 /* AVFoundation.framework in Frameworks */,
+				4C48667616B9411D008C9163 /* CoreMedia.framework in Frameworks */,
+				4C48667716B9411D008C9163 /* CoreVideo.framework in Frameworks */,
+				4C48667816B9411D008C9163 /* QuartzCore.framework in Frameworks */,
+				4C48667A16B9411D008C9163 /* OpenGLES.framework in Frameworks */,
+				4C48667B16B9411D008C9163 /* GLKit.framework in Frameworks */,
+				4C48669116B94227008C9163 /* libCKObjectTrackerPhone243.a in Frameworks */,
+				4C5F276016B9712A00AB97BA /* opencv2fast.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4C4E0D0E15DE33C0002BE9A4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -205,7 +323,6 @@
 				4C4E0D1315DE33C0002BE9A4 /* UIKit.framework in Frameworks */,
 				4C4E0D1415DE33C0002BE9A4 /* Foundation.framework in Frameworks */,
 				4C4E0D1515DE33C0002BE9A4 /* CoreGraphics.framework in Frameworks */,
-				4C4E0DE715DE4077002BE9A4 /* libCKObjectTrackerPhone.a in Frameworks */,
 				4CE1865415F9E71A004C3372 /* AVFoundation.framework in Frameworks */,
 				4CE1865515F9E71D004C3372 /* CoreMedia.framework in Frameworks */,
 				4CE1865615F9E727004C3372 /* CoreVideo.framework in Frameworks */,
@@ -213,6 +330,7 @@
 				4C23D20D15FE3C1100A1AC55 /* opencv2fast.framework in Frameworks */,
 				4C85112B1600F329002AEB77 /* OpenGLES.framework in Frameworks */,
 				4C85112C1600F32F002AEB77 /* GLKit.framework in Frameworks */,
+				4C4E0DE715DE4077002BE9A4 /* libCKObjectTrackerPhone.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -231,6 +349,24 @@
 				4C4E0DE615DE4076002BE9A4 /* libCKObjectTrackerPhone.a in Frameworks */,
 				4C7980651602264A009693C0 /* OpenGLES.framework in Frameworks */,
 				4C7980661602264D009693C0 /* GLKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4CFD4714164964E2009265B7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4CFD4715164964E2009265B7 /* UIKit.framework in Frameworks */,
+				4CFD4716164964E2009265B7 /* Foundation.framework in Frameworks */,
+				4CFD4717164964E2009265B7 /* AVFoundation.framework in Frameworks */,
+				4CFD4718164964E2009265B7 /* CoreMedia.framework in Frameworks */,
+				4CFD4719164964E2009265B7 /* CoreVideo.framework in Frameworks */,
+				4CFD471A164964E2009265B7 /* CoreGraphics.framework in Frameworks */,
+				4CFD471B164964E2009265B7 /* QuartzCore.framework in Frameworks */,
+				4CFD471E164964E2009265B7 /* OpenGLES.framework in Frameworks */,
+				4CFD471F164964E2009265B7 /* GLKit.framework in Frameworks */,
+				4C48665516B93BB4008C9163 /* libCKObjectTrackerPhone243.a in Frameworks */,
+				4C5F276116B9712B00AB97BA /* opencv2fast.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -254,6 +390,8 @@
 			children = (
 				4C4E0D1115DE33C0002BE9A4 /* CKObjectTrackerDemo.app */,
 				4C4E0D2F15DE344C002BE9A4 /* CKObjectTrackerTest.app */,
+				4CFD4730164964E2009265B7 /* CKObjectTrackerTest243.app */,
+				4C48668B16B9411D008C9163 /* CKObjectTrackerDemo243.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -261,6 +399,7 @@
 		4C4E0CEF15DE3378002BE9A4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4C7C999616A00D850051BC50 /* opencv2.4.3 */,
 				4C4E0CF015DE3378002BE9A4 /* UIKit.framework */,
 				4C4E0CF215DE3378002BE9A4 /* Foundation.framework */,
 				4CE1864E15F9E5B8004C3372 /* AVFoundation.framework */,
@@ -273,6 +412,7 @@
 				4C4E0DE815DE4221002BE9A4 /* opencv2.framework */,
 				4C23D20B15FE3A5600A1AC55 /* opencv2fast.framework */,
 				4C4E0DE415DE4034002BE9A4 /* libCKObjectTrackerPhone.a */,
+				4C48665416B93BB4008C9163 /* libCKObjectTrackerPhone243.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -293,6 +433,7 @@
 			isa = PBXGroup;
 			children = (
 				4C4E0D1815DE33C0002BE9A4 /* CKObjectTrackerDemo-Info.plist */,
+				4C48668E16B941F3008C9163 /* CKObjectTrackerDemo243-Info.plist */,
 				4C4E0D1915DE33C0002BE9A4 /* InfoPlist.strings */,
 				4C4E0D1C15DE33C0002BE9A4 /* main.m */,
 				4C4E0D1E15DE33C0002BE9A4 /* CKObjectTrackerDemo-Prefix.pch */,
@@ -317,6 +458,7 @@
 			children = (
 				4C962F0015F96A3500C804E5 /* testdata */,
 				4C4E0D3615DE344C002BE9A4 /* CKObjectTrackerTest-Info.plist */,
+				4C7C999716A00FA40051BC50 /* CKObjectTrackerTest243-Info.plist */,
 				4C4E0D3715DE344C002BE9A4 /* InfoPlist.strings */,
 				4C4E0D3A15DE344C002BE9A4 /* main.m */,
 				4C4E0D3C15DE344C002BE9A4 /* CKObjectTrackerTest-Prefix.pch */,
@@ -398,6 +540,15 @@
 				4C7980521601F30D009693C0 /* tile_floor.png */,
 			);
 			path = Textures;
+			sourceTree = "<group>";
+		};
+		4C7C999616A00D850051BC50 /* opencv2.4.3 */ = {
+			isa = PBXGroup;
+			children = (
+				4C7C999416A00D7D0051BC50 /* opencv2.framework */,
+				4C5F275E16B970FD00AB97BA /* opencv2fast.framework */,
+			);
+			name = opencv2.4.3;
 			sourceTree = "<group>";
 		};
 		4C85113C16013120002AEB77 /* Drawables */ = {
@@ -506,6 +657,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		4C48665616B9411D008C9163 /* CKObjectTrackerDemo243 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4C48668816B9411D008C9163 /* Build configuration list for PBXNativeTarget "CKObjectTrackerDemo243" */;
+			buildPhases = (
+				4C48665716B9411D008C9163 /* Sources */,
+				4C48667016B9411D008C9163 /* Frameworks */,
+				4C48667C16B9411D008C9163 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CKObjectTrackerDemo243;
+			productName = CKObjectTrackerDemo;
+			productReference = 4C48668B16B9411D008C9163 /* CKObjectTrackerDemo243.app */;
+			productType = "com.apple.product-type.application";
+		};
 		4C4E0D1015DE33C0002BE9A4 /* CKObjectTrackerDemo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4C4E0D2815DE33C0002BE9A4 /* Build configuration list for PBXNativeTarget "CKObjectTrackerDemo" */;
@@ -540,6 +708,23 @@
 			productReference = 4C4E0D2F15DE344C002BE9A4 /* CKObjectTrackerTest.app */;
 			productType = "com.apple.product-type.application";
 		};
+		4CFD46FA164964E2009265B7 /* CKObjectTrackerTest243 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4CFD472D164964E2009265B7 /* Build configuration list for PBXNativeTarget "CKObjectTrackerTest243" */;
+			buildPhases = (
+				4CFD46FB164964E2009265B7 /* Sources */,
+				4CFD4714164964E2009265B7 /* Frameworks */,
+				4CFD4720164964E2009265B7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CKObjectTrackerTest243;
+			productName = CKObjectTrackerTest;
+			productReference = 4CFD4730164964E2009265B7 /* CKObjectTrackerTest243.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -561,13 +746,33 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4C4E0D2E15DE344C002BE9A4 /* CKObjectTrackerTest */,
 				4C4E0D1015DE33C0002BE9A4 /* CKObjectTrackerDemo */,
+				4C48665616B9411D008C9163 /* CKObjectTrackerDemo243 */,
+				4C4E0D2E15DE344C002BE9A4 /* CKObjectTrackerTest */,
+				4CFD46FA164964E2009265B7 /* CKObjectTrackerTest243 */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		4C48667C16B9411D008C9163 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C48667D16B9411D008C9163 /* passThrough.fsh in Resources */,
+				4C48667E16B9411D008C9163 /* passThrough.vsh in Resources */,
+				4C48667F16B9411D008C9163 /* InfoPlist.strings in Resources */,
+				4C48668016B9411D008C9163 /* MainViewController.xib in Resources */,
+				4C48668116B9411D008C9163 /* StartViewController.xib in Resources */,
+				4C48668216B9411D008C9163 /* SettingsViewController.xib in Resources */,
+				4C48668316B9411D008C9163 /* ParameterSegmentCell.xib in Resources */,
+				4C48668416B9411D008C9163 /* ParameterSliderCell.xib in Resources */,
+				4C48668516B9411D008C9163 /* ParameterSwitchCell.xib in Resources */,
+				4C48668616B9411D008C9163 /* tile_floor.png in Resources */,
+				4C48668716B9411D008C9163 /* Default-568h@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4C4E0D0F15DE33C0002BE9A4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -605,9 +810,59 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4CFD4720164964E2009265B7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4CFD4721164964E2009265B7 /* passThrough.fsh in Resources */,
+				4CFD4722164964E2009265B7 /* passThrough.vsh in Resources */,
+				4CFD4723164964E2009265B7 /* InfoPlist.strings in Resources */,
+				4CFD4724164964E2009265B7 /* MainViewController.xib in Resources */,
+				4CFD4725164964E2009265B7 /* testdata in Resources */,
+				4CFD4726164964E2009265B7 /* ResourceViewController.xib in Resources */,
+				4CFD4727164964E2009265B7 /* SettingsViewController.xib in Resources */,
+				4CFD4728164964E2009265B7 /* ParameterSegmentCell.xib in Resources */,
+				4CFD4729164964E2009265B7 /* ParameterSliderCell.xib in Resources */,
+				4CFD472A164964E2009265B7 /* ParameterSwitchCell.xib in Resources */,
+				4CFD472B164964E2009265B7 /* tile_floor.png in Resources */,
+				4CFD472C164964E2009265B7 /* Default-568h@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4C48665716B9411D008C9163 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C48665816B9411D008C9163 /* main.m in Sources */,
+				4C48665916B9411D008C9163 /* AppDelegate.m in Sources */,
+				4C48665A16B9411D008C9163 /* MainViewController.m in Sources */,
+				4C48665B16B9411D008C9163 /* CaptureManager.m in Sources */,
+				4C48665C16B9411D008C9163 /* CVImageConverter.mm in Sources */,
+				4C48665D16B9411D008C9163 /* FPSCalcApple.m in Sources */,
+				4C48665E16B9411D008C9163 /* FPSCalcSummerhill.m in Sources */,
+				4C48665F16B9411D008C9163 /* FPSCalculator.m in Sources */,
+				4C48666016B9411D008C9163 /* ObjectTrackerLibrary.mm in Sources */,
+				4C48666116B9411D008C9163 /* CVImageConverter+PixelBuffer.mm in Sources */,
+				4C48666216B9411D008C9163 /* UIImage+Transform.m in Sources */,
+				4C48666316B9411D008C9163 /* StartViewController.m in Sources */,
+				4C48666416B9411D008C9163 /* SettingsViewController.m in Sources */,
+				4C48666516B9411D008C9163 /* ObjectTrackerParameter.m in Sources */,
+				4C48666616B9411D008C9163 /* ParameterSliderCell.m in Sources */,
+				4C48666716B9411D008C9163 /* ParameterSwitchCell.m in Sources */,
+				4C48666816B9411D008C9163 /* ParameterSegmentCell.m in Sources */,
+				4C48666916B9411D008C9163 /* ParameterCell.m in Sources */,
+				4C48666A16B9411D008C9163 /* UIView+EasyFrame.m in Sources */,
+				4C48666B16B9411D008C9163 /* UIImage+PixelBuffer.m in Sources */,
+				4C48666C16B9411D008C9163 /* ARViewController.m in Sources */,
+				4C48666D16B9411D008C9163 /* DrawableObject.m in Sources */,
+				4C48666E16B9411D008C9163 /* ShaderUtils.m in Sources */,
+				4C48666F16B9411D008C9163 /* BackgroundTexture.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4C4E0D0D15DE33C0002BE9A4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -670,6 +925,37 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4CFD46FB164964E2009265B7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4CFD46FC164964E2009265B7 /* main.m in Sources */,
+				4CFD46FD164964E2009265B7 /* AppDelegate.m in Sources */,
+				4CFD46FE164964E2009265B7 /* MainViewController.m in Sources */,
+				4CFD46FF164964E2009265B7 /* ResourceViewController.m in Sources */,
+				4CFD4700164964E2009265B7 /* VideoReader.m in Sources */,
+				4CFD4701164964E2009265B7 /* CVImageConverter.mm in Sources */,
+				4CFD4702164964E2009265B7 /* FPSCalcApple.m in Sources */,
+				4CFD4703164964E2009265B7 /* FPSCalcSummerhill.m in Sources */,
+				4CFD4704164964E2009265B7 /* FPSCalculator.m in Sources */,
+				4CFD4705164964E2009265B7 /* ObjectTrackerLibrary.mm in Sources */,
+				4CFD4706164964E2009265B7 /* CVImageConverter+PixelBuffer.mm in Sources */,
+				4CFD4707164964E2009265B7 /* UIImage+Transform.m in Sources */,
+				4CFD4708164964E2009265B7 /* SettingsViewController.m in Sources */,
+				4CFD4709164964E2009265B7 /* ObjectTrackerParameter.m in Sources */,
+				4CFD470A164964E2009265B7 /* ParameterSliderCell.m in Sources */,
+				4CFD470B164964E2009265B7 /* ParameterSwitchCell.m in Sources */,
+				4CFD470C164964E2009265B7 /* ParameterSegmentCell.m in Sources */,
+				4CFD470D164964E2009265B7 /* ParameterCell.m in Sources */,
+				4CFD470E164964E2009265B7 /* UIView+EasyFrame.m in Sources */,
+				4CFD470F164964E2009265B7 /* UIImage+PixelBuffer.m in Sources */,
+				4CFD4710164964E2009265B7 /* ARViewController.m in Sources */,
+				4CFD4711164964E2009265B7 /* DrawableObject.m in Sources */,
+				4CFD4712164964E2009265B7 /* ShaderUtils.m in Sources */,
+				4CFD4713164964E2009265B7 /* BackgroundTexture.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
@@ -726,6 +1012,38 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		4C48668916B9411D008C9163 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LIBRARY = "libc++";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../opencv2.4.3\"";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CKObjectTrackerDemo/CKObjectTrackerDemo-Prefix.pch";
+				INFOPLIST_FILE = "CKObjectTrackerDemo/CKObjectTrackerDemo243-Info.plist";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(inherited)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		4C48668A16B9411D008C9163 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LIBRARY = "libc++";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../opencv2.4.3\"";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CKObjectTrackerDemo/CKObjectTrackerDemo-Prefix.pch";
+				INFOPLIST_FILE = "CKObjectTrackerDemo/CKObjectTrackerDemo243-Info.plist";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(inherited)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
 		4C4E0D0815DE3378002BE9A4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -734,7 +1052,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/..\"";
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -763,7 +1081,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/..\"";
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -783,10 +1101,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/..\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/..\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CKObjectTrackerDemo/CKObjectTrackerDemo-Prefix.pch";
 				INFOPLIST_FILE = "CKObjectTrackerDemo/CKObjectTrackerDemo-Info.plist";
@@ -801,10 +1116,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/..\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/..\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CKObjectTrackerDemo/CKObjectTrackerDemo-Prefix.pch";
 				INFOPLIST_FILE = "CKObjectTrackerDemo/CKObjectTrackerDemo-Info.plist";
@@ -819,10 +1131,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/..\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/..\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CKObjectTrackerTest/CKObjectTrackerTest-Prefix.pch";
 				INFOPLIST_FILE = "CKObjectTrackerTest/CKObjectTrackerTest-Info.plist";
@@ -837,10 +1146,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/..\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/..\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CKObjectTrackerTest/CKObjectTrackerTest-Prefix.pch";
 				INFOPLIST_FILE = "CKObjectTrackerTest/CKObjectTrackerTest-Info.plist";
@@ -851,9 +1157,50 @@
 			};
 			name = Release;
 		};
+		4CFD472E164964E2009265B7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LIBRARY = "libc++";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../opencv2.4.3\"";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CKObjectTrackerTest/CKObjectTrackerTest-Prefix.pch";
+				INFOPLIST_FILE = "CKObjectTrackerTest/CKObjectTrackerTest243-Info.plist";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = CKObjectTrackerTest243;
+				USER_HEADER_SEARCH_PATHS = "$(inherited)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		4CFD472F164964E2009265B7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LIBRARY = "libc++";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../opencv2.4.3\"";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CKObjectTrackerTest/CKObjectTrackerTest-Prefix.pch";
+				INFOPLIST_FILE = "CKObjectTrackerTest/CKObjectTrackerTest243-Info.plist";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = CKObjectTrackerTest243;
+				USER_HEADER_SEARCH_PATHS = "$(inherited)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4C48668816B9411D008C9163 /* Build configuration list for PBXNativeTarget "CKObjectTrackerDemo243" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C48668916B9411D008C9163 /* Debug */,
+				4C48668A16B9411D008C9163 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		4C4E0CE615DE3378002BE9A4 /* Build configuration list for PBXProject "CKObjectTrackerDemoPhone" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -877,6 +1224,15 @@
 			buildConfigurations = (
 				4C4E0D4715DE344C002BE9A4 /* Debug */,
 				4C4E0D4815DE344C002BE9A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4CFD472D164964E2009265B7 /* Build configuration list for PBXNativeTarget "CKObjectTrackerTest243" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4CFD472E164964E2009265B7 /* Debug */,
+				4CFD472F164964E2009265B7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

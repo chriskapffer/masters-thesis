@@ -7,11 +7,59 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C48660816B9393F008C9163 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0DDD15DE3E94002BE9A4 /* opencv2.framework */; };
+		4C48661C16B939B0008C9163 /* ObjectTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C4E0D8A15DE368E002BE9A4 /* ObjectTracker.cpp */; };
+		4C48661D16B939B0008C9163 /* DetectionModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C506C3D15E4FC430087865E /* DetectionModule.cpp */; };
+		4C48661E16B939B0008C9163 /* TrackingModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C506C4015E4FC5D0087865E /* TrackingModule.cpp */; };
+		4C48661F16B939B0008C9163 /* ValidationModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C506C4315E4FC6D0087865E /* ValidationModule.cpp */; };
+		4C48662016B939B0008C9163 /* Profiler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C506C8515E51E120087865E /* Profiler.cpp */; };
+		4C48662116B939B0008C9163 /* ObjectTrackerDebugger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CBB24A915E7D092005867C4 /* ObjectTrackerDebugger.cpp */; };
+		4C48662216B939B0008C9163 /* AbstractModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CBB24B515E811E1005867C4 /* AbstractModule.cpp */; };
+		4C48662316B939B0008C9163 /* ObjectTrackerImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CC655B915E8C3DD0035C072 /* ObjectTrackerImpl.cpp */; };
+		4C48662416B939B0008C9163 /* EmptyModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CC655D415E9419D0035C072 /* EmptyModule.cpp */; };
+		4C48662516B939B0008C9163 /* DescriptorMatcherFilterer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CCBADC915EBA719005C579F /* DescriptorMatcherFilterer.cpp */; };
+		4C48662616B939B0008C9163 /* SanityCheck.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CCBADCF15EBD4F0005C579F /* SanityCheck.cpp */; };
+		4C48662716B939B0008C9163 /* Settings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C836FC515F52E11001535A4 /* Settings.cpp */; };
+		4C48662816B939B0008C9163 /* ObjectTrackerDebugInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CD77F2215F8B8A700BBC9D8 /* ObjectTrackerDebugInfo.cpp */; };
+		4C48662916B939B0008C9163 /* FilterAlgorithm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CD77F2B15F8D0F200BBC9D8 /* FilterAlgorithm.cpp */; };
+		4C48662A16B939B0008C9163 /* ColorConversion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CD77F3115F8D2FB00BBC9D8 /* ColorConversion.cpp */; };
+		4C48662B16B939B0008C9163 /* PointOperations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CD77F3A15F8D9FB00BBC9D8 /* PointOperations.cpp */; };
+		4C48662C16B939B0008C9163 /* TransformationBuilder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CCA4A44161EC61E005B92D9 /* TransformationBuilder.cpp */; };
+		4C48662D16B939B0008C9163 /* CameraParams.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CCA4A4B161ECDDC005B92D9 /* CameraParams.cpp */; };
+		4C48663116B939B0008C9163 /* ObjectTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C4E0D8B15DE368E002BE9A4 /* ObjectTracker.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C48663216B939B0008C9163 /* DetectionModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C506C3415E4FB8C0087865E /* DetectionModule.h */; };
+		4C48663316B939B0008C9163 /* ValidationModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C506C3515E4FB8C0087865E /* ValidationModule.h */; };
+		4C48663416B939B0008C9163 /* TrackingModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C506C3A15E4FBBB0087865E /* TrackingModule.h */; };
+		4C48663516B939B0008C9163 /* Singleton.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C506C7F15E51DF00087865E /* Singleton.h */; };
+		4C48663616B939B0008C9163 /* Profiler.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C506C8215E51E010087865E /* Profiler.h */; };
+		4C48663716B939B0008C9163 /* ObjectTrackerDebugger.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CBB24A615E7D074005867C4 /* ObjectTrackerDebugger.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C48663816B939B0008C9163 /* AbstractModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CBB24AF15E80914005867C4 /* AbstractModule.h */; };
+		4C48663916B939B0008C9163 /* ObjectTrackerImpl.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655B515E8C3010035C072 /* ObjectTrackerImpl.h */; };
+		4C48663A16B939B0008C9163 /* ModuleManagement.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655C215E9331D0035C072 /* ModuleManagement.h */; };
+		4C48663B16B939B0008C9163 /* EmptyModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CC655D115E9418E0035C072 /* EmptyModule.h */; };
+		4C48663C16B939B0008C9163 /* ModuleParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCBADC315EBA343005C579F /* ModuleParams.h */; };
+		4C48663D16B939B0008C9163 /* DescriptorMatcherFilterer.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCBADC615EBA6FE005C579F /* DescriptorMatcherFilterer.h */; };
+		4C48663E16B939B0008C9163 /* SanityCheck.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCBADCC15EBD4D4005C579F /* SanityCheck.h */; };
+		4C48663F16B939B0008C9163 /* Callback.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C7FFA0D15F3B55800F1E25C /* Callback.h */; settings = {ATTRIBUTES = (); }; };
+		4C48664016B939B0008C9163 /* SettingsPublicScope.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C836FC215F52E04001535A4 /* SettingsPublicScope.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C48664116B939B0008C9163 /* ObjectTrackerCreator.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C836FC815F531B7001535A4 /* ObjectTrackerCreator.h */; };
+		4C48664216B939B0008C9163 /* SettingsProjectScope.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C84096715F6B8A5009589C1 /* SettingsProjectScope.h */; };
+		4C48664316B939B0008C9163 /* ObjectTrackerTypesPublic.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CD77F1815F8B24A00BBC9D8 /* ObjectTrackerTypesPublic.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C48664416B939B0008C9163 /* ObjectTrackerTypesProject.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CD77F1C15F8B26A00BBC9D8 /* ObjectTrackerTypesProject.h */; };
+		4C48664516B939B0008C9163 /* ModuleTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CD77F1F15F8B73000BBC9D8 /* ModuleTypes.h */; };
+		4C48664616B939B0008C9163 /* ObjectTrackerDebugInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CD77F2315F8B8A700BBC9D8 /* ObjectTrackerDebugInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4C48664716B939B0008C9163 /* Commons.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CD77F2815F8CD3800BBC9D8 /* Commons.h */; };
+		4C48664816B939B0008C9163 /* FilterAlgorithm.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CD77F2C15F8D0F200BBC9D8 /* FilterAlgorithm.h */; };
+		4C48664916B939B0008C9163 /* ColorConversion.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CD77F3215F8D2FB00BBC9D8 /* ColorConversion.h */; };
+		4C48664A16B939B0008C9163 /* Neon.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CD77F3715F8D40E00BBC9D8 /* Neon.h */; };
+		4C48664B16B939B0008C9163 /* PointOperations.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CD77F3B15F8D9FB00BBC9D8 /* PointOperations.h */; };
+		4C48664C16B939B0008C9163 /* TransformationBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCA4A45161EC61E005B92D9 /* TransformationBuilder.h */; settings = {ATTRIBUTES = (); }; };
+		4C48664D16B939B0008C9163 /* CameraParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CCA4A4C161ECDDD005B92D9 /* CameraParams.h */; };
+		4C48665216B93AD8008C9163 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C7C999116A00CC80051BC50 /* opencv2.framework */; };
 		4C4E0D8C15DE368E002BE9A4 /* ObjectTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C4E0D8A15DE368E002BE9A4 /* ObjectTracker.cpp */; };
 		4C4E0D8D15DE368E002BE9A4 /* ObjectTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4C4E0D8A15DE368E002BE9A4 /* ObjectTracker.cpp */; };
 		4C4E0D8E15DE368E002BE9A4 /* ObjectTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C4E0D8B15DE368E002BE9A4 /* ObjectTracker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C4E0D8F15DE368E002BE9A4 /* ObjectTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C4E0D8B15DE368E002BE9A4 /* ObjectTracker.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4C4E0DDE15DE3E94002BE9A4 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0DDD15DE3E94002BE9A4 /* opencv2.framework */; };
 		4C4E0DE015DE3EC5002BE9A4 /* libdispatch.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4E0DDF15DE3EC5002BE9A4 /* libdispatch.dylib */; };
 		4C506C3615E4FB8C0087865E /* DetectionModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C506C3415E4FB8C0087865E /* DetectionModule.h */; };
 		4C506C3715E4FB8C0087865E /* DetectionModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C506C3415E4FB8C0087865E /* DetectionModule.h */; };
@@ -106,6 +154,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4C48660E16B939A1008C9163 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		4C48665116B939B0008C9163 /* libCKObjectTrackerPhone243.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCKObjectTrackerPhone243.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C4E0D7715DE352D002BE9A4 /* libCKObjectTrackerMac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCKObjectTrackerMac.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C4E0D7F15DE35E1002BE9A4 /* libCKObjectTrackerPhone.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCKObjectTrackerPhone.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C4E0D8315DE35E1002BE9A4 /* CKObjectTracker-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CKObjectTracker-Prefix.pch"; sourceTree = "<group>"; };
@@ -122,6 +172,7 @@
 		4C506C7F15E51DF00087865E /* Singleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Singleton.h; sourceTree = "<group>"; };
 		4C506C8215E51E010087865E /* Profiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Profiler.h; sourceTree = "<group>"; };
 		4C506C8515E51E120087865E /* Profiler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Profiler.cpp; sourceTree = "<group>"; };
+		4C7C999116A00CC80051BC50 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 		4C7FFA0D15F3B55800F1E25C /* Callback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Callback.h; sourceTree = "<group>"; };
 		4C836FC215F52E04001535A4 /* SettingsPublicScope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsPublicScope.h; sourceTree = "<group>"; };
 		4C836FC515F52E11001535A4 /* Settings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Settings.cpp; sourceTree = "<group>"; };
@@ -161,6 +212,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		4C48662E16B939B0008C9163 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C48665216B93AD8008C9163 /* opencv2.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4C4E0D7415DE352D002BE9A4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -173,7 +232,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C4E0DDE15DE3E94002BE9A4 /* opencv2.framework in Frameworks */,
+				4C48660816B9393F008C9163 /* opencv2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -194,6 +253,7 @@
 			children = (
 				4C4E0D7715DE352D002BE9A4 /* libCKObjectTrackerMac.a */,
 				4C4E0D7F15DE35E1002BE9A4 /* libCKObjectTrackerPhone.a */,
+				4C48665116B939B0008C9163 /* libCKObjectTrackerPhone243.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -201,8 +261,10 @@
 		4C4E0D5615DE34DD002BE9A4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4CD3A99B164A9F22004483D8 /* opencv2.4.3 */,
 				4C4E0DDD15DE3E94002BE9A4 /* opencv2.framework */,
 				4C4E0DDF15DE3EC5002BE9A4 /* libdispatch.dylib */,
+				4C48660E16B939A1008C9163 /* Foundation.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -294,9 +356,54 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
+		4CD3A99B164A9F22004483D8 /* opencv2.4.3 */ = {
+			isa = PBXGroup;
+			children = (
+				4C7C999116A00CC80051BC50 /* opencv2.framework */,
+			);
+			name = opencv2.4.3;
+			path = ../opencv2.4.3;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		4C48663016B939B0008C9163 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C48663116B939B0008C9163 /* ObjectTracker.h in Headers */,
+				4C48663216B939B0008C9163 /* DetectionModule.h in Headers */,
+				4C48663316B939B0008C9163 /* ValidationModule.h in Headers */,
+				4C48663416B939B0008C9163 /* TrackingModule.h in Headers */,
+				4C48663516B939B0008C9163 /* Singleton.h in Headers */,
+				4C48663616B939B0008C9163 /* Profiler.h in Headers */,
+				4C48663716B939B0008C9163 /* ObjectTrackerDebugger.h in Headers */,
+				4C48663816B939B0008C9163 /* AbstractModule.h in Headers */,
+				4C48663916B939B0008C9163 /* ObjectTrackerImpl.h in Headers */,
+				4C48663A16B939B0008C9163 /* ModuleManagement.h in Headers */,
+				4C48663B16B939B0008C9163 /* EmptyModule.h in Headers */,
+				4C48663C16B939B0008C9163 /* ModuleParams.h in Headers */,
+				4C48663D16B939B0008C9163 /* DescriptorMatcherFilterer.h in Headers */,
+				4C48663E16B939B0008C9163 /* SanityCheck.h in Headers */,
+				4C48663F16B939B0008C9163 /* Callback.h in Headers */,
+				4C48664016B939B0008C9163 /* SettingsPublicScope.h in Headers */,
+				4C48664116B939B0008C9163 /* ObjectTrackerCreator.h in Headers */,
+				4C48664216B939B0008C9163 /* SettingsProjectScope.h in Headers */,
+				4C48664316B939B0008C9163 /* ObjectTrackerTypesPublic.h in Headers */,
+				4C48664416B939B0008C9163 /* ObjectTrackerTypesProject.h in Headers */,
+				4C48664516B939B0008C9163 /* ModuleTypes.h in Headers */,
+				4C48664616B939B0008C9163 /* ObjectTrackerDebugInfo.h in Headers */,
+				4C48664716B939B0008C9163 /* Commons.h in Headers */,
+				4C48664816B939B0008C9163 /* FilterAlgorithm.h in Headers */,
+				4C48664916B939B0008C9163 /* ColorConversion.h in Headers */,
+				4C48664A16B939B0008C9163 /* Neon.h in Headers */,
+				4C48664B16B939B0008C9163 /* PointOperations.h in Headers */,
+				4C48664C16B939B0008C9163 /* TransformationBuilder.h in Headers */,
+				4C48664D16B939B0008C9163 /* CameraParams.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4C4E0D7515DE352D002BE9A4 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -372,6 +479,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		4C48661A16B939B0008C9163 /* CKObjectTrackerPhone243 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4C48664E16B939B0008C9163 /* Build configuration list for PBXNativeTarget "CKObjectTrackerPhone243" */;
+			buildPhases = (
+				4C48661B16B939B0008C9163 /* Sources */,
+				4C48662E16B939B0008C9163 /* Frameworks */,
+				4C48663016B939B0008C9163 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CKObjectTrackerPhone243;
+			productName = CKObjectTracker;
+			productReference = 4C48665116B939B0008C9163 /* libCKObjectTrackerPhone243.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		4C4E0D7615DE352D002BE9A4 /* CKObjectTrackerMac */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4C4E0D7815DE352D002BE9A4 /* Build configuration list for PBXNativeTarget "CKObjectTrackerMac" */;
@@ -429,11 +553,37 @@
 			targets = (
 				4C4E0D7615DE352D002BE9A4 /* CKObjectTrackerMac */,
 				4C4E0D7E15DE35E1002BE9A4 /* CKObjectTrackerPhone */,
+				4C48661A16B939B0008C9163 /* CKObjectTrackerPhone243 */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4C48661B16B939B0008C9163 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C48661C16B939B0008C9163 /* ObjectTracker.cpp in Sources */,
+				4C48661D16B939B0008C9163 /* DetectionModule.cpp in Sources */,
+				4C48661E16B939B0008C9163 /* TrackingModule.cpp in Sources */,
+				4C48661F16B939B0008C9163 /* ValidationModule.cpp in Sources */,
+				4C48662016B939B0008C9163 /* Profiler.cpp in Sources */,
+				4C48662116B939B0008C9163 /* ObjectTrackerDebugger.cpp in Sources */,
+				4C48662216B939B0008C9163 /* AbstractModule.cpp in Sources */,
+				4C48662316B939B0008C9163 /* ObjectTrackerImpl.cpp in Sources */,
+				4C48662416B939B0008C9163 /* EmptyModule.cpp in Sources */,
+				4C48662516B939B0008C9163 /* DescriptorMatcherFilterer.cpp in Sources */,
+				4C48662616B939B0008C9163 /* SanityCheck.cpp in Sources */,
+				4C48662716B939B0008C9163 /* Settings.cpp in Sources */,
+				4C48662816B939B0008C9163 /* ObjectTrackerDebugInfo.cpp in Sources */,
+				4C48662916B939B0008C9163 /* FilterAlgorithm.cpp in Sources */,
+				4C48662A16B939B0008C9163 /* ColorConversion.cpp in Sources */,
+				4C48662B16B939B0008C9163 /* PointOperations.cpp in Sources */,
+				4C48662C16B939B0008C9163 /* TransformationBuilder.cpp in Sources */,
+				4C48662D16B939B0008C9163 /* CameraParams.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4C4E0D7315DE352D002BE9A4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -487,6 +637,45 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		4C48664F16B939B0008C9163 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libc++";
+				DSTROOT = /tmp/CKObjectTracker.dst;
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../opencv2.4.3\"";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CKObjectTracker/CKObjectTracker-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OPENCV243=1",
+					"DEBUG=1",
+				);
+				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		4C48665016B939B0008C9163 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libc++";
+				DSTROOT = /tmp/CKObjectTracker.dst;
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../opencv2.4.3\"";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CKObjectTracker/CKObjectTracker-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "OPENCV243=1";
+				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 		4C4E0D5F15DE34DD002BE9A4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -539,7 +728,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CKObjectTracker/CKObjectTracker-Prefix.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				HEADER_SEARCH_PATHS = /usr/local/include/;
+				HEADER_SEARCH_PATHS = "/usr/local/include/**";
 				INFOPLIST_OUTPUT_FORMAT = binary;
 				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)";
 				LIBRARY_SEARCH_PATHS = (
@@ -570,7 +759,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CKObjectTracker/CKObjectTracker-Prefix.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				HEADER_SEARCH_PATHS = /usr/local/include/;
+				HEADER_SEARCH_PATHS = "/usr/local/include/**";
 				INFOPLIST_OUTPUT_FORMAT = binary;
 				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)";
 				LIBRARY_SEARCH_PATHS = (
@@ -596,6 +785,11 @@
 				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/..\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CKObjectTracker/CKObjectTracker-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OPENCV243=0",
+					"DEBUG=1",
+					"$(inherited)",
+				);
 				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -613,6 +807,7 @@
 				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/..\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CKObjectTracker/CKObjectTracker-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "OPENCV243=0";
 				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -624,6 +819,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4C48664E16B939B0008C9163 /* Build configuration list for PBXNativeTarget "CKObjectTrackerPhone243" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C48664F16B939B0008C9163 /* Debug */,
+				4C48665016B939B0008C9163 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		4C4E0D4E15DE34DD002BE9A4 /* Build configuration list for PBXProject "CKObjectTrackerLib" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

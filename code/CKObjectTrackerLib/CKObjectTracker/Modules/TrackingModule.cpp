@@ -28,7 +28,7 @@ TrackingModule::TrackingModule(int maxPoints, int minPointsAbs, float minPointsR
     _enabled = true;
     
     _maxTransformationDelta = 50;
-    _maxSuccessiveFrames = 120;
+    _maxSuccessiveFrames = 90;
     _maxPointsAbsolute = maxPoints;
     _minPointsAbsolute = minPointsAbs;
     _minPointsRelative = minPointsRel;

@@ -166,7 +166,9 @@ namespace ck {
         vector<DMatch> result;
         // for all matches - add first neighbor to result and ignore others
 		for (vector<vector<DMatch> >::const_iterator iter = matches.begin(); iter!= matches.end(); iter++) {
-            result.push_back((*iter)[0]);
+            if (!(*iter).empty()) {
+                result.push_back((*iter)[0]);
+            }
 		}
         return result;
     }

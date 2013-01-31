@@ -80,9 +80,20 @@ namespace ck {
         static void initValidationSettings(ValidationModule* module, Settings& settings)
         {
             std::vector<std::string> estMethVals; estMethVals.push_back(EST_METHOD_RANSAC); estMethVals.push_back(EST_METHOD_LMEDS); estMethVals.push_back(EST_METHOD_DEFAULT);
-            std::vector<std::string> detectorVals; detectorVals.push_back("FAST"); detectorVals.push_back("GFTT"); detectorVals.push_back("SIFT"); detectorVals.push_back("SURF"); detectorVals.push_back("ORB");
-            std::vector<std::string> extractorVals; extractorVals.push_back("SIFT"); extractorVals.push_back("SURF"); extractorVals.push_back("ORB"); extractorVals.push_back("FREAK");
-            std::vector<int> fastThresVals; fastThresVals.push_back(10); fastThresVals.push_back(20); fastThresVals.push_back(40); fastThresVals.push_back(60); fastThresVals.push_back(80);
+            std::vector<std::string> detectorVals;
+                detectorVals.push_back("FAST"); detectorVals.push_back("GFTT");
+                detectorVals.push_back("SIFT"); detectorVals.push_back("SURF");
+                detectorVals.push_back("ORB");
+            std::vector<std::string> extractorVals;
+                extractorVals.push_back("SIFT"); extractorVals.push_back("SURF");
+                extractorVals.push_back("ORB"); extractorVals.push_back("FREAK");
+#if OPENCV243
+            extractorVals.push_back("BRISK");
+#endif
+            std::vector<int> fastThresVals;
+                fastThresVals.push_back(10); fastThresVals.push_back(20);
+                fastThresVals.push_back(40); fastThresVals.push_back(60);
+                fastThresVals.push_back(80);
             
             Settings filterSettings = Settings("Filter Parameters");
             filterSettings.registerBool(OT_SETTING_VALID_MATCHES_SORT, module, &ValidationModule::setSortMatches, &ValidationModule::getSortMatches);
@@ -94,7 +105,7 @@ namespace ck {
 
             Settings estimationSettings = Settings("Estimation Parameters");
             estimationSettings.registerString(OT_SETTING_VALID_EST_METHOD, module, &ValidationModule::setEstimationMethod, &ValidationModule::getEstimationMethod, estMethVals);
-            estimationSettings.registerInt(OT_SETTING_VALID_RANSAC_THRESHLD, module, &ValidationModule::setRansacThreshold, &ValidationModule::setRansacThreshold, 1, 9);
+            estimationSettings.registerInt(OT_SETTING_VALID_RANSAC_THRESHLD, module, &ValidationModule::setRansacThreshold, &ValidationModule::getRansacThreshold, 1, 9);
             estimationSettings.registerBool(OT_SETTING_VALID_REFINE_HOMOGRAPHY, module, &ValidationModule::setRefineHomography, &ValidationModule::getRefineHomography);
 
             Settings validationSettings = Settings("Validation Settings");
