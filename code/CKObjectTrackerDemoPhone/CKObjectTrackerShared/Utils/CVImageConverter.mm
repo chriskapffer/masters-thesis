@@ -47,7 +47,7 @@ static inline double radians (double degrees) {return degrees * M_PI/180;}
     
     // Write the data into a bitmap context
     CGContextRef context;
-    CGColorSpaceRef colorSpace;
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray(); // if bpp == 1
     uchar* bitmapData = NULL;
     
     if( bpp == 1 ) {

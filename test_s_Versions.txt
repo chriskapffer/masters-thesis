@@ -117,17 +117,3 @@ lost after tracking: 0.603
 delta transform (px): 5.926
 distance range (px): 2.053
 average error: 5.995
-
-
-
-#### #### octaves 0 #### ####
-objectKeyPoints: 200
-sceneKeyPoints: 113
-matches total: 200
-matches masked: 13
-
-#### #### octaves 1 #### ####
-objectKeyPoints: 200
-sceneKeyPoints: 64
-matches total: 200
-matches masked: 16
