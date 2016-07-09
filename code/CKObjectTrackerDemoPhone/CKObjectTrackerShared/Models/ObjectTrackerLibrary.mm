@@ -27,8 +27,8 @@ using namespace cv;
     NSLock* _debugDataLock;
 }
 
-@property (nonatomic, assign) dispatch_queue_t trackStillImageQueue;
-@property (nonatomic, assign) dispatch_queue_t setObjectImageQueue;
+@property (nonatomic, strong) dispatch_queue_t trackStillImageQueue;
+@property (nonatomic, strong) dispatch_queue_t setObjectImageQueue;
 @property (nonatomic, assign) TrackerDebugInfo frameDebugInfo;
 @property (nonatomic, assign) TrackerOutput trackerOutput;
 
@@ -162,13 +162,13 @@ using namespace cv;
     delete _tracker;
     _tracker = 0;
     
-    dispatch_release(_trackStillImageQueue);
-    dispatch_release(_setObjectImageQueue);
+    //dispatch_release(_trackStillImageQueue);
+    //dispatch_release(_setObjectImageQueue);
     _outputDataLock = nil;
     _debugDataLock = nil;
 }
 
-- (void)setFocalLength:(CGPoint)focalLength {
+- (void)setFocalLength2:(CGPoint)focalLength {
     _tracker->setFocalLength(Point2f(focalLength.x, focalLength.y));
 }
 

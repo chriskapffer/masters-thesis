@@ -8,6 +8,7 @@
 
 #import "DrawableObject.h"
 #import "teapot.h"
+#import <OpenGLES/ES2/glext.h>
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 #define kTeapotScale 8.0f

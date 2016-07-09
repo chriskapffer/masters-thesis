@@ -38,7 +38,7 @@
 
 + (id)instance;
 
-- (void)setFocalLength:(CGPoint)focalLength;
+- (void)setFocalLength2:(CGPoint)focalLength;
 - (void)setPrincipalPoint:(CGPoint)principalPoint;
 
 - (UIImage*)objectImage;

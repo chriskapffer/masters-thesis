@@ -78,7 +78,7 @@
     double cx = 143.50000000; // Camera primary point x
     double cy = 175.50000000; // Camera primary point y
     
-    [[ObjectTrackerLibrary instance] setFocalLength:CGPointMake(fx, fy)];
+    [[ObjectTrackerLibrary instance] setFocalLength2:CGPointMake(fx, fy)];
     [[ObjectTrackerLibrary instance] setPrincipalPoint:CGPointMake(cx, cy)];
     [[ObjectTrackerLibrary instance] setDelegate:self];
     [[ObjectTrackerLibrary instance] setRecordDebugInfo:NO];

@@ -18,7 +18,7 @@
 @property (nonatomic, strong) AVCaptureDeviceInput* videoInput;
 @property (nonatomic, strong) AVCaptureVideoDataOutput* videoOutput;
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer* previewLayer;
-@property (nonatomic, assign) dispatch_queue_t videoCaptureQueue;
+@property (nonatomic, strong) dispatch_queue_t videoCaptureQueue;
 
 @property (nonatomic, strong) FPSCalculator* fpsCalculator;
 
@@ -331,7 +331,7 @@
     [self.captureSession stopRunning];
     
     dispatch_sync(self.videoCaptureQueue, ^{ });
-    dispatch_release(self.videoCaptureQueue);
+    //dispatch_release(self.videoCaptureQueue);
     
     [self removeObserver:self forKeyPath:@"videoInput.device.adjustingFocus"];
     [self removeObserver:self forKeyPath:@"videoInput.device.adjustingExposure"];

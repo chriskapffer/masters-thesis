@@ -8,6 +8,8 @@
 
 #import "BackgroundTexture.h"
 #import "ShaderUtils.h"
+#import <GLKit/GLKit.h>
+#import <OpenGLES/ES2/glext.h>
 
 #define VERTEX_COUNT 8
 
@@ -205,7 +207,7 @@ static const GLfloat gQuadVertices[VERTEX_COUNT] = {
                                                          GL_RGBA,
                                                          width,
                                                          height,
-                                                         GL_BGRA,
+                                                         GL_RGBA,
                                                          GL_UNSIGNED_BYTE,
                                                          0,
                                                          &_backgroundTexture);

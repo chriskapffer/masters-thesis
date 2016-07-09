@@ -17,7 +17,7 @@
 
 @property (nonatomic, strong) AVAssetReader* assetReader;
 @property (nonatomic, strong) FPSCalculator* fpsCalculator;
-@property (nonatomic, assign) dispatch_queue_t readerQueue;
+@property (nonatomic, strong) dispatch_queue_t readerQueue;
 @property (nonatomic, assign) BOOL stopRequested;
 
 @end
@@ -56,7 +56,7 @@
 - (void)dealloc
 {
     [self stopReading];
-    dispatch_release(_readerQueue);
+    //dispatch_release(_readerQueue);
 }
 
 #pragma mark - video reading
